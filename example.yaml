@@ -81,7 +81,7 @@ jobs:
 
       - name: Install
         run: |
-          R CMD INSTALL --with-keep.source --with-keep.parse.data .
+          R CMD INSTALL .
         shell: bash
 
       - name: Session info
