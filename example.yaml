@@ -76,6 +76,7 @@ jobs:
           options(keep.source = TRUE)
           options(keep.source.pkgs = TRUE)
           install.packages("rlang", repos = "https://cloud.r-project.org")
+          getOption("keep.source")
         shell: Rscript {0}
 
       - name: Install
