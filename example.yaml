@@ -83,3 +83,4 @@ jobs:
         run: |
           R CMD INSTALL .
           R -q -f '.github/example.R'
+        shell: bash
