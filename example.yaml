@@ -82,4 +82,4 @@ jobs:
       - name: Example
         run: |
           R CMD INSTALL .
-          R -q -e '.github/example.R'
+          R -q -f '.github/example.R'
