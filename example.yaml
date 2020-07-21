@@ -63,7 +63,7 @@ jobs:
           sudo -s eval "$sysreqs"
 
       - name: Install dependencies
-        run:
+        run: |
           library(remotes)
           deps <- readRDS('.github/depends.Rds')
           deps[['installed']] <- vapply(deps[['package']], remotes:::local_sha, character(1))
