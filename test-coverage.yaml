@@ -37,6 +37,8 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages(c("remotes"))
+          if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+          BiocManager::install("multtest")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("covr")
         shell: Rscript {0}

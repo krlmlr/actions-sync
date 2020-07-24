@@ -33,6 +33,8 @@ jobs:
       - name: Install dependencies
         run: |
           install.packages("remotes")
+          if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+          BiocManager::install("multtest")
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github("krlmlr/pkgdown@fix/examples-dontshow")
           remotes::install_github("tidyverse/tidytemplate")

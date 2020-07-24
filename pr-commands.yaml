@@ -16,7 +16,13 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: r-lib/actions/setup-r@master
       - name: Install dependencies
-        run: Rscript -e 'install.packages(c("remotes", "roxygen2"))' -e 'remotes::install_deps(dependencies = TRUE)'
+        run: |
+          install.packages(c("remotes", "roxygen2"))
+          if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+          BiocManager::install("multtest")
+          remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("rcmdcheck")
+        shell: Rscript {0}
       - name: Document
         run: Rscript -e 'roxygen2::roxygenise()'
       - name: commit
@@ -39,7 +45,13 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       - uses: r-lib/actions/setup-r@master
       - name: Install dependencies
-        run: Rscript -e 'install.packages("styler")'
+        run: |
+          install.packages("styler")
+          if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+          BiocManager::install("multtest")
+          remotes::install_deps(dependencies = TRUE)
+          remotes::install_cran("rcmdcheck")
+        shell: Rscript {0}
       - name: Style
         run: Rscript -e 'styler::style_pkg()'
       - name: commit
