@@ -60,7 +60,7 @@ jobs:
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          apt install -y libunwind-dev
+          sudo apt-get install -y libunwind-dev
 
       - name: Install dependencies
         run: |
