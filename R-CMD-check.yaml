@@ -89,7 +89,7 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_: false
           _R_CHECK_SYSTEM_CLOCK_: false
-          RCMDCHECK_ERROR_ON: note
+          RCMDCHECK_ERROR_ON: warning
         run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = Sys.getenv("RCMDCHECK_ERROR_ON"), check_dir = "check")
         shell: Rscript {0}
 
