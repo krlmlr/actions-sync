@@ -9,7 +9,7 @@ on:
     branches:
       - master
 
-name: rcc
+name: upstream
 
 jobs:
   R-CMD-check:
