@@ -87,5 +87,5 @@ jobs:
 
       - name: Example
         run: |
-          echo .github/example*.R | xargs -n 1 R -q -f
+          echo tests/example*.R | xargs -n 1 R -q -f
         shell: bash
