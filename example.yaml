@@ -75,7 +75,7 @@ jobs:
 
       - name: Install
         run: |
-          R CMD INSTALL . --debug
+          R CMD INSTALL .
         shell: bash
 
       - name: Session info
