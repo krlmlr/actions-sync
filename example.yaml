@@ -18,9 +18,10 @@ jobs:
       fail-fast: false
       matrix:
         config:
+          - {os: windows-latest,   r: 'release'}
           - {os: macOS-latest,   r: 'release'}
           - {os: ubuntu-18.04,   r: '4.0', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.2', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-18.04,   r: '3.3', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -29,7 +30,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@7ddb175
+      - uses: r-lib/actions/setup-r@master
         with:
           r-version: ${{ matrix.config.r }}
 
@@ -49,12 +50,11 @@ jobs:
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
-        env:
-          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
-          Rscript -e "remotes::install_github('r-hub/sysreqs')"
-          sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
-          sudo -s eval "$sysreqs"
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "16.04"); if (length(req) > 0) cat(req, sep = "\n")')
 
       - name: Install libunwind
         if: runner.os == 'Linux'
