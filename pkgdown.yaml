@@ -9,10 +9,10 @@ name: pkgdown
 
 jobs:
   pkgdown:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"
+      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"
 
     steps:
       - uses: actions/checkout@v2
@@ -41,6 +41,21 @@ jobs:
           git config --global user.name "$GITHUB_WORKFLOW"
           git config --global user.email "${GITHUB_EVENT_NAME}@ghactions.local"
         shell: bash
+
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "18.04"); if (length(req) > 0) cat(req, sep = "\n")')
+
+      - name: Install libunwind
+        if: runner.os == 'Linux'
+        env:
+          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
+        run: |
+          sudo apt-get install -y libunwind-dev
 
       - name: Install dependencies
         run: |
