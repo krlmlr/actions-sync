@@ -1,15 +1,18 @@
 on:
   push:
     branches:
+      - main
       - master
   pull_request:
     branches:
+      - main
       - master
 
 name: coverage
 
 jobs:
   coverage:
+    if: "!contains(github.event.head_commit.message, 'skip ci')"
     runs-on: macOS-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
