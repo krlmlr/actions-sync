@@ -97,7 +97,7 @@ jobs:
         env:
           _R_CHECK_CRAN_INCOMING_: false
           _R_CHECK_SYSTEM_CLOCK_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = "error", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = if (getRversion() >= "3.5" && getRversion() < "3.6") "error" else "note", check_dir = "check")
         shell: Rscript {0}
 
       - name: Show test output
