@@ -57,6 +57,13 @@ jobs:
         run: |
           sudo apt-get install -y libunwind-dev
 
+      - name: Install pkgdown sysdeps
+        if: runner.os == 'Linux'
+        env:
+          RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
+        run: |
+          sudo apt-get install -y libharfbuzz-dev libfribidi-dev
+
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
