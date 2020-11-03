@@ -11,6 +11,8 @@ on:
   pull_request:
     branches:
       - master
+  schedule:
+    - cron:  '0 8 * * *'
 
 name: rcc
 
@@ -18,7 +20,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.libunwind }} ${{ matrix.config.libbacktrace }}
 
     strategy:
       fail-fast: false
@@ -28,7 +30,8 @@ jobs:
           - {os: windows-latest, r: 'oldrel'}
           - {os: macOS-latest,   r: 'release'}
           - {os: ubuntu-18.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", http-user-agent: "R/4.0.0 (ubuntu-16.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
-          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit }
+          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind }
+          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, libbacktrace: omit-libbacktrace }
           - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           - {os: ubuntu-18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           - {os: ubuntu-18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
@@ -62,8 +65,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
+          key: ${{ matrix.config.os }}-${{ hashFiles('.github/R-version') }}-2-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ matrix.config.os }}-${{ hashFiles('.github/R-version') }}-2-
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
@@ -74,18 +77,22 @@ jobs:
           done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "18.04"); if (length(req) > 0) cat(req, sep = "\n")')
 
       - name: Install libunwind
-        if: runner.os == 'Linux' && matrix.config.libunwind != 'omit'
+        if: runner.os == 'Linux' && matrix.config.libunwind != 'omit-libunwind'
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
           sudo apt-get install -y libunwind-dev
 
+      - name: Break libbacktrace
+        if: matrix.config.libbacktrace == 'omit-libbacktrace'
+        run: |
+          echo '{ print "bogus"; exit }' > src/vendor/libbacktrace/filetype.awk
+
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
+          remotes::install_deps(dependencies = TRUE, type = .Platform$pkgType, upgrade = TRUE)
           remotes::install_cran("rcmdcheck")
           remotes::install_github("tidyverse/magrittr")
-          remotes::install_github("krlmlr/rlang@f-trace-hook")
         shell: Rscript {0}
 
       - name: Session info
