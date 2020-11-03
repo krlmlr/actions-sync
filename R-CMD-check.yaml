@@ -85,7 +85,6 @@ jobs:
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("rcmdcheck")
           remotes::install_github("tidyverse/magrittr")
-          remotes::install_github("krlmlr/rlang@f-trace-hook")
         shell: Rscript {0}
 
       - name: Session info
