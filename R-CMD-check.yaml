@@ -88,7 +88,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE)
+          remotes::install_deps(dependencies = TRUE, type = .Platform$pkgType, upgrade = TRUE)
           remotes::install_cran("rcmdcheck")
           remotes::install_github("tidyverse/magrittr")
         shell: Rscript {0}
