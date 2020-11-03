@@ -20,7 +20,7 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.libunwind }} ${{ matrix.config.libbacktrace }}
 
     strategy:
       fail-fast: false
@@ -30,8 +30,8 @@ jobs:
           - {os: windows-latest, r: 'oldrel'}
           - {os: macOS-latest,   r: 'release'}
           - {os: ubuntu-18.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", http-user-agent: "R/4.0.0 (ubuntu-16.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
-          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit }
-          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit, libbacktrace: omit }
+          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind }
+          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, libbacktrace: omit-libbacktrace }
           - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           - {os: ubuntu-18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           - {os: ubuntu-18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
@@ -77,14 +77,14 @@ jobs:
           done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "18.04"); if (length(req) > 0) cat(req, sep = "\n")')
 
       - name: Install libunwind
-        if: runner.os == 'Linux' && matrix.config.libunwind != 'omit'
+        if: runner.os == 'Linux' && matrix.config.libunwind != 'omit-libunwind'
         env:
           RHUB_PLATFORM: linux-x86_64-ubuntu-gcc
         run: |
           sudo apt-get install -y libunwind-dev
 
       - name: Break libbacktrace
-        if: matrix.config.libunwind == 'omit'
+        if: matrix.config.libbacktrace == 'omit-libbacktrace'
         run: |
           echo '{ print "bogus"; exit }' > src/vendor/libbacktrace/filetype.awk
 
