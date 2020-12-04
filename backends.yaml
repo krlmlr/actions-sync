@@ -92,27 +92,27 @@ jobs:
       # Must happen after installing system dependencies,
       # https://github.com/ankane/setup-mariadb/issues/2
       - uses: ankane/setup-mariadb@v1
-        if: ${{ matrix.package }} == 'RMariaDB'
+        if: matrix.package == 'RMariaDB'
         with:
           mariadb-version: 10.5
 
       - name: Create database, set it to UTF-8
-        if: ${{ matrix.package }} == 'RMariaDB'
+        if: matrix.package == 'RMariaDB'
         run: |
           mysql -e "CREATE DATABASE IF NOT EXISTS test; ALTER DATABASE test CHARACTER SET 'utf8'; FLUSH PRIVILEGES;"
 
       - uses: ankane/setup-postgres@v1
-        if: ${{ matrix.package }} == 'RPostgres'
+        if: matrix.package == 'RPostgres'
         with:
           postgres-version: 13
 
       - name: Create database
-        if: (runner.os != 'Windows') && (${{ matrix.package }} == 'RPostgres')
+        if: (runner.os != 'Windows') && (matrix.package == 'RPostgres')
         run: |
           createdb ${USER}
 
       - name: Create database
-        if: (runner.os == 'Windows') && (${{ matrix.package }} == 'RPostgres')
+        if: (runner.os == 'Windows') && (matrix.package == 'RPostgres')
         run: |
           createdb ${USERNAME}
         shell: bash
