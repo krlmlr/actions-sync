@@ -107,12 +107,12 @@ jobs:
           postgres-version: 13
 
       - name: Create database
-        if: runner.os != 'Windows' and ${{ matrix.package }} == 'RPostgres'
+        if: (runner.os != 'Windows') && (${{ matrix.package }} == 'RPostgres')
         run: |
           createdb ${USER}
 
       - name: Create database
-        if: runner.os == 'Windows' and ${{ matrix.package }} == 'RPostgres'
+        if: (runner.os == 'Windows') && (${{ matrix.package }} == 'RPostgres')
         run: |
           createdb ${USERNAME}
         shell: bash
