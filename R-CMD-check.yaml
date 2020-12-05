@@ -85,6 +85,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          install.packages("https://github.com/krlmlr/remotes/archive/f-rate-limit-gh.tar.gz", repos = NULL)
           remotes::install_deps(dependencies = TRUE, type = .Platform$pkgType)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
