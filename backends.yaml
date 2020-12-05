@@ -46,6 +46,7 @@ jobs:
       - name: Install remotes
         run: |
           if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+          remotes::install_url("https://github.com/krlmlr/gh/archive/retry-logic.zip")
         shell: Rscript {0}
 
       - name: Clone backend
