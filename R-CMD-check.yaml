@@ -14,7 +14,7 @@ on:
       - main
       - master
   schedule:
-    - cron:  '0 8 * * *'
+    - cron:  '20 2 * * *'
 
 name: rcc
 
