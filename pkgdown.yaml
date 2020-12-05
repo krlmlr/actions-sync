@@ -24,8 +24,7 @@ jobs:
 
       - name: Install remotes
         run: |
-          if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
-          remotes::install_cran("curl")
+          if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
           install.packages("https://github.com/krlmlr/remotes/archive/f-rate-limit-gh.tar.gz", repos = NULL)
         shell: Rscript {0}
 
@@ -66,6 +65,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
           install.packages("https://github.com/krlmlr/remotes/archive/f-rate-limit-gh.tar.gz", repos = NULL)
           remotes::install_deps(dependencies = TRUE)
           remotes::install_github("r-lib/pkgdown")
@@ -73,6 +73,13 @@ jobs:
 
       - name: Install package
         run: R CMD INSTALL .
+
+      - name: Session info
+        run: |
+          options(width = 100)
+          if (!requireNamespace("sessioninfo", quietly = TRUE)) install.packages("sessioninfo")
+          sessioninfo::session_info(pkgs, include_base = TRUE)
+        shell: Rscript {0}
 
       - name: Build site
         if: github.event_name == 'pull_request'

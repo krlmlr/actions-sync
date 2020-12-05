@@ -40,8 +40,7 @@ jobs:
 
       - name: Install remotes
         run: |
-          if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
-          remotes::install_cran("curl")
+          if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
           install.packages("https://github.com/krlmlr/remotes/archive/f-rate-limit-gh.tar.gz", repos = NULL)
         shell: Rscript {0}
 
@@ -68,6 +67,7 @@ jobs:
 
       - name: Install dependencies
         run: |
+          if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
           install.packages("https://github.com/krlmlr/remotes/archive/f-rate-limit-gh.tar.gz", repos = NULL)
           deps <- remotes::dev_package_deps(dependencies = TRUE)
           update(deps)
@@ -78,8 +78,7 @@ jobs:
       - name: Session info
         run: |
           options(width = 100)
-          pkgs <- installed.packages()[, "Package"]
-          if (!("sessioninfo" %in% pkgs)) install.packages("sessioninfo")
+          if (!requireNamespace("sessioninfo", quietly = TRUE)) install.packages("sessioninfo")
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
