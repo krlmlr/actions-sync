@@ -75,9 +75,9 @@ jobs:
             eval sudo $cmd
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "16.04", path = "revdep-dev/${{ matrix.package }}"))')
 
-      - name: Install dependencies
+      - name: Install package and dependencies
         run: |
-          remotes::install_deps("revdep-dev/${{ matrix.package }}", dependencies = TRUE, type = .Platform$pkgType)
+          remotes::install_local("revdep-dev/${{ matrix.package }}", dependencies = TRUE, type = .Platform$pkgType)
         shell: Rscript {0}
 
       - name: Session info
