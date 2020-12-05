@@ -18,6 +18,11 @@ jobs:
       RSPM: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"
 
     steps:
+      - name: Check rate limits
+        run: |
+          curl https://${{ secrets.GITHUB_TOKEN }}@api.github.com/rate_limit
+        shell: bash
+
       - uses: actions/checkout@v2
 
       - uses: r-lib/actions/setup-r@master
@@ -73,3 +78,8 @@ jobs:
       - name: Test coverage
         run: covr::codecov()
         shell: Rscript {0}
+
+      - name: Check rate limits
+        run: |
+          curl https://${{ secrets.GITHUB_TOKEN }}@api.github.com/rate_limit
+        shell: bash
