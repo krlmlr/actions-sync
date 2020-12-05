@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Check rate limits
         run: |
-          curl https://${{ secrets.GITHUB_TOKEN }}@api.github.com/rate_limit
+          curl -s https://${{ secrets.GITHUB_TOKEN }}@api.github.com/rate_limit
         shell: bash
 
       - uses: actions/checkout@v2
@@ -81,5 +81,5 @@ jobs:
 
       - name: Check rate limits
         run: |
-          curl https://${{ secrets.GITHUB_TOKEN }}@api.github.com/rate_limit
+          curl -s https://${{ secrets.GITHUB_TOKEN }}@api.github.com/rate_limit
         shell: bash
