@@ -46,7 +46,7 @@ jobs:
       - name: Install remotes
         run: |
           if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
-          remotes::install_cran("curl")
+          if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
           install.packages("https://github.com/krlmlr/remotes/archive/f-rate-limit-gh.tar.gz", repos = NULL)
         shell: Rscript {0}
 
@@ -80,7 +80,7 @@ jobs:
       - name: Install package and dependencies
         run: |
           install.packages("https://github.com/krlmlr/remotes/archive/f-rate-limit-gh.tar.gz", repos = NULL)
-          stopifnot(requireNamespace("curl", quietly = TRUE))
+          if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
 
           remotes::install_local("revdep-dev/${{ matrix.package }}", dependencies = TRUE, type = .Platform$pkgType)
         shell: Rscript {0}
