@@ -1,14 +1,8 @@
+# This workflow calls the GitHub API very frequently.
+# Can't be run as part of commits
 on:
-  push:
-    branches:
-      - main
-      - master
-  pull_request:
-    branches:
-      - main
-      - master
   schedule:
-    - cron:  '0 8 * * *'
+    - cron:  '0 1 * * *'
 
 name: rcc dev
 
