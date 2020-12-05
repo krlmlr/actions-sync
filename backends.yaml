@@ -83,6 +83,7 @@ jobs:
           if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
 
           remotes::install_local("revdep-dev/${{ matrix.package }}", dependencies = TRUE, type = .Platform$pkgType)
+          remotes::install_local(".", type = .Platform$pkgType)
         shell: Rscript {0}
 
       - name: Session info
