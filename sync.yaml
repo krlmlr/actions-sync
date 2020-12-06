@@ -20,5 +20,6 @@ jobs:
 
       - name: git subtree push
         run: |
-          git subtree push --prefix=.github/workflows https://${{ secrets.GITHUB_TOKEN }}@github.com/krlmlr/r-actions-subtree ${{ env.GITHUB_REPOSITORY }}
+          env | sort
+          git subtree push --prefix=.github/workflows https://${{ secrets.GITHUB_TOKEN }}@github.com/krlmlr/r-actions-subtree ${GITHUB_REPOSITORY}
         shell: bash
