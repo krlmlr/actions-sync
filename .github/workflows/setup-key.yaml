@@ -34,8 +34,8 @@ jobs:
             -H"Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
             --data @- https://api.github.com/repos/${GITHUB_REPOSITORY}/keys << EOF
             {
-              "title" : "$repo_id $(date)",
-              "key" : "$(cat $id_rsa.pub)",
+              "title" : "Deploy key for linked projects",
+              "key" : "$(cat id_rsa.pub)",
               "read_only" : false
             }
             EOF
