@@ -11,7 +11,8 @@ Manage all your GitHub Actions workflows across multiple projects.
 ### PAT
 
 1. Visit https://github.com/settings/tokens
-1. Click "Generate new token"
-    - Scope: repo (needed because this is a private repository)
+1. Click "Generate new token" with scopes:
+    - repo (needed because this is a private repository)
+    - workflow (needed to change workflows in other repos, implies repo)
 1. Copy generated token
 1. Store it as a secret named `TOKEN_KEYS`
