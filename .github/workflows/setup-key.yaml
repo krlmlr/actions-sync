@@ -22,16 +22,23 @@ jobs:
       - name: Delete existing deploy key
         run: |
           curl -s \
-            -X "DELETE" \
-            -H"Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            https://api.github.com/repos/${GITHUB_REPOSITORY}/keys/actions
+            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+            https://api.github.com/repos/noah/$reponame/keys \
+            | jq '.[] | .id ' | \
+            while read _id; do
+                    echo "- deploy key: $_id"
+                    curl -s \
+                      -X "DELETE" \
+                      -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+                      https://api.github.com/repos/${GITHUB_REPOSITORY}/keys/$_id
+            done
         shell: bash
 
       - name: Add new deploy key
         run: |
           curl -s \
             -i \
-            -H"Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             --data @- https://api.github.com/repos/${GITHUB_REPOSITORY}/keys << EOF
             {
               "title" : "Deploy key for linked projects",
