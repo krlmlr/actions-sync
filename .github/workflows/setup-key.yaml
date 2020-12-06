@@ -23,7 +23,7 @@ jobs:
         run: |
           curl -s \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-            https://api.github.com/repos/noah/$reponame/keys \
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/keys \
             | jq '.[] | .id ' | \
             while read _id; do
                     echo "- deploy key: $_id"
