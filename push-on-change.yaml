@@ -26,3 +26,15 @@ jobs:
         with:
           repository: ${{ steps.remote_repo.outputs.slug }}
           path: remote/${{ steps.remote_repo.outputs.slug }}
+          token: $${ secrets.TOKEN_REPO }
+
+      - name: Clean .github from entire history
+        run: |
+          FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --index-filter 'git rm -rf --cached --ignore-unmatch .github' --prune-empty
+
+      - name: Merge subtree
+        run: |
+          set -x
+          cd remote/${{ steps.remote_repo.outputs.slug }}
+          git subtree pull -m "Merge from actions-subtree" --prefix=.github/workflows ../../.. ${{ steps.remote_repo.outputs.slug }}
+          git push
