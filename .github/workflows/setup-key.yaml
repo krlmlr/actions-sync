@@ -31,5 +31,5 @@ jobs:
               "key" : "$(cat id_rsa.pub)",
               "read_only" : false
             }
-            EOF
+          EOF
         shell: bash
