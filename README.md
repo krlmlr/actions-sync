@@ -12,6 +12,6 @@ Manage all your GitHub Actions workflows across multiple projects.
 
 1. Visit https://github.com/settings/tokens
 1. Click "Generate new token"
-    - Scope: admin:public_key
+    - Scope: repo (needed because this is a private repository)
 1. Copy generated token
-1. Store it as a secret named
+1. Store it as a secret named `TOKEN_KEYS`
