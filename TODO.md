@@ -1,6 +1,5 @@
 # TODO
 
-- Send secret to remote repository
 - How to resend secret to remote repository -- manual workflow run?
 - Trigger resend of secret when key is regenerated
 - Add workflow to RKazam that pushes changes back here
