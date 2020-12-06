@@ -1,0 +1,26 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/update-gha.yaml'
+      - 'template/**'
+
+name: Update GHA in remote repositories
+
+jobs:
+  create_key:
+    runs-on: ubuntu-18.04
+
+    name: Create deploy key
+
+    steps:
+      - name: Check out remote repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.TOKEN_KEYS }}
+
+      - name: Update
+        run: |
+          make copy-templates
