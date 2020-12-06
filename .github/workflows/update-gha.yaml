@@ -12,7 +12,7 @@ jobs:
   create_key:
     runs-on: ubuntu-18.04
 
-    name: Create deploy key
+    name: Update GHA in remote repositories
 
     steps:
       - name: Check out remote repository
