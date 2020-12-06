@@ -24,6 +24,7 @@ jobs:
           curl -s \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             https://api.github.com/repos/${GITHUB_REPOSITORY}/keys \
+            | tee /dev/stderr \
             | jq '.[] | .id ' | \
             while read _id; do
                     echo "- deploy key: $_id"
