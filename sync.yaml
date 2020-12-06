@@ -5,7 +5,7 @@ on:
       - main
       - master
     paths:
-      - '.github/workflows'
+      - '.github/workflows/**'
 
 name: Sync workflows
 
