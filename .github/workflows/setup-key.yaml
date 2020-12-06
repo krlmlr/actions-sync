@@ -61,6 +61,6 @@ jobs:
       - name: Store private deploy key as secret
         uses: gliech/create-github-secret-action@v1
         with:
-          name: DEPLOY_KEY
+          name: KEY_DEPLOY
           value: ${{ steps.id_rsa.outputs.content }}
           pa_token: ${{ secrets.TOKEN_KEYS }}
