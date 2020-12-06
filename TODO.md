@@ -1,9 +1,11 @@
 # TODO
 
-- Add new projects:
-    - r-dbi/*
+- Send secret to remote repository
+- How to resend secret to remote repository -- manual workflow run?
+- Trigger resend of secret when key is regenerated
+- Add workflow to RKazam that pushes changes back here
+- Copy that workflow to other projects
 - Import other projects:
-    - r-dbi/RMariaDB
     - tibble
     - rprojroot
     - roxygen2md
