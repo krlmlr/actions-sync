@@ -1,6 +1,5 @@
 # TODO
 
-- Copy that workflow to other projects
 - Import other projects:
     - tibble
     - rprojroot
