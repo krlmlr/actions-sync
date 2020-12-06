@@ -35,6 +35,7 @@ jobs:
           repository: ${{ steps.remote_repo.outputs.slug }}
           path: remote/${{ steps.remote_repo.outputs.slug }}
           fetch-depth: 0
+          token: ${{ secrets.TOKEN_KEYS }}
 
       - name: Merge subtree
         run: |
