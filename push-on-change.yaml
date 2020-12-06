@@ -19,6 +19,10 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Configure Git identity
+        run: |
+          git log HEAD^.. --pretty=format:"git config user.name '%an' && git config user.email '%ae'" | tee /dev/stderr | sh
+
       - name: Get branch name
         id: remote_repo
         run: |
