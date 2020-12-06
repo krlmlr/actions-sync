@@ -100,6 +100,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Check rate limits
+        if: always()
         run: |
           curl -s --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/rate_limit
         shell: bash

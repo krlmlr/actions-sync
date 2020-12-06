@@ -140,6 +140,7 @@ jobs:
           path: revdep-dev/${{ matrix.package }}
 
       - name: Check rate limits
+        if: always()
         run: |
           curl -s --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/rate_limit
         shell: bash
