@@ -19,6 +19,24 @@ jobs:
           ssh-keygen -N "" -f id_rsa
         shell: bash
 
+      - name: Delete existing deploy key
+        run: |
+          curl -s \
+            --fail \
+            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/keys \
+            | tee /dev/stderr \
+            | jq '.[] | .id ' | \
+            while read _id; do
+                    echo "- deploy key: $_id"
+                    curl -s \
+                      --fail \
+                      -X "DELETE" \
+                      -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+                      https://api.github.com/repos/${GITHUB_REPOSITORY}/keys/$_id
+            done
+        shell: bash
+
       - name: Add new deploy key
         run: |
           curl -s \
