@@ -47,6 +47,6 @@ jobs:
           git remote add target ..
           git fetch target
           git checkout ${{ github.repository }}
-          git merge --squash --ff target
+          git merge --squash --ff target/actions-subtree
           git commit --no-edit
           git push
