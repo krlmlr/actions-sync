@@ -1,0 +1,20 @@
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - '.github/workflows/setup-key.yaml'
+
+name: Create deploy key
+
+jobs:
+  create_key:
+    runs-on: ubuntu-18.04
+
+    name: Generate SSH key
+
+    steps:
+      - name: ssh-keygen
+        run: |
+          ssh-keygen
+        shell: bash
