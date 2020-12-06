@@ -1,6 +1,5 @@
 # TODO
 
-- Add workflow to RKazam that pushes changes back here
 - Copy that workflow to other projects
 - Import other projects:
     - tibble
@@ -10,5 +9,6 @@
     - pillar
     - r-prof/*
     - formattable
+- Replace subtree filter with more robust solution
 - How to resend secret to remote repository -- manual workflow run?
 - Trigger resend of secret when key is regenerated
