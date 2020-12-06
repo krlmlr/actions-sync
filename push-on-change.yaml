@@ -26,7 +26,6 @@ jobs:
         with:
           repository: ${{ steps.remote_repo.outputs.slug }}
           path: remote/${{ steps.remote_repo.outputs.slug }}
-          token: ${{ secrets.TOKEN_REPO }}
 
       - name: Clean .github from entire history
         run: |
