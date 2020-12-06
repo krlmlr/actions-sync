@@ -11,7 +11,7 @@ jobs:
   create_key:
     runs-on: ubuntu-18.04
 
-    name: Generate SSH key
+    name: Create deploy key
 
     steps:
       - name: ssh-keygen
@@ -37,7 +37,7 @@ jobs:
             done
         shell: bash
 
-      - name: Add new deploy key
+      - name: Add new deploy key (public)
         run: |
           curl -s \
             --fail \
@@ -51,3 +51,30 @@ jobs:
             }
           EOF
         shell: bash
+
+      - name: Store private deploy key as secret
+        run: |
+          curl -s \
+            --fail \
+            -X POST \
+            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+            --data @- https://api.github.com/repos/${GITHUB_REPOSITORY}/secrets << EOF
+            {
+              "title" : "Deploy key for linked projects",
+              "key" : "$(cat id_rsa.pub)",
+              "read_only" : false
+            }
+          EOF
+        shell: bash
+
+      - name: Read id_rsa
+        id: id_rsa
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./id_rsa
+
+      - uses: gliech/create-github-secret-action@v1
+        with:
+          name: DEPLOY_KEY
+          value: ${{ steps.id_rsa.outputs.content }}
+          pa_token: ${{ secrets.TOKEN_KEYS }}
