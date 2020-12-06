@@ -34,7 +34,7 @@ jobs:
 
       - name: Clone actions-subtree
         run: |
-          git clone .github/workflows git@github.com:${{ secrets.ACTIONS_SUBTREE_REMOTE_REPO }} actions-subtree
+          git clone git@github.com:${{ secrets.ACTIONS_SUBTREE_REMOTE_REPO }} actions-subtree
 
       - name: Extract subtree
         run: |
