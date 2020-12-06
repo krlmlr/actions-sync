@@ -32,15 +32,21 @@ jobs:
           known_hosts: 'github.com ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAq2A7hRGmdnm9tUDbO9IDSwBK6TbQa+PXYPCPy6rbTrTtw7PHkccKrpp0yVhp5HdEIcKr6pLlVDBfOLX9QUsyCOV0wzfjIJNlGEYsdlLJizHhbn2mUjvSAHQqZETYP81eFzLQNnPHt4EVVUh7VfDESU84KezmD5QlWpXLmvU31/yMf+Se8xhHTvKSCZIFImWwoG6mbUoWf9nzpIoaSjB+weqqUUmpaaasXVal72J+UX2B+2RPW3RcT0eOzQgqlJL3RKrTJvdsjE3JEAvGq3lGHSZXy28G3skua2SmVi/w4yCE6gbODqnTWlg7+wC604ydGXA8VJiS5ap43JXiUFFAaQ=='
           name: id_rsa # optional
 
-      - name: Pull subtree
+      - name: Clone actions-subtree
         run: |
-          set -x
-          git subtree pull -m "Merge from actions-subtree" --prefix=.github/workflows git@github.com:${{ secrets.ACTIONS_SUBTREE_REMOTE_REPO }} ${{ github.repository }} || (git rm -rf .github/workflows/.github && git add .github/workflows && git commit --no-edit)
-          if git rm -rf .github/workflows/.github; then
-            git commit --amend --no-edit
-          fi
+          git clone .github/workflows git@github.com:${{ secrets.ACTIONS_SUBTREE_REMOTE_REPO }} actions-subtree
 
-      - name: Push subtree
+      - name: Extract subtree
+        run: |
+          git subtree split --prefix=.github/workflows -b actions-subtree
+
+      - name: Merge subtree manually
         run: |
           set -x
-          git subtree push --prefix=.github/workflows git@github.com:${{ secrets.ACTIONS_SUBTREE_REMOTE_REPO }} ${{ github.repository }}
+          cd actions-subtree
+          git remote add target ..
+          git fetch target
+          git checkout ${{ github.repository }}
+          git merge --squash --ff target
+          git commit --no-edit
+          git push
