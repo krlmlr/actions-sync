@@ -22,7 +22,7 @@ jobs:
       - name: Add new deploy key
         run: |
           curl -s \
-            -i \
+            --fail \
             -X POST \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             --data @- https://api.github.com/repos/${GITHUB_REPOSITORY}/keys << EOF
