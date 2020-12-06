@@ -1,0 +1,41 @@
+# Push back changes to main actions-subtree repository
+on:
+  push:
+    branches:
+      - main
+      - master
+    paths:
+      - '.github/workflows/*'
+
+name: Push back to actions-subtree
+
+jobs:
+  create_key:
+    runs-on: ubuntu-18.04
+
+    name: Push on change
+
+    steps:
+      - name: Check out our repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git log HEAD^.. --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
+
+      - name: Install SSH key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.ACTIONS_SUBTREE_KEY_DEPLOY }}
+          name: id_rsa # optional
+
+      - name: Set known hosts
+        run: |
+          ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+
+      - name: Push subtree
+        run: |
+          set -x
+          git subtree push --prefix=.github/workflows git@github.com:${{ secrets.ACTIONS_SUBTREE_REMOTE_REPO }}
