@@ -35,4 +35,4 @@ jobs:
       - name: Push subtree
         run: |
           set -x
-          git subtree push --prefix=.github/workflows git@github.com:${{ secrets.ACTIONS_SUBTREE_REMOTE_REPO }}
+          git subtree push --prefix=.github/workflows git@github.com:${{ secrets.ACTIONS_SUBTREE_REMOTE_REPO }} ${{ github.repository }}
