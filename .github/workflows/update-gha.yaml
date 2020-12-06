@@ -21,6 +21,10 @@ jobs:
           fetch-depth: 0
           token: ${{ secrets.TOKEN_KEYS }}
 
+      - name: Configure Git identity
+        run: |
+          git log HEAD^.. --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
+
       - name: Update
         run: |
           make copy-templates
