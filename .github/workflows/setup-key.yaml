@@ -23,6 +23,7 @@ jobs:
         run: |
           curl -s \
             -i \
+            -X POST \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             --data @- https://api.github.com/repos/${GITHUB_REPOSITORY}/keys << EOF
             {
