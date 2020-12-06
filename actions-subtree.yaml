@@ -35,7 +35,7 @@ jobs:
       - name: Pull subtree
         run: |
           set -x
-          git subtree pull -m "Merge from actions-subtree" --prefix=.github/workflows ../../.. ${{ steps.remote_repo.outputs.slug }} || (git rm -rf .github/workflows/.github && git add .github/workflows)
+          git subtree pull -m "Merge from actions-subtree" --prefix=.github/workflows ../../.. ${{ github.repository }} || (git rm -rf .github/workflows/.github && git add .github/workflows)
           git rm -rf --ignore-unmatch .github/workflows/.github
           git commit --amend --no-edit || true
 
