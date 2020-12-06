@@ -24,7 +24,14 @@ jobs:
           curl -s \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             https://api.github.com/repos/noah/$reponame/keys \
-            | jq '.[] | .id '
+            | jq '.[] | .id ' | \
+            while read _id; do
+                    echo "- deploy key: $_id"
+                    curl -s \
+                      -X "DELETE" \
+                      -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+                      https://api.github.com/repos/${GITHUB_REPOSITORY}/keys/$_id
+            done
         shell: bash
 
       - name: Add new deploy key
