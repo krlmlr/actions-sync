@@ -216,4 +216,6 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
 
   git cherry-pick actions/${repo} ^subtree --allow-empty --first-parent -m 1 --no-edit
   git push
+  cd ..
+  rm -rf remote
 }
