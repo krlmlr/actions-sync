@@ -102,8 +102,6 @@ wt_pull() { # Run git pull --ff-only for all worktrees
 }
 
 copy_templates() { # Copy workflow templates into foreign repository
-  rm -rf wt/*/*/.github
-  rm -rf wt/*/*/actions-subtree.yaml
   wt_run _copy_template
 }
 
@@ -112,6 +110,7 @@ _copy_template() {
   shift
 
   echo "$repo"
+  rm -rf "$repo"/.github
   cp -r template/.github "$repo"
   git -C "$repo" add .
   if ! git -C "$repo" diff-index --quiet HEAD; then
