@@ -8,6 +8,8 @@
 
 ## Caveat
 
+- Merges in local history can't be easily recreated in the remote repos
+
 - Push to `templates/` then unrelated push doesn't trigger workflow?
 
 ## Done
