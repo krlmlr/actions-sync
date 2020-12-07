@@ -27,4 +27,4 @@ jobs:
 
       - name: Update
         run: |
-          make copy-templates
+          make copy_templates

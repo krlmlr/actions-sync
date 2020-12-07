@@ -13,6 +13,20 @@ pull() {
   git -C "$1" pull --ff-only
 }
 
+copy_templates() {
+	rm -rf wt/*/*/.github
+	find wt/*/* -maxdepth 0 -type d | parallel -q ./run.sh _copy_template
+}
+
+_copy_template() {
+	cp -r template "$1"/.github
+	git -C "$1" add .
+	if git -C "$1" diff-index --quiet HEAD; then
+    git -C "$1" commit -m 'Update push action'
+	  git -C "$1" push
+  fi
+}
+
 if [ "$1" = "" ]; then
   echo "Usage: $0 command ..."
   echo "with command one of:"

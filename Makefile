@@ -7,12 +7,8 @@ wt:
 pull:
 	find wt/*/* -maxdepth 0 -type d | parallel -q ./run.sh pull
 
-copy-templates: wt
-	rm -rf wt/*/*/.github
-	find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' cp -r template '{}'/.github
-	find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' git -C '{}' add .
-	find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' sh -c "git -C '{}' diff-index --quiet HEAD || git -C '{}' commit -m 'Update push action'"
-	find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' git -C '{}' push
+copy_templates: wt
+	./run.sh copy_templates
 
 .wt:
 	git worktree list | egrep -v '[[]main[]]' | cut -d " " -f 1 | xargs -r -n 1 git worktree remove
