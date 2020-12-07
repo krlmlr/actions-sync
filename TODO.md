@@ -1,12 +1,12 @@
 # TODO
 
-- Finish import target
-    - Ensure import works out of the box in CI
-    - Add "phone home" workflow right away
+- Implement merge back
     - Replace subtree filter with more robust solution
+    - Test with RKazam
+- Reimport all existing repositories
 - Add code to prune branches
 - Import other projects:
-    - MultiLevelIPF
+    - MultiLevelIPF (no GHA yet)
     - tibble
     - rprojroot
     - roxygen2md
