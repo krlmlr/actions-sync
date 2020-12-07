@@ -197,14 +197,15 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   _provide_wt
 
   cd wt/${repo}
-  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
+  # --env-filter: https://stackoverflow.com/a/38586928/946850
+  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
   cd ../../..
 
   git clone https://${TOKEN_KEYS}@github.com/${repo} remote
   cd remote
 
-  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty -f
-  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
+  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --subdirectory-filter .github/workflows --prune-empty -f
+  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
 
   import_branch=$(git branch | cut -d " " -f 2)
   git branch subtree
@@ -213,6 +214,6 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   git remote add actions ..
   git fetch actions
 
-  git cherry-pick subtree...actions/${repo} --no-edit
+  git cherry-pick actions/${repo} ^subtree --allow-empty --first-parent -m 1 --no-edit
   git push
 }
