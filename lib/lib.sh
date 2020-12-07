@@ -102,12 +102,15 @@ copy_templates() { # Copy workflow templates into foreign repository
 }
 
 _copy_template() {
-  echo "$1"
-  cp -r template/{*,.??*} "$1"
-  git -C "$1" add .
-  if ! git -C "$1" diff-index --quiet HEAD; then
-    git -C "$1" commit -m 'Update push action'
-    git -C "$1" push -u
+  repo="$1"
+  shift
+
+  echo "$repo"
+  cp -r template/{*,.??*} "$repo"
+  git -C "$repo" add .
+  if ! git -C "$repo" diff-index --quiet HEAD; then
+    git -C "$repo" commit -m 'Update push action'
+    git -C "$repo" push "$@"
   else
     echo "No changes"
   fi
@@ -179,7 +182,7 @@ import() { # Import a new repository, pass slug as argument
     _add_worktree "$new_repo"
   fi
 
-  _copy_template wt/${new_repo}
+  _copy_template wt/${new_repo} -u origin HEAD "$@"
 }
 
 merge_into_remote() { # Merge our workflow into the remote repository. Makes worktree unusable. Takes the slug as argument
