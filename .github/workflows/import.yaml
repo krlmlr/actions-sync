@@ -26,5 +26,7 @@ jobs:
         shell: bash
 
       - name: Import
+        env:
+          TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
           ./run.sh import ${{ steps.remote_repo.outputs.slug }}
