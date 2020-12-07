@@ -5,7 +5,7 @@ wt:
 	./run.sh add_worktrees
 
 pull:
-	find wt/*/* -maxdepth 0 -type d | parallel -q ./run.sh pull
+	./run.sh wt_pull
 
 copy_templates: wt
 	./run.sh copy_templates

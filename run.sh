@@ -8,9 +8,20 @@ _add_worktree() {
   git worktree add wt/"$1" "$1"
 }
 
-pull() { # Run git pull --ff-only for all worktrees
-  echo "$1"
-  git -C "$1" pull --ff-only
+wt_git() { # Run git command in all worktrees
+	find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' ./run.sh _wtdir_git '{}' "$@"
+}
+
+_wtdir_git() {
+  git_dir="$1"
+  shift
+
+  echo "$git_dir"
+  git -C "$git_dir" "$@"
+}
+
+wt_pull() { # Run git pull --ff-only for all worktrees
+	wt_git pull --ff-only
 }
 
 copy_templates() { # Copy workflow templates into foreign repository
