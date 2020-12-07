@@ -59,6 +59,11 @@ _add_worktree() {
   repo="$1"
   shift
 
+  if [ -d wt/"$repo" ]; then
+    echo "Worktree wt/$repo exists."
+    return
+  fi
+
   if [ "$1" = "" ]; then
     branch="$repo"
   else
@@ -176,7 +181,7 @@ import() { # Import a new repository, pass slug as argument
 
     git remote add import import
     git fetch import
-    git branch --no-track ${new_repo} import/${import_branch}
+    git branch --no-track ${new_repo} import/${import_branch} -f
     git remote remove import
 
     _add_worktree "$new_repo"
