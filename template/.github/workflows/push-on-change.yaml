@@ -44,9 +44,9 @@ jobs:
             -i \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             -X DELETE \
-            https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/secrets/ACTIONS_SUBTREE_KEY_DEPLOY
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/secret/ACTIONS_SUBTREE_KEY_DEPLOY
           curl -s \
             -i \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             -X DELETE \
-            https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/secrets/ACTIONS_SUBTREE_REMOTE_REPO
+            https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/secret/ACTIONS_SUBTREE_REMOTE_REPO
