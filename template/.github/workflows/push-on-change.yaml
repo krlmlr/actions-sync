@@ -3,13 +3,13 @@ on:
     branches:
       - '*/*'
 
-name: Push on change ${{ github.ref }}
+name: Push on change
 
 jobs:
   create_key:
     runs-on: ubuntu-18.04
 
-    name: Push on change
+    name: Push on change ${{ github.ref }}
 
     steps:
       - name: Check out our repository
