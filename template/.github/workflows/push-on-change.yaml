@@ -48,4 +48,3 @@ jobs:
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             -X DELETE \
             https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/secrets/ACTIONS_SUBTREE_REMOTE_REPO
-
