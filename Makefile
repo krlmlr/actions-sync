@@ -11,10 +11,7 @@ copy_templates: wt
 	./run.sh copy_templates
 
 .wt:
-	git worktree list | egrep -v '[[]main[]]' | cut -d " " -f 1 | xargs -r -n 1 git worktree remove
-	if [ -d $(echo wt/* | head -n 1) ]; then rmdir wt/*; fi
-	if [ -d wt ]; then rmdir wt; fi
-	git branch | egrep -v 'main' | xargs -r git branch -d || git branch | egrep -v 'main' | xargs -r git branch -D
+	./run.sh remove_worktrees
 
 # Requires krlmlr/scriptlets for git dm
 sync-with-%: wt
