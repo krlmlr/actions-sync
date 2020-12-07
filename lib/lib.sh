@@ -155,6 +155,14 @@ _wtdir_finish_merge() {
   fi
 }
 
+refresh_all() { # Refresh all repositories
+  git branch -r | egrep -v 'main' | sed 's#  origin/##' | grep '/' | parallel ./run.sh _force_import
+}
+
+_force_import() {
+  import "$1" --force
+}
+
 import() { # Import a new repository, pass slug as argument
   new_repo="$1"
 
@@ -165,9 +173,10 @@ import() { # Import a new repository, pass slug as argument
 
   shift
 
-  git clone https://${TOKEN_KEYS}@github.com/${new_repo} import
+  mkdir -p import/${new_repo}
+  git clone https://${TOKEN_KEYS}@github.com/${new_repo} import/${new_repo}
 
-  cd import
+  cd import/${new_repo}
 
   if [ $(git log --oneline -- .github/workflows | head -n 1 | wc -l) = 0 ]; then
     echo "NYI: importing empty branch"
@@ -177,17 +186,17 @@ import() { # Import a new repository, pass slug as argument
     FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty
     import_branch=$(git branch | cut -d " " -f 2)
 
-    cd ..
+    cd ../../..
 
-    git remote add import import
-    git fetch import
-    git branch --no-track ${new_repo} import/${import_branch} -f
-    git remote remove import
+    git remote add import/${new_repo} import/${new_repo}
+    git fetch import/${new_repo}
+    git branch --no-track ${new_repo} import/${new_repo}/${import_branch} -f
+    git remote remove import/${new_repo}
 
     _add_worktree "$new_repo"
   fi
 
-  rm -rf import
+  rm -rf import/${new_repo}
   _copy_template wt/${new_repo} -u origin HEAD "$@"
 }
 
