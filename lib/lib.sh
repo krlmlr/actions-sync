@@ -133,27 +133,14 @@ remove_worktrees() { # Remove wt/ directory and all local branches. Potentially 
   git branch | egrep -v 'main' | xargs -r git branch -d || git branch | egrep -v 'main' | xargs -r git branch -D
 }
 
-wt_merge_with() { # Merge a branch into all worktrees, don't commit. Pass local branch as argument
+wt_copy_to() { # Copy a branch into all worktrees, don't commit. Pass local branch as argument
   base="$1"
   shift
-  wt_git merge "$1" --no-commit
+  wt_git checkout -f "$base" -- .
 }
 
 wt_git_dm() { # Run git dm on all worktrees, requires krlmlr/scriptlets
   wt_git dm
-}
-
-wt_finish_merge() { # Finish merging, push
-  wt_run _wtdir_finish_merge
-}
-
-_wtdir_finish_merge() {
-  git_dir="$1"
-  shift
-  if git -C "$git_dir" diff-index --quiet HEAD; then
-    git -C "$git_dir" commit --no-edit
-    git -C "$git_dir" push
-  fi
 }
 
 refresh_all() { # Refresh all repositories
