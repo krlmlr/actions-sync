@@ -16,3 +16,11 @@ Manage all your GitHub Actions workflows across multiple projects.
     - workflow (needed to change workflows in other repos, implies repo)
 1. Copy generated token
 1. Store it as a secret named `TOKEN_KEYS`
+
+## Hacking
+
+### Update command scripts
+
+```sh
+./run.sh _make_commands
+```

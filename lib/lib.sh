@@ -23,24 +23,28 @@ echo "> $1"
 EOF
   chmod +x run.sh
 
-  sed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//\1/; p }' lib/lib.sh | parallel ./run.sh _make_command
+  sed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//\1 "\2"/; p }' lib/lib.sh | parallel ./run.sh _make_command
 }
 
 _make_command() {
-  command="$1"
+  _make_command_uq $@
+}
+
+_make_command_uq() {
+  command=$1
   shift
   comment="$@"
 
   echo ${command}
 
-  echo > ${command}.sh <<EOF
+  cat > ${command}.sh <<EOF
 #!/bin/bash
 
 . lib/lib.sh
 
 # ${comment}
 
-${command} "$@"
+${command} "\$@"
 EOF
 
   chmod +x ${command}.sh
