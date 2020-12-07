@@ -198,10 +198,12 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
   cd import/${new_repo}
 
   if [ $(git log --oneline -- .github/workflows | head -n 1 | wc -l) = 0 ]; then
-    if [ "$base" = "" ]; then
+    if [ -z "$base" ]; then
       echo "Remote repository ${new_repo} has no workflows, need base branch."
       exit 1
     fi
+
+    cd ../../..
 
     git branch --no-track ${new_repo} ${base} -f
   else
@@ -214,8 +216,9 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
     git fetch import/${new_repo}
     git branch --no-track ${new_repo} import/${new_repo}/${import_branch} -f
     git remote remove import/${new_repo}
-    rm -rf import/${new_repo}
   fi
+
+  rm -rf import/${new_repo}
 
   _add_worktree "$new_repo"
 
