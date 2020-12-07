@@ -115,10 +115,11 @@ _copy_template() {
   git -C "$repo" add .
   if ! git -C "$repo" diff-index --quiet HEAD; then
     git -C "$repo" commit -m 'Update push action'
-    git -C "$repo" push "$@"
   else
     echo "No changes"
   fi
+  # Always push, could be a copy from a base branch that has all push actions
+  git -C "$repo" push "$@"
 }
 
 remove_worktrees() { # Remove wt/ directory and all local branches. Potentially destructive, check output!
