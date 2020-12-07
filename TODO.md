@@ -1,12 +1,13 @@
 # TODO
 
+- Add workflow to reimport all
 - Import doesn't run push workflow
     - Add argument refresh=TRUE
     - Trigger manually if refresh=TRUE
+        - https://github.com/marketplace/actions/dispatch-action
 - Implement merge back
     - With import, refresh=FALSE
     - Test with RKazam
-- Add workflow to reimport all
 - Add code to prune branches in fork
 - Import other projects:
     - MultiLevelIPF (no GHA yet)
