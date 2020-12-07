@@ -1,9 +1,10 @@
 # TODO
 
+- Implement refresh
+    - workflow with parameter
 - Implement merge back
     - Replace subtree filter with more robust solution
     - Test with RKazam
-- Reimport all existing repositories
 - Add code to prune branches
 - Import other projects:
     - MultiLevelIPF (no GHA yet)
