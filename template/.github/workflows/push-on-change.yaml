@@ -29,23 +29,11 @@ jobs:
           echo "::set-output name=slug::$(echo $GITHUB_REF | sed 's#refs/heads/##')"
         shell: bash
 
-      - name: Check out remote repository
-        uses: actions/checkout@v2
-        with:
-          repository: ${{ steps.remote_repo.outputs.slug }}
-          path: remote/${{ steps.remote_repo.outputs.slug }}
-          fetch-depth: 0
-          token: ${{ secrets.TOKEN_KEYS }}
-
       - name: Merge subtree
+        env:
+          TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
-          set -x
-          cd remote/${{ steps.remote_repo.outputs.slug }}
-          git subtree pull -m "Merge from actions-subtree" --prefix=.github/workflows ../../.. ${{ steps.remote_repo.outputs.slug }} || (git rm -rf .github/workflows/.github && git add .github/workflows && git commit --no-edit)
-          if git rm -rf .github/workflows/.github; then
-            git commit --amend --no-edit
-          fi
-          git push
+          ./run.sh merge_into_remote ${{ steps.remote_repo.outputs.slug }}
 
       - name: Share private deploy key with remote repository
         uses: gliech/create-github-secret-action@v1
