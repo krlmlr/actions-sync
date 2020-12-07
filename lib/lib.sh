@@ -176,7 +176,7 @@ import() { # Import a new repository, pass slug as argument
   import_base "$1" "" "$@"
 }
 
-import() { # Import a new repository with fallback to a base branch, pass slug and base branch as argument
+import_base() { # Import a new repository with fallback to a base branch, pass slug and base branch as argument
   new_repo="$1"
 
   if [ "$new_repo" = "" ]; then
