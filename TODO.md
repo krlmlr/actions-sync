@@ -4,6 +4,10 @@
     - MultiLevelIPF (no GHA yet)
     - r-prof/profile
 - Add code to prune branches in fork
+- Add code to sync/copy base to other branches
+
+## Later
+
 - Remove hard-coded github.com
 
 ## Caveat
