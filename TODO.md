@@ -1,5 +1,9 @@
 # TODO
 
+- Harmonize
+    - rcc: r-prof/winch
+    - Show testthat output -> show test output
+    - Decide on R 3.2
 - Add code to prune branches in fork
 - Add workflow to create commands
 - Add code to sync/copy base to other branches
