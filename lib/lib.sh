@@ -236,9 +236,10 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
 
   if [ $(git log --oneline -- .github/workflows | head -n 1 | wc -l) = 0 ]; then
     echo "Green field"
-    # Green field, cherry-pick all commits
-    git cherry-pick ..actions/${repo} --allow-empty -m 1 --no-edit
-    git push -n
+    # Green field, squash-merge all commits
+    git merge actions/${repo} --allow-unrelated --squash --ff
+    git commit --no-edit
+    git push
   else
     echo "Integrate"
     # At least one remote commit
