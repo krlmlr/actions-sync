@@ -105,9 +105,9 @@ _copy_template() {
   echo "$1"
   cp -r template/{*,.??*} "$1"
   git -C "$1" add .
-  if git -C "$1" diff-index --quiet HEAD; then
+  if ! git -C "$1" diff-index --quiet HEAD; then
     git -C "$1" commit -m 'Update push action'
-    git -C "$1" push
+    git -C "$1" push -u
   else
     echo "No changes"
   fi
