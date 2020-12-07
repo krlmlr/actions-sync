@@ -6,6 +6,7 @@
     - Replace subtree filter with more robust solution
 - Add code to prune branches
 - Import other projects:
+    - MultiLevelIPF
     - tibble
     - rprojroot
     - roxygen2md
@@ -13,6 +14,7 @@
     - pillar
     - r-prof/*
     - formattable
+    - wrswoR*
 - Think about export: enable a project that has no GHA yet
 - How to resend secret to remote repository -- manual workflow run?
 - Trigger resend of secret when key is regenerated
