@@ -35,18 +35,3 @@ jobs:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
           ./run.sh merge_into_remote ${{ steps.remote_repo.outputs.slug }}
-
-      - name: Delete secrets on remote repository
-        env:
-          TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
-        run: |
-          curl -s \
-            -i \
-            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-            -X DELETE \
-            https://api.github.com/repos/${{ steps.remote_repo.outputs.slug }}/actions/secrets/ACTIONS_SUBTREE_KEY_DEPLOY
-          curl -s \
-            -i \
-            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-            -X DELETE \
-            https://api.github.com/repos/${{ steps.remote_repo.outputs.slug }}/actions/secrets/ACTIONS_SUBTREE_REMOTE_REPO
