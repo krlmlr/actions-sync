@@ -20,6 +20,12 @@ jobs:
         run: |
           git log HEAD^.. --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
 
+      - name: Get branch name
+        id: remote_repo
+        run: |
+          echo "::set-output name=slug::$(echo $GITHUB_REF | sed 's#refs/heads/##')"
+        shell: bash
+
       - name: Import
         run: |
-          ./run.sh import ${{ github.ref }}
+          ./run.sh import ${{ steps.remote_repo.outputs.slug }}
