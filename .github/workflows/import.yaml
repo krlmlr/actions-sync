@@ -12,7 +12,7 @@ jobs:
   import_repo:
     runs-on: ubuntu-18.04
 
-    name: Import/refresh ${{ steps.remote_repo.outputs.slug }} ${{ github.event.inputs.remote_repo }}
+    name: Import/refresh ${{ github.ref }} ${{ github.event.inputs.remote_repo }}
 
     steps:
       - name: Check out repository
