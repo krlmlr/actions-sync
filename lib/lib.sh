@@ -139,10 +139,6 @@ wt_copy_to() { # Copy a branch into all worktrees, don't commit. Pass local bran
   wt_git checkout -f "$base" -- .
 }
 
-wt_git_dm() { # Run git dm on all worktrees, requires krlmlr/scriptlets
-  wt_git dm
-}
-
 refresh_all() { # Refresh all repositories
   git branch -r | egrep -v 'main' | sed 's#  origin/##' | grep '/' | parallel ./run.sh _force_import
 }
