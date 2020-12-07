@@ -151,6 +151,10 @@ import() { # Import a new repository, pass slug as argument
   new_repo="$1"
   shift
 
+  if [ "$new_repo" = "" ]; then
+    echo "Usage: $0 owner/repo"
+  fi
+
   _add_worktree "$new_repo" --detach
   ( cd wt/"$new_repo" && git checkout --orphan "$new_repo" )
 }
