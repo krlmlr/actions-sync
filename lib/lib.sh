@@ -1,7 +1,8 @@
 set -e
 
 _make_commands() {
-  rm *.sh
+  rm -rf bin
+  mkdir bin
 
   cat > run.sh <<"EOF"
 #!/bin/bash
@@ -37,7 +38,7 @@ _make_command_uq() {
 
   echo ${command}
 
-  cat > ${command}.sh <<EOF
+  cat > bin/${command} <<EOF
 #!/bin/bash
 
 . lib/lib.sh
@@ -47,7 +48,7 @@ _make_command_uq() {
 ${command} "\$@"
 EOF
 
-  chmod +x ${command}.sh
+  chmod +x bin/${command}
 }
 
 add_worktrees() { # Add all branches representing workflows in foreign repositories as worktrees in the wt/ directory
