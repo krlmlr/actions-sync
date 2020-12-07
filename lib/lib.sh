@@ -1,5 +1,51 @@
 set -e
 
+_make_commands() {
+  rm *.sh
+
+  cat > run.sh <<"EOF"
+#!/bin/bash
+
+. lib/lib.sh
+
+if [ "$1" = "" ]; then
+  echo "Usage: $0 command ..."
+  echo
+  echo "with command one of:"
+  echo
+  sed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//- \1: \2/; p }' lib/lib.sh
+  exit 1
+fi
+
+echo "> $1"
+
+"$@"
+EOF
+  chmod +x run.sh
+
+  sed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//\1/; p }' lib/lib.sh | parallel ./run.sh _make_command
+}
+
+_make_command() {
+  command="$1"
+  shift
+  comment="$@"
+
+  echo ${command}
+
+  echo > ${command}.sh <<EOF
+#!/bin/bash
+
+. lib/lib.sh
+
+# ${comment}
+
+${command} "$@"
+EOF
+
+  chmod +x ${command}.sh
+}
+
 add_worktrees() { # Add all branches representing workflows in foreign repositories as worktrees in the wt/ directory
 	git branch -r | egrep -v 'main' | sed 's#  origin/##' | xargs -r -n 1 ./run.sh _add_worktree
 }
