@@ -149,12 +149,67 @@ _wtdir_finish_merge() {
 
 import() { # Import a new repository, pass slug as argument
   new_repo="$1"
-  shift
 
   if [ "$new_repo" = "" ]; then
     echo "Usage: $0 owner/repo"
+    exit 1
   fi
 
-  _add_worktree "$new_repo" --detach
-  ( cd wt/"$new_repo" && git checkout --orphan "$new_repo" )
+  shift
+
+  git clone https://${TOKEN_KEYS}@github.com/${new_repo} import
+
+  cd import
+
+  if [ $(git log --oneline -- .github/workflows | head -n 1 | wc -l) = 0 ]; then
+    echo "NYI: importing empty branch"
+    # https://stackoverflow.com/a/53919745/946850
+    false
+  else
+    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty
+    import_branch=$(git branch | cut -d " " -f 2)
+
+    cd ..
+
+    git remote add import import
+    git fetch import
+    git branch --no-track ${new_repo} import/${import_branch}
+    git remote remove import
+
+    _add_worktree "$new_repo"
+  fi
+
+  _copy_template wt/${new_repo}
+}
+
+merge_into_remote() { # Merge our workflow into the remote repository. Makes worktree unusable. Takes the slug as argument
+  repo="$1"
+  if [ "$repo" = "" ]; then
+    echo "Usage: $0 owner/repo"
+    exit 1
+  fi
+
+  shift
+
+  _provide_wt
+
+  cd wt/${repo}
+  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
+  cd ../../..
+
+  git clone https://${TOKEN_KEYS}@github.com/${repo} remote
+  cd remote
+
+  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty -f
+  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
+
+  import_branch=$(git branch | cut -d " " -f 2)
+  git branch subtree
+  git reset --hard origin/${import_branch}
+
+  git remote add actions ..
+  git fetch actions
+
+  git cherry-pick subtree...actions/${repo} --no-edit
+  git push
 }
