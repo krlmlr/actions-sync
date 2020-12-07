@@ -1,9 +1,5 @@
 # TODO
 
-- Switch to scheduled sync back
-    - Add local sync back action to every branch
-- Think about sync back on remote change
-    - No
 - Import other projects:
     - MultiLevelIPF (no GHA yet)
     - r-prof/profile
@@ -16,3 +12,10 @@
 - Remove hard-coded github.com
 - How to remove?
     - Remove branch, foreign workflow won't notice
+
+## Done
+
+- Switch to scheduled sync back
+    - Add local sync back action to every branch: doesn't work, scheduled works only for main branch
+- Think about sync back on remote change
+    - No
