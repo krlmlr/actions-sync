@@ -190,6 +190,8 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
 
   shift
 
+  _provide_wt
+
   mkdir -p import/${new_repo}
   git clone https://${TOKEN_KEYS}@github.com/${new_repo} import/${new_repo}
 
