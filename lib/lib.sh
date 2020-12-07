@@ -103,6 +103,7 @@ wt_pull() { # Run git pull --ff-only for all worktrees
 
 copy_templates() { # Copy workflow templates into foreign repository
   rm -rf wt/*/*/.github
+  rm -rf wt/*/*/actions-subtree.yaml
   wt_run _copy_template
 }
 
