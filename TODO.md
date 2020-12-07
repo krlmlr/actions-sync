@@ -1,6 +1,7 @@
 # TODO
 
 - Harmonize
+    - rcc-dev.yaml
     - rcc: r-prof/winch
     - Show testthat output -> show test output
     - Decide on R 3.2
