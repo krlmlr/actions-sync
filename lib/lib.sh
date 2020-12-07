@@ -112,7 +112,7 @@ _copy_template() {
   shift
 
   echo "$repo"
-  cp -r template/{.??*} "$repo"
+  cp -r template/.github "$repo"
   git -C "$repo" add .
   if ! git -C "$repo" diff-index --quiet HEAD; then
     git -C "$repo" commit -m 'Update push action'
