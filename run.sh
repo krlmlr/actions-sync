@@ -8,8 +8,12 @@ _add_worktree() {
   git worktree add wt/"$1" "$1"
 }
 
+wt_run() { # Run command in all worktrees, use '{}' as placeholder for worktree directory
+	find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' ./run.sh "$@"
+}
+
 wt_git() { # Run git command in all worktrees
-	find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' ./run.sh _wtdir_git '{}' "$@"
+	wt_run _wtdir_git '{}' "$@"
 }
 
 _wtdir_git() {
@@ -51,6 +55,30 @@ remove_worktrees() { # Remove wt/ directory and all local branches. Potentially 
   fi
 	git branch | egrep -v 'main' | xargs -r git branch -d || git branch | egrep -v 'main' | xargs -r git branch -D
 }
+
+wt_merge_with() { # Merge a branch into all worktrees, don't commit
+  base="$1"
+  shift
+  wt_git merge "$1" --no-commit
+}
+
+wt_git_dm() { # Run git dm on all worktrees, requires krlmlr/scriptlets
+  wt_git dm
+}
+
+wt_finish_merge() { # Finish merging, push
+  wt_run _wtdir_finish_merge
+}
+
+_wtdir_finish_merge() {
+  git_dir="$1"
+  shift
+	if git -C "$git_dir" diff-index --quiet HEAD; then
+    git -C "$git_dir" commit --no-edit
+	  git -C "$git_dir" push
+  fi
+}
+
 
 if [ "$1" = "" ]; then
   echo "Usage: $0 command ..."
