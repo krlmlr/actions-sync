@@ -1,13 +1,15 @@
 on:
+  schedule:
+    - cron: '0 0 * * *'
   workflow_dispatch:
 
-name: Refresh all remote repositories
+name: Refresh remote repository
 
 jobs:
   import_repo:
     runs-on: ubuntu-18.04
 
-    name: Refresh all remote repositories
+    name: Refresh remote repository
 
     steps:
       - name: Check out repository
@@ -24,4 +26,4 @@ jobs:
         env:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
-          ./run.sh refresh_all
+          ./run.sh import ${{ GITHUB_REF }}
