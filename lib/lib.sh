@@ -70,7 +70,14 @@ _add_worktree() {
 }
 
 wt_run() { # Run command in all worktrees, use '{}' as placeholder for worktree directory
+  _provide_wt
 	find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' ./run.sh "$@"
+}
+
+_provide_wt() {
+  if ! [ -d wt ]; then
+    add_worktrees
+  fi
 }
 
 wt_git() { # Run git command in all worktrees
@@ -91,7 +98,7 @@ wt_pull() { # Run git pull --ff-only for all worktrees
 
 copy_templates() { # Copy workflow templates into foreign repository
 	rm -rf wt/*/*/.github
-	find wt/*/* -maxdepth 0 -type d | parallel -q ./run.sh _copy_template
+	wt_run _copy_template
 }
 
 _copy_template() {
