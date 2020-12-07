@@ -27,11 +27,16 @@ jobs:
       - name: Get branch name
         id: remote_repo
         run: |
-          echo "::set-output name=slug::$(echo $GITHUB_REF | sed 's#refs/heads/##')${{ github.event.inputs.remote_repo }}"
+          echo "::set-output name=slug::$(echo $GITHUB_REF | sed 's#refs/heads/##')"
         shell: bash
 
       - name: Import
         env:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
-          ./run.sh import ${{ steps.remote_repo.outputs.slug }} --force
+          if [ -n "${{ github.event.inputs.remote_repo }}" ]; then
+            remote_repo=${{ github.event.inputs.remote_repo }}
+          else
+            remote_repo=${{ steps.remote_repo.outputs.slug }}
+          fi
+          ./run.sh import $remote_repo --force
