@@ -1,0 +1,25 @@
+on:
+  create:
+
+name: Import remote repositories
+
+jobs:
+  import_repos:
+    runs-on: ubuntu-18.04
+
+    name: Import remote repositories
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v2
+        with:
+          ref: main
+          token: ${{ secrets.TOKEN_KEYS }}
+
+      - name: Configure Git identity
+        run: |
+          git log HEAD^.. --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
+
+      - name: Import
+        run: |
+          ./run.sh import ${{ github.ref }}
