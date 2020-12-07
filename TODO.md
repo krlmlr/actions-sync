@@ -1,7 +1,8 @@
 # TODO
 
+- Check if sync job has run
+- Fix failing workflows
 - Harmonize
-    - rcc-dev.yaml
     - rcc: r-prof/winch
     - Begin custom:
     - Show testthat output -> show test output
