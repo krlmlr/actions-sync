@@ -18,3 +18,4 @@
 - Think about export: enable a project that has no GHA yet
 - How to resend secret to remote repository -- manual workflow run?
 - Trigger resend of secret when key is regenerated
+- Remove hard-coded github.com
