@@ -2,10 +2,10 @@ all:
 	false
 
 wt:
-	git branch -r | egrep -v 'main' | sed 's#  origin/##' | xargs -r -n 1 -I '{}' git worktree add wt/'{}' '{}'
+	git branch -r | egrep -v 'main' | sed 's#  origin/##' | xargs -r -n 1 ./run.sh add_worktree
 
 pull:
-	find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' sh -c "echo '{}' && git -C '{}' pull --ff-only"
+	find wt/*/* -maxdepth 0 -type d | parallel -q ./run.sh pull
 
 copy-templates: wt
 	rm -rf wt/*/*/.github
