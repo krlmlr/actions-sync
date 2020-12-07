@@ -19,6 +19,10 @@ Manage all your GitHub Actions workflows across multiple projects.
 
 ## Hacking
 
+Code is in `lib/lib.sh`.
+Public functions don't start with an underscore and have a comment on the line of the function definition.
+This is used for creating the command scripts and for the usage.
+
 ### Update command scripts
 
 ```sh
