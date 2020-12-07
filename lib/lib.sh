@@ -187,6 +187,7 @@ import() { # Import a new repository, pass slug as argument
     _add_worktree "$new_repo"
   fi
 
+  rm -rf import
   _copy_template wt/${new_repo} -u origin HEAD "$@"
 }
 
