@@ -1,9 +1,7 @@
 # TODO
 
-- Import other projects:
-    - MultiLevelIPF (no GHA yet)
-    - r-prof/profile
 - Add code to prune branches in fork
+- Add workflow to create commands
 - Add code to sync/copy base to other branches
 
 ## Later
