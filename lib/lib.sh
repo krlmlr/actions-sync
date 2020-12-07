@@ -220,7 +220,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   git remote add actions ..
   git fetch actions
 
-  if [ $(git log --format:oneline actions/${repo} ^subtree | head -n 1 | wc -l) -gt 0]; then
+  if [ $(git log --pretty=oneline actions/${repo} ^subtree | head -n 1 | wc -l) -gt 0 ]; then
     git cherry-pick actions/${repo} ^subtree --allow-empty --first-parent -m 1 --no-edit
     git push
   fi
