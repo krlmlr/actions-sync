@@ -235,10 +235,12 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   git fetch actions
 
   if [ $(git log --oneline -- .github/workflows | head -n 1 | wc -l) = 0 ]; then
+    echo "Green field"
     # Green field, cherry-pick all commits
     git cherry-pick ..actions/${repo} --allow-empty -m 1 --no-edit
     git push -n
   else
+    echo "Integrate"
     # At least one remote commit
     FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --subdirectory-filter .github/workflows --prune-empty -f
     FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
