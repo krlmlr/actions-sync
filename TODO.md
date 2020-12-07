@@ -13,7 +13,6 @@
     - pillar
     - r-prof/*
     - formattable
-- Extract bash script to be sourced which provides functions
 - Think about export: enable a project that has no GHA yet
 - How to resend secret to remote repository -- manual workflow run?
 - Trigger resend of secret when key is regenerated
