@@ -17,6 +17,7 @@ jobs:
       - name: Check out our repository
         uses: actions/checkout@v2
         with:
+          branch: main
           fetch-depth: 0
 
       - name: Configure Git identity
