@@ -1,13 +1,18 @@
 on:
   create:
+  workflow_dispatch:
+    inputs:
+      remote_repo:
+        description: 'Remote repository (owner/repo)'
+        required: true
 
-name: Import remote repositories
+name: Import/refresh remote repositories
 
 jobs:
-  import_repos:
+  import_repo:
     runs-on: ubuntu-18.04
 
-    name: Import remote repositories
+    name: Import/refresh remote repositories
 
     steps:
       - name: Check out repository
@@ -22,7 +27,7 @@ jobs:
       - name: Get branch name
         id: remote_repo
         run: |
-          echo "::set-output name=slug::$(echo $GITHUB_REF | sed 's#refs/heads/##')"
+          echo "::set-output name=slug::$(echo $GITHUB_REF | sed 's#refs/heads/##')${{ github.event.inputs.remote_repo }}"
         shell: bash
 
       - name: Import
