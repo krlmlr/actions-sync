@@ -244,21 +244,28 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   git clone https://${TOKEN_KEYS}@github.com/${repo} remote
   cd remote
 
-  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --subdirectory-filter .github/workflows --prune-empty -f
-  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
-
-  import_branch=$(git branch | cut -d " " -f 2)
-  git branch subtree
-  git reset --hard origin/${import_branch}
-
   git remote add actions ..
   git fetch actions
 
-  if [ $(git log --pretty=oneline actions/${repo} ^subtree | head -n 1 | wc -l) -gt 0 ]; then
-    git cherry-pick actions/${repo} ^subtree --allow-empty --first-parent -m 1 --no-edit
-    git push
+  if [ $(git log --oneline -- .github/workflows | head -n 1 | wc -l) = 0 ]; then
+    # Green field, cherry-pick all commits
+    git cherry-pick ..actions/${repo} --allow-empty -m 1 --no-edit
+    git push -n
   else
-    echo "Nothing to cherry-pick"
+    # At least one remote commit
+    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --subdirectory-filter .github/workflows --prune-empty -f
+    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
+
+    import_branch=$(git branch | cut -d " " -f 2)
+    git branch subtree
+    git reset --hard origin/${import_branch}
+
+    if [ $(git log --pretty=oneline actions/${repo} ^subtree | head -n 1 | wc -l) -gt 0 ]; then
+      git cherry-pick actions/${repo} ^subtree --allow-empty --first-parent -m 1 --no-edit
+      git push
+    else
+      echo "Nothing to cherry-pick"
+    fi
   fi
   cd ..
   rm -rf remote
