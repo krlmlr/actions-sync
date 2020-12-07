@@ -25,4 +25,4 @@ jobs:
         env:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
-          ./run.sh import_all
+          ./run.sh refresh_all
