@@ -16,7 +16,7 @@ copy-templates: wt
 
 .wt:
 	git worktree list | egrep -v '[[]main[]]' | cut -d " " -f 1 | xargs -r -n 1 git worktree remove
-	if [ -d wt/* ]; then rmdir wt/*; fi
+	if [ -d $(echo wt/* | head -n 1) ]; then rmdir wt/*; fi
 	if [ -d wt ]; then rmdir wt; fi
 	git branch | egrep -v 'main' | xargs -r git branch -d || git branch | egrep -v 'main' | xargs -r git branch -D
 
