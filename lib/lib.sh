@@ -115,7 +115,7 @@ _copy_template() {
 
 remove_worktrees() { # Remove wt/ directory and all local branches. Potentially destructive, check output!
   git worktree list | egrep -v '[[]main[]]' | cut -d " " -f 1 | xargs -r -n 1 git worktree remove
-  if [ -d $(ls -d wt/* | head -n 1) ]; then
+  if [ -d $(echo wt/* | cut -d " " -f 1) ]; then
     rmdir wt/*
   fi
   if [ -d wt ]; then
