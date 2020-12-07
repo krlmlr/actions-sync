@@ -101,8 +101,8 @@ wt_pull() { # Run git pull --ff-only for all worktrees
   wt_git pull --ff-only
 }
 
-copy_templates() { # Copy workflow templates into foreign repository
-  wt_run _copy_template
+copy_templates() { # Copy workflow templates into foreign repositories
+  wt_run _copy_template '{}'
 }
 
 _copy_template() {
