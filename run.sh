@@ -1,6 +1,10 @@
 #!/bin/bash
 
-add_worktree() {
+add_worktrees() {
+	git branch -r | egrep -v 'main' | sed 's#  origin/##' | xargs -r -n 1 ./run.sh _add_worktree
+}
+
+_add_worktree() {
   git worktree add wt/"$1" "$1"
 }
 

@@ -2,7 +2,7 @@ all:
 	false
 
 wt:
-	git branch -r | egrep -v 'main' | sed 's#  origin/##' | xargs -r -n 1 ./run.sh add_worktree
+	./run.sh add_worktrees
 
 pull:
 	find wt/*/* -maxdepth 0 -type d | parallel -q ./run.sh pull
