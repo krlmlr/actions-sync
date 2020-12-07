@@ -1,0 +1,7 @@
+#!/bin/bash
+
+. lib/lib.sh
+
+# "Import a new repository with fallback to a base branch, pass slug and base branch as argument"
+
+import_base "$@"
