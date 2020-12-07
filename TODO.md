@@ -1,14 +1,13 @@
 # TODO
 
 - Switch to scheduled sync back
-    - Cleanup secrets from remote repositories
-    - Remove code that generates secret
-    - Remove deploy key
+    - Add local sync back action to every branch
 - Think about sync back on remote change
-- Add code to prune branches in fork
+    - No
 - Import other projects:
     - MultiLevelIPF (no GHA yet)
     - r-prof/profile
+- Add code to prune branches in fork
 - Implement merge back
     - With import, refresh=FALSE
     - Test with RKazam
