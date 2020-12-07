@@ -166,11 +166,27 @@ _force_import() {
 
 import() { # Import a new repository, pass slug as argument
   new_repo="$1"
-
   if [ "$new_repo" = "" ]; then
     echo "Usage: $0 owner/repo"
     exit 1
   fi
+
+  shift
+
+  import_base "$1" "" "$@"
+}
+
+import() { # Import a new repository with fallback to a base branch, pass slug and base branch as argument
+  new_repo="$1"
+
+  if [ "$new_repo" = "" ]; then
+    echo "Usage: $0 owner/repo base-owner/base-repo"
+    exit 1
+  fi
+
+  shift
+
+  base="$1"
 
   shift
 
@@ -180,9 +196,12 @@ import() { # Import a new repository, pass slug as argument
   cd import/${new_repo}
 
   if [ $(git log --oneline -- .github/workflows | head -n 1 | wc -l) = 0 ]; then
-    echo "NYI: importing empty branch"
-    # https://stackoverflow.com/a/53919745/946850
-    false
+    if [ "$base" = "" ]; then
+      echo "Remote repository ${new_repo} has no workflows, need base branch."
+      exit 1
+    fi
+
+    git branch --no-track ${new_repo} ${base} -f
   else
     FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty
     import_branch=$(git branch | cut -d " " -f 2)
@@ -193,11 +212,11 @@ import() { # Import a new repository, pass slug as argument
     git fetch import/${new_repo}
     git branch --no-track ${new_repo} import/${new_repo}/${import_branch} -f
     git remote remove import/${new_repo}
-
-    _add_worktree "$new_repo"
+    rm -rf import/${new_repo}
   fi
 
-  rm -rf import/${new_repo}
+  _add_worktree "$new_repo"
+
   _copy_template wt/${new_repo} -u origin HEAD "$@"
 }
 

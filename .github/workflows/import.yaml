@@ -1,10 +1,12 @@
 on:
-  create:
   workflow_dispatch:
     inputs:
       remote_repo:
         description: 'Remote repository (owner/repo)'
         required: true
+      base:
+        description: 'Base repository (owner/repo) if remote repo has no workflows'
+        required: false
 
 name: Import/refresh remote repositories
 
@@ -24,19 +26,8 @@ jobs:
         run: |
           git log -n 1 --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
 
-      - name: Get branch name
-        id: remote_repo
-        run: |
-          echo "::set-output name=slug::$(echo $GITHUB_REF | sed 's#refs/heads/##')"
-        shell: bash
-
       - name: Import
         env:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
-          if [ -n "${{ github.event.inputs.remote_repo }}" ]; then
-            remote_repo=${{ github.event.inputs.remote_repo }}
-          else
-            remote_repo=${{ steps.remote_repo.outputs.slug }}
-          fi
-          ./run.sh import $remote_repo --force
+          ./run.sh import_base "${{ github.event.inputs.remote_repo }}" "${{ github.event.inputs.base }}" --force
