@@ -5,7 +5,7 @@ Manage all your GitHub Actions workflows across multiple projects.
 ## Setup
 
 1. Fork this project.
-2. FIXME: Run `make prune` to remove all branches other than `main`.
+2. FIXME: Run `./run.sh prune` to remove all branches other than `main`.
 3. Create a PAT and store it as a secret.
 
 ### PAT

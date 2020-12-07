@@ -27,4 +27,4 @@ jobs:
 
       - name: Update
         run: |
-          make copy_templates
+          ./run.sh copy_templates
