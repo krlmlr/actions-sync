@@ -1,9 +1,8 @@
 # TODO
 
 - Fix failing workflows
+    - Add overview of build statuses for all projects
 - Harmonize
-    - rcc: r-prof/winch
-    - Begin custom:
     - Show testthat output -> show test output
     - Decide on R 3.2
 - Add code to prune branches in fork
