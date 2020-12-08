@@ -42,7 +42,7 @@
         |
         ```
 
-    - Can be solved only by keeping `.github/workflows/.github` directory, or by synchronization on refresh/reimport, e.g. "FIXME: If branch exists, perform double rebase; fall back to force if fails"
+    - Solved by double rebase with fallback to force-push
 
 - Merges in local history can't be easily recreated in the remote repos
 
