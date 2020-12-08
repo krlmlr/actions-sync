@@ -120,7 +120,9 @@ For R projects, workflows may differ across projects:
 - Additional software may need to be installed for some projects
 - The test matrix may contain additional entries for some projects
 
-To make this maintainable, I use a `base` branch that contains the common parts.
+This will be similar also for other environments.
+
+To make this maintainable in the longer term, I use a `base` branch that contains the common parts.
 Extension points are placed in the `.yaml` files surrounded by "# Begin custom:" and "# End custom:" comments.
 If the base workflow changes, most of the time the change can be cherry-picked into the project branches without conflicts: the comments serve as anchors that isolate the custom from the common parts.
 
