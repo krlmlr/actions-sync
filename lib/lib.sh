@@ -198,7 +198,7 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
     git remote add import/${new_repo} import/${new_repo}
     git fetch import/${new_repo}
 
-    if [ -n $(git branch --list ${new_repo}) ]; then
+    if [ -n "$(git branch --list ${new_repo})" ]; then
       _add_worktree "$new_repo"
       if ! ( cd wt/"$new_repo" && git rebase import/${new_repo}/${import_branch} && git rebase ); then
         echo "Rebase failed, falling back to brute force"
