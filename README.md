@@ -9,7 +9,10 @@ Apply changes to similar workflows at once across all your projects.
 1. Fork this project.
 1. Make private if needed.
 1. Clone it locally.
-1. Remove all branches other than `main` in your fork:
+1. Remove all branches other than `main` in your fork.
+
+    - Substitue `origin` with the name of your remote if needed
+    - Omit the final `| sh` to see what's executed
 
     ```sh
     git branch -r | grep " origin/" | grep -v /main | sed -r 's#^ +([^/]+)/(.*)$#git push \1 :\2#' | sh
