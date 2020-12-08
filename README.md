@@ -2,7 +2,7 @@
 
 Manage all your GitHub Actions workflows across multiple projects.
 Synchronize to and from all your projects.
-Apply changes at once across all your projects.
+Apply changes to similar workflows at once across all your projects.
 
 ## Setup
 
@@ -44,7 +44,7 @@ Also, branches that don't have a slash in their name are not synchronized with r
 > - [r-lib/rprojroot](https://github.com/krlmlr/actions-subtree/tree/r-lib/rprojroot)
 > - ...
 >
-> The top level of the latter three branches contain the `.yaml` files from the `.github/workflows` directory in the remote repositories.
+> The top level of these branches contain the `.yaml` files from the `.github/workflows` directory in the remote repositories.
 > It also contains its own `.github` directory that powers the synchronization but is not copied to the remote repository.
 
 
@@ -58,10 +58,11 @@ Also, branches that don't have a slash in their name are not synchronized with r
     1. `bin/import_base owner/repo base-owner/base-repo`
 1. Synchronization from this repository to the remote repositories:
     - automatically via GitHub Actions, on push
-    - there is also a manual ways but tihs will bork your work trees
-1. Synchronization from the remote repositories to this repositories, one of:
+1. Synchronization from the remote repositories to this repositories:
     - automatically via GitHub Actions, on schedule or triggered
-    - there is also a manual ways but tihs will bork your work trees
+
+There are also manual ways to synchronize but this will bork your work trees.
+Use with care!
 
 
 ## Editing workflows locally
@@ -91,24 +92,6 @@ Requires GNU `parallel`.
         bin/wt_git status
         ```
 
-    - Apply the last commit of the `foo` branch to all other branches:
-
-        ```sh
-        bin/wt_git cherry-pick owner/repo
-        ```
-
-    - Copy over `workflow.yaml` from the `foo` branch to all other branches:
-
-        ```sh
-        bin/wt_git checkout -f foo -- workflow.yaml
-        ```
-
-    - Copy over the contents of the `foo` branch to all other branches:
-
-        ```sh
-        bin/wt_copy_to base-branch
-        ```
-
     - Show diff for all worktrees:
 
         ```sh
@@ -128,6 +111,55 @@ Requires GNU `parallel`.
 1. Clean up all worktrees
     - `bin/remove_worktrees`
 
+
+## Maintaining similar yet different workflows across projects
+
+For R projects, workflows may differ across projects:
+
+- Success conditions for CI may be loosened for some projects or on some R versions
+- Additional software may need to be installed for some projects
+- The test matrix may contain additional entries for some projects
+
+To make this maintainable, I use a `base` branch that contains the common parts.
+Extension points are placed in the `.yaml` files surrounded by "# Begin custom:" and "# End custom:" comments.
+If the base workflow changes, most of the time the change can be cherry-picked into the project branches without conflicts: the comments serve as anchors that isolate the custom from the common parts.
+
+- Apply the last commit of the `base` branch to all other branches:
+
+    ```sh
+    bin/wt_git cherry-pick base
+    ```
+
+- Apply the last three commits of the `base` branch to all other branches:
+
+    ```sh
+    bin/wt_git cherry-pick base~3..base
+    ```
+
+If a workflow in a remote repository changes common parts, they are brought back into the `base` branch.
+
+    ```
+    cd wt/base
+    git checkout -f owner/repo -- .
+    # Keep only desired changes
+    git add .
+    git commit -f
+    cd ../..
+    ```
+
+For a "tabula rasa" style setup, we can also overwrite worktrees with the contents of a branch.
+
+- Copy over `workflow.yaml` from the `base` branch to all other branches:
+
+    ```sh
+    bin/wt_git checkout -f base -- workflow.yaml
+    ```
+
+- Copy over the contents of the `base` branch to all other branches:
+
+    ```sh
+    bin/wt_copy_to base-branch
+    ```
 
 ## Hacking
 
