@@ -8,10 +8,12 @@
 - Add code to prune branches in fork
 - Add workflow to create commands
 - Add code to sync/copy base to other branches
+- BUG: Repositories cannot be named main, fix grep expressions searching for `main`
 
 ## Later
 
 - Remove hard-coded github.com
+- Use git-filter-repo
 
 ## Caveat
 
