@@ -15,7 +15,7 @@ if [ "$1" = "" ]; then
   echo "with command one of:"
   echo
   sed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//- \1: \2/; p }' lib/lib.sh
-  exit 1
+  return 1
 fi
 
 echo "> $1"
@@ -151,7 +151,7 @@ import() { # Import a new repository, pass slug as argument
   new_repo="$1"
   if [ "$new_repo" = "" ]; then
     echo "Usage: $0 owner/repo"
-    exit 1
+    return 1
   fi
 
   shift
@@ -164,7 +164,7 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
 
   if [ "$new_repo" = "" ]; then
     echo "Usage: $0 owner/repo base-owner/base-repo"
-    exit 1
+    return 1
   fi
 
   shift
@@ -183,7 +183,7 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
   if [ $(git log --oneline -- .github/workflows | head -n 1 | wc -l) = 0 ]; then
     if [ -z "$base" ]; then
       echo "Remote repository ${new_repo} has no workflows, need base branch."
-      exit 1
+      return 1
     fi
 
     cd ../../..
@@ -224,7 +224,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   repo="$1"
   if [ "$repo" = "" ]; then
     echo "Usage: $0 owner/repo"
-    exit 1
+    return 1
   fi
 
   shift
