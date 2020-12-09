@@ -251,15 +251,30 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   else
     echo "Integrate"
     # At least one remote commit
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --subdirectory-filter .github/workflows --prune-empty -f
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
+    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty -f
+    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
 
     import_branch=$(git branch | cut -d " " -f 2)
     git branch subtree
     git reset --hard origin/${import_branch}
 
-    if [ $(git log --pretty=oneline actions/${repo} ^subtree | head -n 1 | wc -l) -gt 0 ]; then
-      git cherry-pick actions/${repo} ^subtree --allow-empty --first-parent -m 1 --no-edit
+    # Rebase actions-subtree onto subtree
+    # to ignore differences in committer date
+    # and out-of-order commits
+    git branch actions-subtree actions/${repo}
+    git checkout actions-subtree
+
+    if ! git rebase subtree; then
+      echo "Warning: Rebase failed"
+      git rebase --abort
+    fi
+
+    git checkout ${import_branch}
+
+    # Cherry-pick differences onto target branch
+    # FIXME: Will a rebase work here too?
+    if [ $(git log --pretty=oneline actions-subtree ^subtree | head -n 1 | wc -l) -gt 0 ]; then
+      git cherry-pick actions-subtree ^subtree --allow-empty --first-parent -m 1 --no-edit
       git push
     else
       echo "Nothing to cherry-pick"
