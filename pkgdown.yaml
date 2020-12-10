@@ -62,6 +62,10 @@ jobs:
           done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "18.04"); if (length(req) > 0) cat(req, sep = "\n")')
 
       # Begin custom: before install
+      - name: Install protobuf
+        if: runner.os == 'Linux'
+        run: |
+          apt install libprotoc-dev libprotobuf-dev protobuf-compiler
       # End custom: before install
 
       - name: Install pkgdown sysdeps
