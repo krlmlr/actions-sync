@@ -92,7 +92,7 @@ jobs:
       - name: Install protobuf
         if: runner.os == 'Linux'
         run: |
-          apt install libprotoc-dev libprotobuf-dev protobuf-compiler
+          sudo apt-get install libprotoc-dev libprotobuf-dev protobuf-compiler
       # End custom: before install
 
       - name: Install dependencies
