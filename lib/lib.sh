@@ -206,7 +206,7 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
         git branch --no-track ${new_repo} import/${new_repo}/${import_branch} -f
       fi
     else
-      # Branch doesn't exist: recreate
+      # Branch doesn't exist: create
       git branch --no-track ${new_repo} import/${new_repo}/${import_branch}
     fi
 
