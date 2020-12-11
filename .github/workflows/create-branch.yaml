@@ -1,0 +1,23 @@
+on:
+  create:
+
+name: Trigger push for new branch
+
+jobs:
+  create_branch:
+    name: Trigger push for ${{ github.ref }}
+
+    runs-on: ubuntu-18.04
+
+    steps:
+      - name: Dispatch event
+        run: |
+          curl -s \
+            --fail \
+            -X POST \
+            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+            --data @- https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/push-on-change/dispatches << EOF
+            {
+              "ref" : "${{ github.ref }}"
+            }
+          EOF
