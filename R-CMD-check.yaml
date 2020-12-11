@@ -99,6 +99,18 @@ jobs:
           done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "16.04"))')
 
       # Begin custom: before install
+      - name: Prepare Bioconductor
+        run: |
+          if (!requireNamespace("BiocManager", quietly = TRUE)) install.packages("BiocManager")
+          cat("options(repos = BiocManager::repositories())\n", file = "~/.Rprofile", append = TRUE)
+        shell: Rscript {0}
+
+      - name: Install knitcitations if needed
+        run: |
+          if (!("knitcitations" %in% rownames(available.packages()))) {
+            remotes::install_github("cboettig/knitcitations")
+          }
+        shell: Rscript {0}
       # End custom: before install
 
       - name: Install dependencies
