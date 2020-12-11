@@ -55,7 +55,7 @@ jobs:
           curl -s \
             -X POST \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-            --data @- https://api.github.com/repos/${{ github.repository }}/actions/workflows/push-on-change/dispatches << EOF
+            --data @- https://api.github.com/repos/${{ github.repository }}/actions/workflows/push-on-change.yaml/dispatches << EOF
             {
               "ref" : "${{ github.event.inputs.remote_repo }}"
             }
