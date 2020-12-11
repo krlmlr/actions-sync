@@ -12,10 +12,10 @@ name: test-coverage
 
 jobs:
   test-coverage:
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"
+      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"
 
     steps:
       - name: Check rate limits
@@ -54,7 +54,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "16.04"); if (length(req) > 0) cat(req, sep = "\n")')
+          done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "18.04"); if (length(req) > 0) cat(req, sep = "\n")')
 
       # Begin custom: before install
       # End custom: before install
