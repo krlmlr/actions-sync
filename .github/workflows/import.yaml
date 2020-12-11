@@ -49,7 +49,7 @@ jobs:
         run: |
           ./run.sh import_base "${{ github.event.inputs.remote_repo }}" "${{ github.event.inputs.base }}" --force
 
-      - name: Trigger if branch exists
+      - name: Trigger if branch is new
         if: ${{ steps.check_branch.outputs.exists }} == ""
         run: |
           curl -s \
