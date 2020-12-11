@@ -2,6 +2,7 @@ on:
   push:
     branches:
       - '*/*'
+  workflow_dispatch:
 
 name: Push on change
 
