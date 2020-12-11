@@ -34,8 +34,30 @@ jobs:
         run: |
           git log -n 1 --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
 
+      - name: Check if branch exists
+        id: check_branch
+        run: |
+          echo "::set-output name=exists::$(git branch --list origin/${{ github.event.inputs.remote_repo }})"
+
+      - name: Show if branch exists
+        run: |
+          echo ${{ steps.check_branch.outputs.exists }}
+
       - name: Import
         env:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
           ./run.sh import_base "${{ github.event.inputs.remote_repo }}" "${{ github.event.inputs.base }}" --force
+
+      - name: Trigger if branch exists
+        if: ${{ steps.check_branch.outputs.exists }} == ""
+        run: |
+          curl -s \
+            --fail \
+            -X POST \
+            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+            --data @- https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/workflows/push-on-change/dispatches << EOF
+            {
+              "ref" : "${{ github.event.inputs.remote_repo }}"
+            }
+          EOF
