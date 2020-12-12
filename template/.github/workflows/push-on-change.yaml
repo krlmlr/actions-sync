@@ -34,3 +34,4 @@ jobs:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
           ./run.sh merge_into_remote ${{ steps.remote_repo.outputs.slug }}
+
