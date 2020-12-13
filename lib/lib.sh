@@ -264,7 +264,8 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
     git branch actions-subtree actions/${repo}
     git checkout actions-subtree
 
-    if ! git rebase -q subtree --rebase-merges; then
+    # Is it better to not use --rebase-merges here?
+    if ! git rebase -q subtree; then
       echo "Warning: Rebase failed"
       git rebase --abort
     fi
