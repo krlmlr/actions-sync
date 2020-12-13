@@ -32,3 +32,8 @@ jobs:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
           ./run.sh refresh_all
+
+      - name: Show job log
+        if: always()
+        run: |
+          cat refresh_all.log
