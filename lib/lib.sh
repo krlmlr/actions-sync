@@ -190,7 +190,7 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
 
     git branch --no-track ${new_repo} ${base} -f
   else
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty
+    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty | grep -v '^Rewrite'
     import_branch=$(git branch | cut -d " " -f 2)
 
     cd ../../..
@@ -233,7 +233,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
 
   cd wt/${repo}
   # --env-filter: https://stackoverflow.com/a/38586928/946850
-  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
+  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f | grep -v '^Rewrite'
   cd ../../..
 
   git clone https://${TOKEN_KEYS}@github.com/${repo} remote
@@ -251,8 +251,8 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   else
     echo "Integrate"
     # At least one remote commit
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty -f
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f
+    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty -f | grep -v '^Rewrite'
+    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f | grep -v '^Rewrite'
 
     import_branch=$(git branch | cut -d " " -f 2)
     git branch subtree
