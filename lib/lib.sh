@@ -200,7 +200,7 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
 
     if [ -n "$(git branch --list ${new_repo})" ]; then
       _add_worktree "$new_repo"
-      if ! ( cd wt/"$new_repo" && git rebase import/${new_repo}/${import_branch} --rebase-merges && git rebase --rebase-merges); then
+      if ! ( cd wt/"$new_repo" && git rebase -q import/${new_repo}/${import_branch} --rebase-merges && git rebase -q --rebase-merges); then
         echo "Rebase failed, falling back to brute force"
         git worktree remove -f "$new_repo"
         git branch --no-track ${new_repo} import/${new_repo}/${import_branch} -f
@@ -264,7 +264,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
     git branch actions-subtree actions/${repo}
     git checkout actions-subtree
 
-    if ! git rebase subtree --rebase-merges; then
+    if ! git rebase -q subtree --rebase-merges; then
       echo "Warning: Rebase failed"
       git rebase --abort
     fi
