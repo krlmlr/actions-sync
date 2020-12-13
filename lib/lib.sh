@@ -266,7 +266,8 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
 
     # Without --rebase-merges, pillar and dm fail
     # With --rebase-merges, sometimes empty commits remain
-    if ! ( git rebase -q --rebase-merges subtree 6& git rebase -q subtree ); then
+    # The combination is even worse.
+    if ! ( git rebase -q --rebase-merges subtree ); then
       echo "Warning: Rebase failed"
       git rebase --abort
     fi
