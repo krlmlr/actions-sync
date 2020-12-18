@@ -5,6 +5,10 @@ on:
     - main
     - "docs*"
     - "cran-*"
+  pull_request:
+    branches:
+    - master
+    - main
 
 name: pkgdown
 
