@@ -26,9 +26,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
       - id: set-matrix
         run: |
           echo '::set-output name=matrix::$( echo "["; sed -n "/^REVDEP *:= */ { s///; p }" revdep-dev/Makefile | sed 's/ /, /g' | xargs -n 1 echo | sed -r 's/^([^,]*)(,?)$/{ "package": "\1" }\2/'; echo "]" )'
+
   backend:
     needs: matrix
     runs-on: ubuntu-20.04
