@@ -19,40 +19,20 @@ on:
 name: backends
 
 jobs:
-  matrix:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Install json2yaml
-        run: |
-          sudo npm install -g json2yaml
-
-      # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
-      - name: Define matrix
-        id: set-matrix
-        run: |
-          matrix=$(
-            echo '{ "package" : ['
-            sed -n "/^REVDEP *:= */ { s///; p }" revdep-dev/Makefile | sed 's/ /, /g' | xargs -n 1 echo | sed -r 's/^([^,]*)(,?)$/"\1"\2/'
-            echo "]}"
-          )
-          echo $matrix
-          echo $matrix | jq .
-          echo $matrix | json2yaml
-          echo '::set-output name=matrix::$matrix'
-
   backend:
-    needs: matrix
     runs-on: ubuntu-20.04
 
     name: ${{ matrix.package }}
 
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+      matrix:
+        package:
+          - duckdb
+          - RSQLite
+          - RMariaDB
+          - RPostgres
+          - RKazam
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -60,16 +40,12 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
-      - name: Show matrix JSON
-        run: |
-          echo "${{ toJSON(matrix) }}"
-          echo "${{ toJSON(steps) }}"
-        shell: bash
-
       - name: Check rate limits
         run: |
           curl -s --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/rate_limit
         shell: bash
+
+      - uses: actions/checkout@v2
 
       - uses: r-lib/actions/setup-r@v1
 
