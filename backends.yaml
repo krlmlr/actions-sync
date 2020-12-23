@@ -43,6 +43,7 @@ jobs:
       - name: Show matrix JSON
         run: |
           echo "${{ toJSON(matrix) }}"
+          echo "${{ toJSON(steps) }}"
         shell: bash
 
       - name: Check rate limits
