@@ -40,6 +40,11 @@ jobs:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
+      - name: Show matrix JSON
+        run: |
+          cat ${{ toJSON(matrix) }}
+        shell: bash
+
       - name: Check rate limits
         run: |
           curl -s --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/rate_limit
