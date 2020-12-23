@@ -29,7 +29,7 @@ jobs:
       # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
       - id: set-matrix
         run: |
-          matrix=$( echo "["; sed -n "/^REVDEP *:= */ { s///; p }" revdep-dev/Makefile | sed 's/ /, /g' | xargs -n 1 echo | sed -r 's/^([^,]*)(,?)$/{ "package": "\1" }\2/'; echo "]" )
+          matrix=( echo '{ "package" : ['; sed -n "/^REVDEP *:= */ { s///; p }" revdep-dev/Makefile | sed 's/ /, /g' | xargs -n 1 echo | sed -r 's/^([^,]*)(,?)$/"\1"\2/'; echo "]}" )
           echo $matrix
           echo $matrix | jq .
           echo '::set-output name=matrix::$matrix'
