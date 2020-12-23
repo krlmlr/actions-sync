@@ -48,11 +48,11 @@ jobs:
     needs: matrix
     runs-on: ubuntu-20.04
 
-    name: ${{ matrix.package }}
-
     strategy:
       fail-fast: false
       matrix: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+
+    name: ${{ matrix.package }}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
