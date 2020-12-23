@@ -28,7 +28,7 @@ jobs:
 
       - name: Install json2yaml
         run: |
-          npm install -g json2yaml
+          sudo npm install -g json2yaml
 
       # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
       - name: Define matrix
