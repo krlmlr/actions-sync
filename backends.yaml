@@ -19,20 +19,25 @@ on:
 name: backends
 
 jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v2
+
+      - id: set-matrix
+        run: |
+          echo '::set-output name=matrix::$( echo "["; sed -n "/^REVDEP *:= */ { s///; p }" revdep-dev/Makefile | sed 's/ /, /g' | xargs -n 1 echo | sed -r 's/^([^,]*)(,?)$/{ "package": "\1" }\2/'; echo "]" )'
   backend:
+    needs: matrix
     runs-on: ubuntu-20.04
 
     name: ${{ matrix.package }}
 
     strategy:
       fail-fast: false
-      matrix:
-        package:
-          - duckdb
-          - RSQLite
-          - RMariaDB
-          - RPostgres
-          - RKazam
+      matrix: ${{fromJson(needs.matrix.outputs.matrix)}}
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
@@ -50,8 +55,6 @@ jobs:
         run: |
           curl -s --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/rate_limit
         shell: bash
-
-      - uses: actions/checkout@v2
 
       - uses: r-lib/actions/setup-r@v1
 
