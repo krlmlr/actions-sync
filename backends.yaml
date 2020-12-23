@@ -37,7 +37,7 @@ jobs:
             echo '{ "package" : ['
             sed -n "/^REVDEP *:= */ { s///; p }" revdep-dev/Makefile | sed 's/ /, /g' | xargs -n 1 echo | sed -r 's/^([^,]*)(,?)$/"\1"\2/'
             echo " ]}"
-          ) | jq -c)
+          ) | jq -c .)
           echo $matrix
           echo $matrix | jq .
           echo $matrix | json2yaml
