@@ -31,7 +31,8 @@ jobs:
           npm install -g json2yaml
 
       # https://github.blog/changelog/2020-04-15-github-actions-new-workflow-features/
-      - id: set-matrix
+      - name: Define matrix
+        id: set-matrix
         run: |
           matrix=$(
             echo '{ "package" : ['
