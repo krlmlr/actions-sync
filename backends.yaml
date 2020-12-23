@@ -50,7 +50,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix: ${{ fromJSON(needs.matrix.outputs.matrix) }}
+      matrix: ${{ fromJson(needs.matrix.outputs.matrix) }}
 
     name: ${{ matrix.package }}
 
