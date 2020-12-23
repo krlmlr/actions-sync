@@ -42,7 +42,7 @@ jobs:
           echo $matrix
           echo $matrix | jq .
           echo $matrix | json2yaml
-          echo '::set-output name=matrix::$matrix'
+          echo '::set-output name=matrix::$(echo $matrix | jq -c)'
 
   backend:
     needs: matrix
