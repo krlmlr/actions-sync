@@ -31,7 +31,7 @@ jobs:
         env:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
         run: |
-          ./run.sh refresh_all
+          ./run.sh refresh_all || ./run.sh refresh_all || ./run.sh refresh_all
 
       - name: Show job log
         if: always()
