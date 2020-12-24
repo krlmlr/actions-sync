@@ -75,6 +75,12 @@ Requires GNU `parallel`.
 
 1. Extract all branches as worktrees locally, to the `wt/` directory:
     - `bin/add_worktrees`
+1. Check history by date in all worktrees, to remind you which actions have been updated recently in which remote repository:
+
+    ```sh
+    git log --all --graph --date-order
+    ```
+
 1. Apply a Git command to all worktrees:
     - Fast-forward pull all worktrees:
 
