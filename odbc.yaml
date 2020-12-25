@@ -100,7 +100,6 @@ jobs:
       - name: Clone backend
         run: |
           make -C revdep-dev ${{ matrix.package }}
-          head revdep-dev/${{ matrix.package }}/DESCRIPTION
 
       - name: Prepare cache keys
         if: runner.os != 'Windows'
@@ -168,7 +167,6 @@ jobs:
           ACCEPT_EULA=Y apt-get install -y msodbcsql17
           ln -s /opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.*.so.* /opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.so
         shell: sudo bash {0}
-      # End custom: after install
 
       - name: Install locally to avoid error with test_local()
         run: |
@@ -176,8 +174,9 @@ jobs:
         env:
           LIB_DIR: /usr/lib/x86_64-linux-gnu/
           INCLUDE_DIR: /usr/include
+      # End custom: after install
 
-      - name: Test
+      - name: Test backend
         run: |
           make -C revdep-dev test-${{ matrix.package }}
 

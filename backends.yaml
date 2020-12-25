@@ -81,7 +81,6 @@ jobs:
       - name: Clone backend
         run: |
           make -C revdep-dev ${{ matrix.package }}
-          head revdep-dev/${{ matrix.package }}/DESCRIPTION
 
       - name: Prepare cache keys
         if: runner.os != 'Windows'
@@ -152,7 +151,7 @@ jobs:
         shell: bash
       # End custom: after install
 
-      - name: Test
+      - name: Test backend
         run: |
           make -C revdep-dev test-${{ matrix.package }}
 
