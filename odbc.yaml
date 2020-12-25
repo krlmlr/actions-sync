@@ -170,7 +170,7 @@ jobs:
 
       - name: Install locally to avoid error with test_local()
         run: |
-          R CMD INSTALL .
+          R CMD INSTALL revdep-dev/${{ matrix.package }}
         env:
           LIB_DIR: /usr/lib/x86_64-linux-gnu/
           INCLUDE_DIR: /usr/include
