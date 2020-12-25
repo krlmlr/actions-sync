@@ -31,7 +31,7 @@ jobs:
         run: |
           matrix=$((
             echo '{ "package" : ['
-            sed -n "/^REVDEP *:= */ { s///; p }" revdep-dev/Makefile | sed 's/ /, /g' | xargs -n 1 echo | sed -r 's/^([^,]*)(,?)$/"\1"\2/'
+            sed -n "/^REVDEP *:= */ { s///; p }" revdep-dev/Makefile | sed -r 's/ odbc-[^ ]*//g' | sed 's/ /,\n/g' | sed -r 's/^([^,]*)(,?)$/"\1"\2/'
             echo " ]}"
           ) | jq -c .)
           echo $matrix
