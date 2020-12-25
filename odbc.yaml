@@ -178,7 +178,7 @@ jobs:
 
       - name: Test backend
         run: |
-          make -C revdep-dev test-${{ matrix.package }}
+          make -C revdep-dev test-${{ matrix.package }}-${{ matrix.database }}
 
       - name: Upload check results
         if: failure()
