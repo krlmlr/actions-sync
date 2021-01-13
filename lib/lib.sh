@@ -277,7 +277,12 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
     # Cherry-pick differences onto target branch
     # FIXME: Will a rebase work here too?
     if [ $(git log --pretty=oneline actions-subtree ^subtree | head -n 1 | wc -l) -gt 0 ]; then
-      git cherry-pick actions-subtree ^subtree --allow-empty --first-parent -m 1 --no-edit
+      if ! git cherry-pick actions-subtree ^subtree --allow-empty --first-parent -m 1 --no-edit; then
+        git cherry-pick --abort
+        git diff actions-subtree ^subtree | patch -p1
+        git add .
+        git commit -m "Import from actions-subtree, check carefully"
+      fi
       git push
     else
       echo "Nothing to cherry-pick"
