@@ -280,8 +280,10 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
       if ! git cherry-pick actions-subtree ^subtree --allow-empty --first-parent -m 1 --no-edit; then
         git cherry-pick --abort
         git diff actions-subtree ^subtree | patch -p1
-        git add .
-        git commit -m "Import from actions-subtree, check carefully"
+        if [ $(git status --porcelain | wc -l) -gt 0 ]; then
+          git add .
+          git commit -m "Import from actions-subtree, check carefully"
+        fi
       fi
       git push
     else
