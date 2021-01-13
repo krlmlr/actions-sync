@@ -47,6 +47,7 @@ jobs:
           # End custom: R 3.4
 
           # Begin custom: R 3.3
+          - {os: ubuntu-16.04,   r: '3.3',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
           # End custom: R 3.3
 
           # Begin custom: matrix elements
@@ -109,8 +110,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
-          if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
           remotes::install_deps(dependencies = TRUE, type = .Platform$pkgType)
           remotes::install_cran("rcmdcheck")
         shell: Rscript {0}
