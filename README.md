@@ -35,6 +35,8 @@ Projects that don't have GitHub Actions yet can inherit from an existing project
 
 From then on, pushes to this repository apply the new commits to the remote repository, with a technique similar to `git subtree`, hence the name.
 Backwards synchronization happens on schedule and is a variant of the initial import.
+Whenever the code in this repository is identical to the remote code, a full import of the remote history is carried out.
+If the remote code is different (e.g. if you changed the actions directly in the remote repository), an attempt is made to isolate the commits from the remote history and to apply them here.
 
 Branches that start with `main` are special.
 Also, branches that don't have a slash in their name are not synchronized with repositories.
