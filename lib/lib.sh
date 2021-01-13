@@ -200,10 +200,19 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
 
     if [ -n "$(git branch --list ${new_repo})" ]; then
       _add_worktree "$new_repo"
-      if ! ( cd wt/"$new_repo" && git rebase -q import/${new_repo}/${import_branch} --rebase-merges && git rebase -q --rebase-merges); then
-        echo "Rebase failed, falling back to brute force"
-        git worktree remove -f "$new_repo"
-        git branch --no-track ${new_repo} import/${new_repo}/${import_branch} -f
+
+      if [ $(git diff import/${new_repo}/${import_branch} * | wc -l) -eq 0 ]; then
+        echo "Remote identical"
+        if [ $(git diff import/${new_repo}/${import_branch} HEAD^ | wc -l) -gt 0 ]; then
+          echo "Resetting history to remote"
+          git worktree remove -f "$new_repo"
+          git branch --no-track ${new_repo} import/${new_repo}/${import_branch} -f
+        else
+          echo "Local branch is remote plus our action, nothing to do"
+        fi
+      elif ! ( cd wt/"$new_repo" && git rebase -q import/${new_repo}/${import_branch} --rebase-merges && git rebase -q --rebase-merges); then
+        echo "Rebase failed, reconcile differences manually"
+        return 1
       fi
     else
       # Branch doesn't exist: create
