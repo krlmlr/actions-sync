@@ -103,7 +103,13 @@ jobs:
       # Begin custom: after install
       # End custom: after install
 
-      - name: Create worktree
+      - name: Clone worktrees
+        run: |
+          git fetch --depth=1
+          ./run.sh add_worktrees
+        shell: bash
+
+      - name: Create docs worktree
         run: |
           if ! git worktree add docs gh-pages; then
             mkdir docs
@@ -128,7 +134,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           cd docs
-          git fetch
+          git fetch --depth=1
           git reset origin/gh-pages
 
           if [ $(git status --porcelain | wc -l) -gt 0 ]; then
