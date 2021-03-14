@@ -4,6 +4,7 @@ on:
       - main
     paths:
       - .github/workflows/status.yaml
+      - index.Rmd
   schedule:
     - cron:  '20 2 * * *'
 
