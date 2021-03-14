@@ -110,7 +110,7 @@ jobs:
             git checkout main
             git worktree add docs gh-pages
           fi
-        shell: Rscript {0}
+        shell: bash
 
       - name: Build site
         run: |
