@@ -10,11 +10,11 @@ Apply changes to similar workflows at once across all your projects.
     - You can make this repository public, or keep it private.
 2. Create a PAT and store it as a secret.
     1. Visit <https://github.com/settings/tokens>
-    1. Click "Generate new token" with scopes:
-        - repo (needed because this is a private repository)
-        - workflow (needed to change workflows in other repos, implies repo)
-    1. Copy generated token
-    1. Store it as a secret named `TOKEN_KEYS`
+    2. Click "Generate new token" with scopes:
+        - **repo** (needed because this is a private repository)
+        - **workflow** (needed to change workflows in other repos, implies **repo**)
+    3. Copy generated token
+    4. Store it as a secret named `TOKEN_KEYS`
 
 ## Design
 
