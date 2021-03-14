@@ -113,6 +113,7 @@ jobs:
             git push up HEAD:gh-pages
             cd ..
             rm -rf docs
+            git push -u origin gh-pages
             git worktree add docs gh-pages
           fi
         shell: bash
