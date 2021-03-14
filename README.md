@@ -57,6 +57,8 @@ Workflows in remote repositories will contain a history of all changes that came
 >
 > The top level of these branches contain the `.yaml` files from the `.github/workflows` directory in the remote repositories.
 > It also contains its own `.github` directory that powers the synchronization but is not copied to the remote repository.
+>
+> An overview page over all workflows in remote repositories, updated daily, is deployed to <https://krlmlr.github.io/actions-subtree/>.
 
 
 ## Basic workflow
