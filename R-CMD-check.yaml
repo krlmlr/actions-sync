@@ -33,13 +33,13 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - {os: macOS-latest,                 r: 'release'}
-          - {os: windows-latest,               r: 'release', rspm: "https://packagemanager.rstudio.com/all/latest" }
-          - {os: windows-latest,               r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/all/latest" }
-          - {os: ubuntu-, os-version: 20.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
-          - {os: ubuntu-, os-version: 18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-, os-version: 18.04,   r: 'devel',   rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest", http-user-agent: "R/4.0.0 (ubuntu-16.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
-          - {os: ubuntu-, os-version: 18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"}
+          - { os: macOS-latest,                 r: 'release' }
+          - { os: windows-latest,               r: 'release', rspm: "https://packagemanager.rstudio.com/all/latest" }
+          - { os: windows-latest,               r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/all/latest" }
+          - { os: ubuntu-, os-version: 20.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+          - { os: ubuntu-, os-version: 18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest" }
+          - { os: ubuntu-, os-version: 18.04,   r: 'devel',   rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", http-user-agent: "R/4.0.0 (ubuntu-18.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
+          - { os: ubuntu-, os-version: 18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest" }
 
           # Begin custom: R 3.5
           - {os: ubuntu-, os-version: 18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
@@ -87,14 +87,14 @@ jobs:
           if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
         shell: Rscript {0}
 
-      - name: Prepare cache keys
+      - name: Query dependencies
         if: runner.os != 'Windows'
         run: |
           saveRDS(remotes::dev_package_deps(dependencies = TRUE, type = .Platform$pkgType), ".github/depends.Rds", version = 2)
           writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
         shell: Rscript {0}
 
-      - name: Cache R packages
+      - name: Restore R package cache
         if: runner.os != 'Windows'
         uses: actions/cache@v2
         with:
@@ -135,7 +135,6 @@ jobs:
           options(width = 100)
           if (!requireNamespace("sessioninfo", quietly = TRUE)) install.packages("sessioninfo")
           pkgs <- installed.packages()[, "Package"]
-          if (!("sessioninfo" %in% pkgs)) install.packages("sessioninfo")
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
 
@@ -148,6 +147,7 @@ jobs:
           _R_CHECK_SYSTEM_CLOCK_: false
           _R_CHECK_FUTURE_FILE_TIMESTAMPS_: false
         run: |
+          options(crayon.enabled = TRUE)
           error_on <- "note"
           # Begin custom: rcmdcheck error_on
           if (getRversion() >= "3.5" && getRversion() < "3.6") {
