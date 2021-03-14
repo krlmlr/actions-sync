@@ -1,0 +1,19 @@
+Package: actions.status
+Title: GitHub Actions Status Badges
+Version: 0.0.0.9000
+Date: 2021-03-14
+Authors@R: 
+    person(given = "Kirill",
+           family = "Müller",
+           role = c("aut", "cre"),
+           email = "krlmlr+r@mailbox.org",
+           comment = c(ORCID = "0000-0002-1416-3412"))
+Description: Collects status badges for GitHub Actions projects.
+License: GPL-3
+URL: https://github.com/krlmlr/actions-subtree,
+    https://krlmlr.github.io/actions-subtree
+BugReports: https://github.com/krlmlr/actions-subtree/issues
+Encoding: UTF-8
+LazyData: true
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.1.1.9001
