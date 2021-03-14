@@ -27,7 +27,7 @@ Apply changes to similar workflows at once across all your projects.
 
 ## Design
 
-Branches in this repository correspond to projects (*remote repositories*) on GitHub.
+Branches in this *central repository* correspond to projects (*remote repositories*) on GitHub.
 Each branch here contains the history of `.github/workflows` in the corresponding remote repository.
 Existing projects can be imported with their history.
 Projects that don't have GitHub Actions yet can inherit from an existing project by creating a new branch in this repository from an existing branch.
@@ -39,6 +39,13 @@ If the remote code is different (e.g. if you changed the actions directly in the
 
 Branches that start with `main` are special.
 Also, branches that don't have a slash in their name are not synchronized with repositories.
+
+### Is it safe?
+
+This repository never performs force-push or delete actions to remote repositories.
+Workflows in remote repositories will contain a history of all changes that came from the central repository.
+
+### Example
 
 > Example: I maintain [r-dbi/DBI](https://github.com/r-dbi/DBI), [r-dbi/RKazam](https://github.com/r-dbi/RKazam) and [r-lib/rprojroot](https://github.com/r-lib/rprojroot), among other projects.
 > This repository has branches:
@@ -62,7 +69,7 @@ Also, branches that don't have a slash in their name are not synchronized with r
     1. `bin/import_base owner/repo base-owner/base-repo`
 1. Synchronization from this repository to the remote repositories:
     - automatically via GitHub Actions, on push
-1. Synchronization from the remote repositories to this repositories:
+1. Synchronization from the remote repositories to this repository:
     - automatically via GitHub Actions, on schedule or triggered
 
 There are also manual ways to synchronize but this will bork your work trees.
@@ -172,6 +179,10 @@ For a "tabula rasa" style setup, we can also overwrite worktrees with the conten
     ```sh
     bin/wt_copy_to base-branch
     ```
+
+## Troubleshooting
+
+If the synchronization breaks for one or multiple repositories, remove the corresponding repository branch and re-add.
 
 ## Hacking
 
