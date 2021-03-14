@@ -1,0 +1,56 @@
+---
+output:
+  html_document:
+    self_contained: false
+title: "Repository status"
+---
+
+```{r echo = FALSE}
+library(dplyr)
+library(purrr)
+
+all_workflows <- dir("wt", recursive = TRUE)
+repo_workflows <- grep("^[^/]+/[^/]+/[^/]+[.]y?aml$", all_workflows, value = TRUE)
+
+has_push <- function(x) {
+  if (is.character(x)) {
+    "push" %in% x
+  } else {
+    !is.null(x$push)
+  }
+}
+
+make_slug <- function(slug) {
+  paste0(
+    '<a href="https://github.com/', slug, '" target="_blank">',
+    slug,
+    "</a>"
+  )
+}
+
+make_badge <- function(slug, name, yaml_name) {
+  paste0(
+    '<a href="https://github.com/', slug, "/actions/workflows/", yaml_name, '.yaml" target="_blank">',
+    "![", name, "]",
+    "(https://github.com/", slug, "/workflows/", name, "/badge.svg)",
+    "</a>"
+  )
+}
+
+tibble(workflow = repo_workflows) %>%
+  mutate(contents = map(file.path("wt", workflow), yaml::read_yaml, eval.expr = FALSE)) %>%
+  mutate(has_push = map_lgl(contents, ~ has_push(.x$on) || has_push(.x$"TRUE"))) %>%
+  filter(has_push) %>%
+  mutate(name = map_chr(contents, c("name"))) %>%
+  mutate(yaml_name = gsub("[.]yaml$", "", basename(workflow))) %>%
+  mutate(name = coalesce(name, yaml_name)) %>%
+  mutate(slug = dirname(workflow)) %>%
+  add_count(name) %>%
+  arrange(slug, desc(n), name) %>%
+  select(slug, name, yaml_name) %>%
+  group_by(slug) %>%
+  summarize(badge = paste(make_badge(slug, name, yaml_name), collapse = " ")) %>%
+  ungroup() %>%
+  transmute(Repository = make_slug(slug), Badges = badge) %>%
+  knitr::kable()
+```
