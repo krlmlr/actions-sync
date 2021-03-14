@@ -23,7 +23,7 @@ Each branch here contains the history of `.github/workflows` in the correspondin
 Existing projects can be imported with their history.
 Projects that don't have GitHub Actions yet can inherit from an existing project by creating a new branch from an existing branch in the central repository.
 
-From then on, pushes to the central repository apply the new commits to the remote repository, with a technique similar to `git subtree`, hence the name.
+From then on, pushes to the central repository apply the new commits to the remote repository, with a technique similar to `git subtree`.
 Backwards synchronization happens on schedule and is a variant of the initial import.
 Whenever the code in the central repository is identical to the remote code, a full import of the remote history is carried out.
 If the remote code is different (e.g. if you changed the actions directly in the remote repository), an attempt is made to isolate the commits from the remote history and to apply them here.
