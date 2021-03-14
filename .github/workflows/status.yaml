@@ -10,7 +10,7 @@ on:
 name: status
 
 jobs:
-  pkgdown:
+  status:
     runs-on: ubuntu-18.04
 
     # Begin custom: services
