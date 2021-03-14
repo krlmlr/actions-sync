@@ -6,18 +6,9 @@ Apply changes to similar workflows at once across all your projects.
 
 ## Setup
 
-1. Fork this project.
-1. Clone it locally.
-1. Remove all branches other than `main` in your fork. Run the code below.
-
-    - Substitue `origin` with the name of your remote if needed
-    - Omit the final `| sh` to see what's executed
-
-    ```sh
-    git branch -r | grep " origin/" | grep -v /main | sed -r 's#^ +([^/]+)/(.*)$#git push \1 :\2#' | sh
-    ```
-
-1. Create a PAT and store it as a secret.
+1. Create a repository from this template, leave "Include all branches" unchecked.
+    - You can make this repository public, or keep it private.
+2. Create a PAT and store it as a secret.
     1. Visit <https://github.com/settings/tokens>
     1. Click "Generate new token" with scopes:
         - repo (needed because this is a private repository)
