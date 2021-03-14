@@ -1,4 +1,4 @@
-# actions-subtree
+# [actions-subtree](https://krlmlr.github.io/actions-subtree)
 
 Manage all your GitHub Actions workflows across multiple projects.
 Synchronize to and from all your projects.
