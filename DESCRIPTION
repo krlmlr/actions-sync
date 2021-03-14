@@ -10,9 +10,9 @@ Authors@R:
            comment = c(ORCID = "0000-0002-1416-3412"))
 Description: Collects status badges for GitHub Actions projects.
 License: GPL-3
-URL: https://github.com/krlmlr/actions-subtree,
-    https://krlmlr.github.io/actions-subtree
-BugReports: https://github.com/krlmlr/actions-subtree/issues
+URL: https://github.com/krlmlr/actions-sync,
+    https://krlmlr.github.io/actions-sync
+BugReports: https://github.com/krlmlr/actions-sync/issues
 Imports: 
     dplyr,
     purrr,

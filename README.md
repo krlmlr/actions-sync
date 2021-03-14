@@ -1,4 +1,4 @@
-# [actions-subtree](https://krlmlr.github.io/actions-subtree)
+# [actions-sync](https://krlmlr.github.io/actions-sync)
 
 Manage all your GitHub Actions workflows across multiple projects.
 Synchronize to and from all your projects.
@@ -50,24 +50,24 @@ Workflows in remote repositories will contain a history of all changes that came
 > Example: I maintain [r-dbi/DBI](https://github.com/r-dbi/DBI), [r-dbi/RKazam](https://github.com/r-dbi/RKazam) and [r-lib/rprojroot](https://github.com/r-lib/rprojroot), among other projects.
 > This repository has branches:
 >
-> - [r-dbi/DBI](https://github.com/krlmlr/actions-subtree/tree/r-dbi/DBI)
-> - [r-dbi/RKazam](https://github.com/krlmlr/actions-subtree/tree/r-dbi/RKazam)
-> - [r-lib/rprojroot](https://github.com/krlmlr/actions-subtree/tree/r-lib/rprojroot)
+> - [r-dbi/DBI](https://github.com/krlmlr/actions-sync/tree/r-dbi/DBI)
+> - [r-dbi/RKazam](https://github.com/krlmlr/actions-sync/tree/r-dbi/RKazam)
+> - [r-lib/rprojroot](https://github.com/krlmlr/actions-sync/tree/r-lib/rprojroot)
 > - ...
 >
 > The top level of these branches contain the `.yaml` files from the `.github/workflows` directory in the remote repositories.
 > It also contains its own `.github` directory that powers the synchronization but is not copied to the remote repository.
 >
-> An overview page over all workflows in remote repositories, updated daily, is deployed to <https://krlmlr.github.io/actions-subtree/>.
+> An overview page over all workflows in remote repositories, updated daily, is deployed to <https://krlmlr.github.io/actions-sync/>.
 
 
 ## Basic workflow
 
 1. Import a project, one of:
-    1. Trigger the ["Import/refresh remote repositories" action](https://github.com/krlmlr/actions-subtree/actions?query=workflow%3A%22Import%2Frefresh+remote+repositories%22): click "Run workflow", enter the owner/repo of the repository you want to import
+    1. Trigger the ["Import/refresh remote repositories" action](https://github.com/krlmlr/actions-sync/actions?query=workflow%3A%22Import%2Frefresh+remote+repositories%22): click "Run workflow", enter the owner/repo of the repository you want to import
     1. `bin/import owner/repo`
 1. Copy the setup for an existing *base* project to a new project, one of:
-    1. Trigger the ["Import/refresh remote repositories" action](https://github.com/krlmlr/actions-subtree/actions?query=workflow%3A%22Import%2Frefresh+remote+repositories%22): click "Run workflow", enter the owner/repo of the repository you want to import and the name of the base owner/repo of the boilerplate repository
+    1. Trigger the ["Import/refresh remote repositories" action](https://github.com/krlmlr/actions-sync/actions?query=workflow%3A%22Import%2Frefresh+remote+repositories%22): click "Run workflow", enter the owner/repo of the repository you want to import and the name of the base owner/repo of the boilerplate repository
     1. `bin/import_base owner/repo base-owner/base-repo`
 1. Synchronization from this repository to the remote repositories:
     - automatically via GitHub Actions, on push
