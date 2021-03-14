@@ -21,11 +21,11 @@ Apply changes to similar workflows at once across all your projects.
 Branches in this *central repository* correspond to projects (*remote repositories*) on GitHub.
 Each branch here contains the history of `.github/workflows` in the corresponding remote repository.
 Existing projects can be imported with their history.
-Projects that don't have GitHub Actions yet can inherit from an existing project by creating a new branch in this repository from an existing branch.
+Projects that don't have GitHub Actions yet can inherit from an existing project by creating a new branch from an existing branch in the central repository.
 
-From then on, pushes to this repository apply the new commits to the remote repository, with a technique similar to `git subtree`, hence the name.
+From then on, pushes to the central repository apply the new commits to the remote repository, with a technique similar to `git subtree`, hence the name.
 Backwards synchronization happens on schedule and is a variant of the initial import.
-Whenever the code in this repository is identical to the remote code, a full import of the remote history is carried out.
+Whenever the code in the central repository is identical to the remote code, a full import of the remote history is carried out.
 If the remote code is different (e.g. if you changed the actions directly in the remote repository), an attempt is made to isolate the commits from the remote history and to apply them here.
 
 Branches that start with `main` are special.
@@ -33,13 +33,13 @@ Also, branches that don't have a slash in their name are not synchronized with r
 
 ### Is it safe?
 
-This repository never performs force-push or delete actions to remote repositories.
+The central repository never performs force-push or delete actions to remote repositories.
 Workflows in remote repositories will contain a history of all changes that came from the central repository.
 
 ### Example
 
 > Example: I maintain [r-dbi/DBI](https://github.com/r-dbi/DBI), [r-dbi/RKazam](https://github.com/r-dbi/RKazam) and [r-lib/rprojroot](https://github.com/r-lib/rprojroot), among other projects.
-> This repository has branches:
+> The central repository has branches:
 >
 > - [r-dbi/DBI](https://github.com/krlmlr/actions-sync/tree/r-dbi/DBI)
 > - [r-dbi/RKazam](https://github.com/krlmlr/actions-sync/tree/r-dbi/RKazam)
