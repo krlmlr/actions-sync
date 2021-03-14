@@ -13,6 +13,10 @@ License: GPL-3
 URL: https://github.com/krlmlr/actions-subtree,
     https://krlmlr.github.io/actions-subtree
 BugReports: https://github.com/krlmlr/actions-subtree/issues
+Imports: 
+    dplyr,
+    purrr,
+    rmarkdown
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
