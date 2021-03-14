@@ -105,9 +105,14 @@ jobs:
       - name: Create worktree
         run: |
           if ! git worktree add docs gh-pages; then
-            git checkout --orphan gh-pages
+            mkdir docs
+            cd docs
+            git init
             git commit -m Initial --allow-empty
-            git checkout main
+            git remote add up ..
+            git push up HEAD:gh-pages
+            cd ..
+            rm -rf docs
             git worktree add docs gh-pages
           fi
         shell: bash
