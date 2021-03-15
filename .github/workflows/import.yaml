@@ -60,3 +60,7 @@ jobs:
               "ref" : "${{ github.event.inputs.remote_repo }}"
             }
           EOF
+          curl -s \
+            -X POST \
+            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+            --data @- https://api.github.com/repos/${{ github.repository }}/actions/workflows/status.yaml/dispatches
