@@ -52,7 +52,7 @@ EOF
 }
 
 add_worktrees() { # Add all branches representing workflows in foreign repositories as worktrees in the wt/ directory
-  git branch -r | egrep -v 'main' | sed 's#  origin/##' | xargs -r -n 1 ./run.sh _add_worktree
+  git branch -r | egrep -v 'main|^gh-pages$' | sed 's#  origin/##' | xargs -r -n 1 ./run.sh _add_worktree
 }
 
 _add_worktree() {

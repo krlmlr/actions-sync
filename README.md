@@ -28,7 +28,7 @@ Backwards synchronization happens on schedule and is a variant of the initial im
 Whenever the code in the central repository is identical to the remote code, a full import of the remote history is carried out.
 If the remote code is different (e.g. if you changed the actions directly in the remote repository), an attempt is made to isolate the commits from the remote history and to apply them here.
 
-Branches that start with `main` are special.
+Branches that start with `main` are special, so is the `gh-pages` branch.
 Also, branches that don't have a slash in their name are not synchronized with repositories.
 
 ### Is it safe?
