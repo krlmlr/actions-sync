@@ -8,7 +8,7 @@ on:
   schedule:
     - cron:  '20 2 * * *'
 
-name: status
+name: Status
 
 jobs:
   status:
