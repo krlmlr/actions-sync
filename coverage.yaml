@@ -1,9 +1,11 @@
 on:
   push:
     branches:
+      - main
       - master
   pull_request:
     branches:
+      - main
       - master
 
 name: coverage
@@ -21,6 +23,9 @@ jobs:
 
       - uses: r-lib/actions/setup-pandoc@master
 
+      - name: JAGS
+        run: brew install jags
+
       - name: Query dependencies
         run: |
           install.packages('remotes')
@@ -29,7 +34,7 @@ jobs:
         shell: Rscript {0}
 
       - name: Cache R packages
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
           key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-${{ hashFiles('.github/depends.Rds') }}
@@ -37,7 +42,6 @@ jobs:
 
       - name: Install dependencies
         run: |
-          install.packages(c("remotes"))
           remotes::install_deps(dependencies = TRUE)
           remotes::install_cran("covr")
         shell: Rscript {0}
