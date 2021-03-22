@@ -135,7 +135,7 @@ jobs:
           _R_CHECK_FUTURE_FILE_TIMESTAMPS_: false
         run: |
           options(crayon.enabled = TRUE)
-          error_on <- "note"
+          error_on <- "warning"
           # Begin custom: rcmdcheck error_on
           # End custom: rcmdcheck error_on
           rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = error_on, check_dir = "check")
