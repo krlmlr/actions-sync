@@ -113,29 +113,29 @@ jobs:
 
       - name: Create gh-pages worktree
         run: |
-          if ! [ -d wt/gh-pages ]; then
-            mkdir -p wt/gh-pages
-            cd wt/gh-pages
+          if ! git show-branch remotes/origin/gh-pages; then
+            mkdir -p gh-pages
+            cd gh-pages
             git init
             git commit -m Initial --allow-empty
-            git remote add up ../..
+            git remote add up ..
             git push up HEAD:gh-pages
-            cd ../..
-            rm -rf wt/gh-pages
+            cd ..
+            rm -rf gh-pages
             git push -u origin gh-pages
-            git worktree add wt/gh-pages gh-pages
           fi
+          git worktree add gh-pages gh-pages
         shell: bash
 
       - name: Build site
         run: |
-          rmarkdown::render("index.Rmd", output_dir = "wt/gh-pages")
+          rmarkdown::render("index.Rmd", output_dir = "gh-pages")
         shell: Rscript {0}
 
       - name: Deploy site
         if: github.event_name == 'push'
         run: |
-          cd wt/gh-pages
+          cd gh-pages
           git fetch --depth=1
           git reset origin/gh-pages
 
