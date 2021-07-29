@@ -69,7 +69,7 @@ jobs:
       - name: Install system dependencies
         if: runner.os == 'Linux'
         run: |
-          apt-get update -y
+          sudo apt-get update -y
           while read -r cmd
           do
             eval sudo $cmd
