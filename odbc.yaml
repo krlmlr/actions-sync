@@ -50,7 +50,7 @@ jobs:
 
   backend:
     needs: matrix
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-20.04
 
     services:
       postgres:
@@ -77,7 +77,7 @@ jobs:
     name: ${{ matrix.database }}
 
     env:
-      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/xenial/latest"
+      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"
       ODBCSYSINI: ${{ github.workspace }}/.github/odbc
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
@@ -122,7 +122,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "16.04", path = "revdep-dev/${{ matrix.package }}"))')
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04", path = "revdep-dev/${{ matrix.package }}"))')
 
       - name: Install package and dependencies
         run: |
@@ -161,7 +161,7 @@ jobs:
         if: matrix.database == 'SQLServer'
         run: |
           curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-          curl https://packages.microsoft.com/config/ubuntu/16.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+          curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
           apt-get update
           ACCEPT_EULA=Y apt-get install -y msodbcsql17
           ln -s /opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.*.so.* /opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.so
