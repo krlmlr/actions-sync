@@ -133,7 +133,6 @@ jobs:
         shell: Rscript {0}
 
       - name: Deploy site
-        if: github.event_name == 'push'
         run: |
           cd gh-pages
           git fetch --depth=1
