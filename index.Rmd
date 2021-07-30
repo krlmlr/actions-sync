@@ -32,6 +32,9 @@ make_slug <- function(slug) {
   paste0(
     '<a href="', github, "/", slug, '" target="_blank">',
     slug,
+    "</a>",
+    ' <a href="', github, "/", slug, '/actions" target="_blank">',
+    "(actions)",
     "</a>"
   )
 }
