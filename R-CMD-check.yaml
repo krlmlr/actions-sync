@@ -57,6 +57,7 @@ jobs:
           # End custom: R 3.4
 
           # Begin custom: matrix elements
+          - { os: windows-latest,               r: 'devel-ucrt', rspm: "https://packagemanager.rstudio.com/all/latest" }
           - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, desc: "omit libunwind" }
           - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, libbacktrace: omit-libbacktrace, desc: "omit libunwind and libbacktrace" }
           # End custom: matrix elements
