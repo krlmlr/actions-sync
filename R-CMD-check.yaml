@@ -7,75 +7,77 @@
 on:
   push:
     branches:
+      - main
       - master
+      - "r-*"
   pull_request:
     branches:
+      - main
       - master
+      - "r-*"
   schedule:
-    - cron:  '0 8 * * *'
+    - cron:  '10 0 * * *'
 
 name: rcc
 
 jobs:
   R-CMD-check:
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ${{ matrix.config.os }}${{ matrix.config.os-version }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.libunwind }} ${{ matrix.config.libbacktrace }}
+    name: ${{ matrix.config.os }}${{ matrix.config.os-version }} (${{ matrix.config.r }}) ${{ matrix.config.desc }}
+
+    # Begin custom: services
+    # End custom: services
 
     strategy:
       fail-fast: false
+      # Ensure that the "cancel" workflow gets a chance to run quickly, even if we just pushed
+      # Need to figure out how to smoke-test
+      max-parallel: 5
       matrix:
         config:
-          - {os: windows-latest, r: 'release'}
-          - {os: windows-latest, r: 'oldrel'}
-          - {os: macOS-latest,   r: 'release'}
-          - {os: ubuntu-18.04,   r: 'devel', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", http-user-agent: "R/4.0.0 (ubuntu-16.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
-          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind }
-          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, libbacktrace: omit-libbacktrace }
-          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.4',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
-          - {os: ubuntu-18.04,   r: '3.3',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - { os: macOS-latest,                 r: 'release' }
+          - { os: windows-latest,               r: 'release', rspm: "https://packagemanager.rstudio.com/all/latest" }
+          - { os: windows-latest,               r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/all/latest" }
+          - { os: ubuntu-, os-version: 20.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest" }
+          - { os: ubuntu-, os-version: 18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest" }
+          - { os: ubuntu-, os-version: 18.04,   r: 'devel',   rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", http-user-agent: "R/4.0.0 (ubuntu-18.04) R (4.0.0 x86_64-pc-linux-gnu x86_64 linux-gnu) on GitHub Actions" }
+          - { os: ubuntu-, os-version: 18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest" }
 
+          # Begin custom: R 3.6
+          - {os: ubuntu-, os-version: 18.04,   r: '3.6',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          # End custom: R 3.6
+
+          # Begin custom: R 3.5
+          - {os: ubuntu-, os-version: 18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          # End custom: R 3.5
+
+          # Begin custom: R 3.4
+          - {os: ubuntu-, os-version: 18.04,   r: '3.4',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          # End custom: R 3.4
+
+          # Begin custom: matrix elements
+          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, desc: "omit libunwind" }
+          - {os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, libbacktrace: omit-libbacktrace, desc: "omit libunwind and libbacktrace" }
+          # End custom: matrix elements
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
+      # prevent rgl issues because no X11 display is available
+      RGL_USE_NULL: true
+      # Begin custom: env vars
+      # End custom: env vars
 
     steps:
+      - name: Check rate limits
+        run: |
+          curl -s --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/rate_limit
+        shell: bash
+
       - uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@master
-        with:
-          r-version: ${{ matrix.config.r }}
-          http-user-agent: ${{ matrix.config.http-user-agent }}
-
-      - uses: r-lib/actions/setup-pandoc@master
-
-      - name: Query dependencies
-        run: |
-          install.packages('remotes')
-          saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
-          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
-        shell: Rscript {0}
-
-      - name: Cache R packages
-        if: runner.os != 'Windows'
-        uses: actions/cache@v1
-        with:
-          path: ${{ env.R_LIBS_USER }}
-          key: ${{ matrix.config.os }}-${{ hashFiles('.github/R-version') }}-2-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: ${{ matrix.config.os }}-${{ hashFiles('.github/R-version') }}-2-
-
-      - name: Install system dependencies
-        if: runner.os == 'Linux'
-        run: |
-          while read -r cmd
-          do
-            eval sudo $cmd
-          done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "18.04"); if (length(req) > 0) cat(req, sep = "\n")')
-
+      # Begin custom: before install
       - name: Install libunwind
         if: runner.os == 'Linux' && matrix.config.libunwind != 'omit-libunwind'
         env:
@@ -87,32 +89,90 @@ jobs:
         if: matrix.config.libbacktrace == 'omit-libbacktrace'
         run: |
           echo '{ print "bogus"; exit }' > src/vendor/libbacktrace/filetype.awk
+      # End custom: before install
+
+      - uses: r-lib/actions/setup-r@v1
+        with:
+          r-version: ${{ matrix.config.r }}
+          http-user-agent: ${{ matrix.config.http-user-agent }}
+
+      - uses: r-lib/actions/setup-pandoc@v1
+
+      - name: Install remotes
+        run: |
+          if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
+          if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+        shell: Rscript {0}
+
+      - name: Query dependencies
+        if: runner.os != 'Windows'
+        run: |
+          saveRDS(remotes::dev_package_deps(dependencies = TRUE, type = .Platform$pkgType), ".github/depends.Rds", version = 2)
+          writeLines(sprintf("R-%i.%i", getRversion()$major, getRversion()$minor), ".github/R-version")
+        shell: Rscript {0}
+
+      - name: Restore R package cache
+        if: runner.os != 'Windows'
+        uses: actions/cache@v2
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: ${{ matrix.config.os }}${{ matrix.config.os-version }}-${{ hashFiles('.github/R-version') }}-2-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: ${{ matrix.config.os }}${{ matrix.config.os-version }}-${{ hashFiles('.github/R-version') }}-2-
+
+      - name: Install system dependencies
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update -y
+          while read -r cmd
+          do
+            eval sudo $cmd
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "${{matrix.config.os-version}}"))')
+
+      - name: Add fake qpdf and checkbashisms
+        if: runner.os == 'Linux'
+        run: |
+          sudo ln -s $(which true) /usr/local/bin/qpdf
+          sudo ln -s $(which true) /usr/local/bin/checkbashisms
 
       - name: Install dependencies
         run: |
-          remotes::install_deps(dependencies = TRUE, type = .Platform$pkgType, upgrade = TRUE)
+          remotes::install_deps(dependencies = TRUE, type = .Platform$pkgType)
           remotes::install_cran("rcmdcheck")
-          remotes::install_github("tidyverse/magrittr")
         shell: Rscript {0}
 
       - name: Session info
         run: |
           options(width = 100)
+          if (!requireNamespace("sessioninfo", quietly = TRUE)) install.packages("sessioninfo")
           pkgs <- installed.packages()[, "Package"]
-          if (!("sessioninfo" %in% pkgs)) install.packages("sessioninfo")
           sessioninfo::session_info(pkgs, include_base = TRUE)
         shell: Rscript {0}
+
+      # Begin custom: after install
+      # End custom: after install
 
       - name: Check
         env:
           _R_CHECK_CRAN_INCOMING_: false
           _R_CHECK_SYSTEM_CLOCK_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = if (getRversion() >= "3.5" && getRversion() < "3.6") "error" else if (getRversion() < "3.4") "warning" else "note", check_dir = "check")
+          _R_CHECK_FUTURE_FILE_TIMESTAMPS_: false
+        run: |
+          options(crayon.enabled = TRUE)
+          error_on <- "note"
+          # Begin custom: rcmdcheck error_on
+          if (getRversion() >= "3.5" && getRversion() < "3.6") {
+            error_on <- "error"
+          } else if (getRversion() < "3.4") {
+            error_on <- "warning"
+          }
+          # End custom: rcmdcheck error_on
+          rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran"), error_on = error_on, check_dir = "check")
         shell: Rscript {0}
 
       - name: Show test output
         if: always()
-        run: find check -name '*.Rout*' -exec head -n 1000000 '{}' \; || true
+        run: |
+          find check -name '*.Rout*' -exec head -n 1000000 '{}' \; || true
         shell: bash
 
       - name: Upload check results
@@ -121,3 +181,9 @@ jobs:
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
+
+      - name: Check rate limits
+        if: always()
+        run: |
+          curl -s --header "authorization: Bearer ${{ secrets.GITHUB_TOKEN }}" https://api.github.com/rate_limit
+        shell: bash
