@@ -127,9 +127,10 @@ jobs:
       - name: Update data
         if: github.event_name == 'push'
         run: |
+          set -e
           git fetch
           R -q -e 'pkgload::load_all(); overwrite_data()'
-          if [ -n $(git status --porcelain inst/csv) ]; then
+          if [ -n "$(git status --porcelain inst/csv)" ]; then
             git add inst/csv
             git commit -m "Update data"
             git push
