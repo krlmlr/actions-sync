@@ -124,6 +124,11 @@ jobs:
         shell: Rscript {0}
 
       # Begin custom: after install
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: true
+
       - name: Update data
         if: github.event_name == 'push'
         run: |
