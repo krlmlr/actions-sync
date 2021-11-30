@@ -124,6 +124,12 @@ jobs:
         shell: Rscript {0}
 
       # Begin custom: after install
+      - name: Update data
+        if: github.event_name == 'push'
+        run: |
+          pkgload::load_all()
+          overwrite_data(push = TRUE)
+        shell: Rscript {0}
       # End custom: after install
 
       - name: Install package
