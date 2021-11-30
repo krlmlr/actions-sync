@@ -129,7 +129,11 @@ jobs:
         run: |
           git fetch
           R -q -e 'pkgload::load_all(); overwrite_data()'
-          git push
+          if [ -n $(git status --porcelain inst/csv) ]; then
+            git add inst/csv
+            git commit -m "Update data"
+            git push
+          fi
       # End custom: after install
 
       - name: Install package
