@@ -124,17 +124,12 @@ jobs:
         shell: Rscript {0}
 
       # Begin custom: after install
-      - name: Setup tmate session
-        uses: mxschmitt/action-tmate@v3
-        with:
-          limit-access-to-actor: true
-
       - name: Update data
         if: github.event_name == 'push'
         run: |
-          pkgload::load_all()
-          overwrite_data(push = TRUE)
-        shell: Rscript {0}
+          git fetch
+          R -q -f 'overwrite_data(push = TRUE)'
+          git push
       # End custom: after install
 
       - name: Install package
