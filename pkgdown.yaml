@@ -128,7 +128,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           git fetch
-          R -q -e 'overwrite_data()'
+          R -q -e 'pkgload::load_all(); overwrite_data()'
           git push
       # End custom: after install
 
