@@ -37,7 +37,6 @@ jobs:
       matrix:
         config:
           - { os: macOS-latest,                 r: 'release' }
-          - { os: macOS-latest,                 r: 'devel' }
           - { os: windows-latest,               r: 'release', rspm: "https://packagemanager.rstudio.com/all/latest" }
           - { os: windows-latest,               r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/all/latest" }
           - { os: windows-latest,               r: 'devel',  rspm: "https://packagemanager.rstudio.com/all/latest" }
