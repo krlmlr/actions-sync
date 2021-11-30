@@ -128,7 +128,7 @@ jobs:
         if: github.event_name == 'push'
         run: |
           git fetch
-          R -q -f 'overwrite_data(push = TRUE)'
+          R -q -e 'overwrite_data()'
           git push
       # End custom: after install
 
