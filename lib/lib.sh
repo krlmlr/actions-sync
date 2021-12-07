@@ -79,6 +79,11 @@ wt_run() { # Run command in all worktrees, use '{}' as placeholder for worktree 
   find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' ./run.sh "$@"
 }
 
+wt_run_serial() { # Run command in all worktrees, use '{}' as placeholder for worktree directory
+  _provide_wt
+  ${SHELL} -ic "$( find wt/*/* -maxdepth 0 -type d | parallel echo ./run.sh "$@" "< /dev/tty ;" )"
+}
+
 _provide_wt() {
   if ! [ -d wt ]; then
     add_worktrees
@@ -87,6 +92,10 @@ _provide_wt() {
 
 wt_git() { # Run git command in all worktrees
   wt_run _wtdir_git '{}' "$@"
+}
+
+wt_git_serial() { # Run git command in all worktrees, with terminal support
+  wt_run_serial _wtdir_git '{}' "$@"
 }
 
 _wtdir_git() {
