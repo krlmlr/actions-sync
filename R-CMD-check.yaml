@@ -45,15 +45,15 @@ jobs:
           - { os: ubuntu-, os-version: 18.04,   r: 'oldrel',  rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest" }
 
           # Begin custom: R 3.6
-          - { os: ubuntu-, os-version: 18.04,   r: '3.6',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-, os-version: 18.04,   r: '3.6',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           # End custom: R 3.6
 
           # Begin custom: R 3.5
-          - { os: ubuntu-, os-version: 18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-, os-version: 18.04,   r: '3.5',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           # End custom: R 3.5
 
           # Begin custom: R 3.4
-          - { os: ubuntu-, os-version: 18.04,   r: '3.4',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          - {os: ubuntu-, os-version: 18.04,   r: '3.4',     rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
           # End custom: R 3.4
 
           # Begin custom: matrix elements
