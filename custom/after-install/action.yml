@@ -1,0 +1,9 @@
+name: 'Actions to run after R packages are installed'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install knitcitations if needed
+      run: |
+        pak::pak("cboettig/knitcitations")
+      shell: Rscript {0}
