@@ -14,7 +14,7 @@ if [ "$1" = "" ]; then
   echo
   echo "with command one of:"
   echo
-  sed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//- \1: \2/; p }' lib/lib.sh
+  gsed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//- \1: \2/; p }' lib/lib.sh
   return 1
 fi
 
@@ -24,7 +24,7 @@ echo "> $1"
 EOF
   chmod +x run.sh
 
-  sed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//\1 "\2"/; p }' lib/lib.sh | parallel ./run.sh _make_command
+  gsed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//\1 "\2"/; p }' lib/lib.sh | parallel ./run.sh _make_command
 }
 
 _make_command() {

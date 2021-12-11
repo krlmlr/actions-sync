@@ -7,7 +7,7 @@ if [ "$1" = "" ]; then
   echo
   echo "with command one of:"
   echo
-  sed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//- \1: \2/; p }' lib/lib.sh
+  gsed -r -n '/^([a-z].*)[(][)] [{] +# (.*)$/ { s//- \1: \2/; p }' lib/lib.sh
   exit 1
 fi
 
