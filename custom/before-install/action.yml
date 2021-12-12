@@ -10,8 +10,10 @@ runs:
       run: |
         sudo apt-get update
         sudo apt-get install -y libunwind-dev
+      shell: bash
 
     - name: Break libbacktrace
       if: matrix.config.libbacktrace == 'omit-libbacktrace'
       run: |
         echo '{ print "bogus"; exit }' > src/vendor/libbacktrace/filetype.awk
+      shell: bash
