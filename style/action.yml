@@ -3,6 +3,16 @@ name: 'Action to auto-style a package'
 runs:
   using: "composite"
   steps:
+    - name: Debug styler options
+      id: autostyle-check
+      run: |
+        set -x
+        scope=$(grep Config/autostyle/scope DESCRIPTION | cut -d " " -f 2)
+        strict=$(grep Config/autostyle/strict DESCRIPTION | cut -d " " -f 2)
+        echo $scope
+        echo $strict
+      shell: Rscript {0}
+
     - name: Check styler options
       id: autostyle-check
       run: |
