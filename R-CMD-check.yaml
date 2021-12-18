@@ -72,6 +72,11 @@ jobs:
           fi
         shell: bash
 
+      - name: Log all
+        run: |
+          git log --all --numstat --graph --decorate
+        shell: bash
+
   R-CMD-check-smoke:
     needs: pre
     runs-on: ubuntu-latest
