@@ -46,7 +46,7 @@ jobs:
 
       - name: Update file
         run: |
-          git echo "Test" >> dummy
+          echo "Test" >> dummy
         shell: bash
 
       - name: Check if changed
