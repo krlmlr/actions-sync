@@ -68,8 +68,8 @@ jobs:
             fi
             git add .
             git commit -m "Auto-update"
-            echo ::set-output name=sha::$(git show-ref -s HEAD)
             git push
+            echo ::set-output name=sha::$(git show-ref -s HEAD)
           fi
         shell: bash
 
