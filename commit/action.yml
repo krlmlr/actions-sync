@@ -8,6 +8,7 @@ runs:
   using: "composite"
   steps:
     - name: Commit if changed
+      id: commit
       run: |
         set -x
         if [ -n "$(git status --porcelain)" ]; then
