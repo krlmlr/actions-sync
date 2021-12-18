@@ -55,6 +55,7 @@ jobs:
       - name: Check if changed
         id: commit
         run: |
+          set -x
           if [ -n "$(git status --porcelain)" ]; then
             echo "Changed"
             git fetch
