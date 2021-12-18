@@ -90,12 +90,12 @@ jobs:
     steps:
       - name: Show previous output
         run: |
-          echo ${{ steps.pre.outputs.sha }}
+          echo ${{ needs.pre.outputs.sha }}
         shell: bash
 
       - uses: actions/checkout@v2
         with:
-          ref: ${{ steps.pre.outputs.sha }}
+          ref: ${{ needs.pre.outputs.sha }}
 
       - name: Log
         run: |
