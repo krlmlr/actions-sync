@@ -6,8 +6,11 @@ runs:
     - name: Check styler options
       id: autostyle-check
       run: |
-        echo ::set-output name=scope::$(grep Config/autostyle/scope DESCRIPTION | cut -d " " -f 2)
-        echo ::set-output name=strict::$(grep Config/autostyle/strict DESCRIPTION | cut -d " " -f 2)
+        set -x
+        scope=$(grep Config/autostyle/scope DESCRIPTION | cut -d " " -f 2)
+        strict=$(grep Config/autostyle/strict DESCRIPTION | cut -d " " -f 2)
+        echo ::set-output name=scope::$scope
+        echo ::set-output name=strict::$strict
       shell: Rscript {0}
 
     - name: Enable styler cache
