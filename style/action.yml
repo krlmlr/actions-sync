@@ -37,5 +37,5 @@ runs:
     - name: Run strict styler
       if: ${{ steps.autostyle-check.outputs.scope }} && ${{ steps.autostyle-check.outputs.strict }}
       run: |
-        styler::style_pkg(scope = "${{ steps.autostyle-check.outputs.scope }}", strict = FALSE)
+        styler::style_pkg(scope = "${{ steps.autostyle-check.outputs.scope }}", strict = TRUE)
       shell: Rscript {0}
