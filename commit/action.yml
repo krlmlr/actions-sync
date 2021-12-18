@@ -1,0 +1,28 @@
+name: 'Action to commit changes to the repository'
+outputs:
+  sha:
+    description: "SHA of generated commit"
+    value: ${{ steps.commit.outputs.sha }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Commit if changed
+      run: |
+        set -x
+        if [ -n "$(git status --porcelain)" ]; then
+          echo "Changed"
+          git fetch
+          if [ -n "${GITHUB_HEAD_REF}" ]; then
+            git add .
+            git stash save
+            git switch ${GITHUB_HEAD_REF}
+            git merge origin/${GITHUB_BASE_REF} --no-edit
+            git stash pop
+          fi
+          git add .
+          git commit -m "Auto-update"
+          git push
+          echo ::set-output name=sha::$(git rev-parse HEAD)
+        fi
+      shell: bash

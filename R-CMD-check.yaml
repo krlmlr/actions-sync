@@ -52,26 +52,8 @@ jobs:
           echo "Test" >> dummy
         shell: bash
 
-      - name: Check if changed
-        id: commit
-        run: |
-          set -x
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "Changed"
-            git fetch
-            if [ -n "${GITHUB_HEAD_REF}" ]; then
-              git add .
-              git stash save
-              git switch ${GITHUB_HEAD_REF}
-              git merge origin/${GITHUB_BASE_REF} --no-edit
-              git stash pop
-            fi
-            git add .
-            git commit -m "Auto-update"
-            git push
-            echo ::set-output name=sha::$(git rev-parse HEAD)
-          fi
-        shell: bash
+      - id: commit
+        uses: ./.github/workflows/commit
 
       - name: Log all
         run: |
