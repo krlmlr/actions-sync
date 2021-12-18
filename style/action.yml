@@ -20,19 +20,18 @@ runs:
       shell: Rscript {0}
 
     - uses: actions/cache@v2
+      if: ${{ steps.check.outputs.scope }}
       with:
         path: |
           ~/.cache/R/R.cache
         key: ${{ runner.os }}-
 
     - name: Run styler
-      if: ${{ steps.check.outputs.scope }} && !${{ steps.check.outputs.strict }}
+      if: ${{ steps.check.outputs.scope }}
       run: |
-        styler::style_pkg(scope = "${{ steps.check.outputs.scope }}", strict = FALSE)
-      shell: Rscript {0}
-
-    - name: Run strict styler
-      if: ${{ steps.check.outputs.scope }} && ${{ steps.check.outputs.strict }}
-      run: |
-        styler::style_pkg(scope = "${{ steps.check.outputs.scope }}", strict = TRUE)
+        strict <- as.logical("${{ steps.check.outputs.strict }}")
+        if (is.na(strict)) {
+          strict = FALSE
+        }
+        styler::style_pkg(scope = "${{ steps.check.outputs.scope }}", strict = strict)
       shell: Rscript {0}
