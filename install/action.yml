@@ -49,6 +49,13 @@ runs:
         extra-packages: ${{ inputs.extra-packages }} ${{ matrix.config.covr && 'covr' }}
         cache-version: ${{ inputs.cache-version }}
 
+    - name: Add pkg.lock to .gitignore
+      run: |
+        if [ ! -f .github/.gitignore || -n "$(grep '^pkg.lock$' .github/.gitignore "]; then
+          echo pkg.lock >> .github/.gitignore
+        fi
+      shell: bash
+
     - name: Add fake qpdf and checkbashisms
       if: runner.os == 'Linux'
       run: |
