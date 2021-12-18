@@ -13,7 +13,7 @@ runs:
       shell: Rscript {0}
 
     - name: Check styler options
-      id: autostyle-check
+      id: check
       run: |
         set -x
         scope=$(grep Config/autostyle/scope DESCRIPTION | cut -d " " -f 2)
@@ -23,19 +23,19 @@ runs:
       shell: Rscript {0}
 
     - name: Enable styler cache
-      if: ${{ steps.autostyle-check.outputs.scope }}
+      if: ${{ steps.check.outputs.scope }}
       run: |
         styler::cache_activate(verbose = TRUE)
       shell: Rscript {0}
 
     - name: Run styler
-      if: ${{ steps.autostyle-check.outputs.scope }} && !${{ steps.autostyle-check.outputs.strict }}
+      if: ${{ steps.check.outputs.scope }} && !${{ steps.check.outputs.strict }}
       run: |
-        styler::style_pkg(scope = "${{ steps.autostyle-check.outputs.scope }}", strict = FALSE)
+        styler::style_pkg(scope = "${{ steps.check.outputs.scope }}", strict = FALSE)
       shell: Rscript {0}
 
     - name: Run strict styler
-      if: ${{ steps.autostyle-check.outputs.scope }} && ${{ steps.autostyle-check.outputs.strict }}
+      if: ${{ steps.check.outputs.scope }} && ${{ steps.check.outputs.strict }}
       run: |
-        styler::style_pkg(scope = "${{ steps.autostyle-check.outputs.scope }}", strict = TRUE)
+        styler::style_pkg(scope = "${{ steps.check.outputs.scope }}", strict = TRUE)
       shell: Rscript {0}
