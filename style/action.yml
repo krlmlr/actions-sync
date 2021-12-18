@@ -10,7 +10,7 @@ runs:
         strict=$(grep Config/autostyle/strict DESCRIPTION | cut -d " " -f 2)
         echo $scope
         echo $strict
-      shell: Rscript {0}
+      shell: bash
 
     - name: Check styler options
       id: check
@@ -20,7 +20,7 @@ runs:
         strict=$(grep Config/autostyle/strict DESCRIPTION | cut -d " " -f 2)
         echo ::set-output name=scope::$scope
         echo ::set-output name=strict::$strict
-      shell: Rscript {0}
+      shell: bash
 
     - name: Enable styler cache
       if: ${{ steps.check.outputs.scope }}
