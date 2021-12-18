@@ -118,6 +118,8 @@ jobs:
   # Runs in a separate workflow, because it's using dev pkgdown
   # which might bring in other dev dependencies
   pkgdown:
+    needs: R-CMD-check-smoke
+
     runs-on: ubuntu-latest
 
     name: "pkgdown"
