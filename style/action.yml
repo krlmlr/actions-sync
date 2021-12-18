@@ -4,7 +4,6 @@ runs:
   using: "composite"
   steps:
     - name: Debug styler options
-      id: autostyle-check
       run: |
         set -x
         scope=$(grep Config/autostyle/scope DESCRIPTION | cut -d " " -f 2)
