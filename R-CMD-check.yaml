@@ -21,7 +21,51 @@ on:
 name: rcc
 
 jobs:
+  pre:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: ./.github/workflows/git-identity
+
+      - name: Show environment
+        run: |
+          env | sort
+        shell: bash
+
+      - name: Log all
+        run: |
+          git log --all --numstat --graph --decorate
+        shell: bash
+
+      - name: Show branches
+        run: |
+          git branch -vv
+          git branch -vvr
+        shell: bash
+
+      - name: Update file
+        run: |
+          git echo "Test" >> dummy
+        shell: bash
+
+      - name: Check if changed
+        id: commit
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "Changed"
+            if [ -n "${GITHUB_HEAD_REF}" ]; then
+              git switch ${GITHUB_HEAD_REF}
+              git merge ${GITHUB_BASE_REF} --no-edit
+            fi
+            git add .
+            git commit -m "Auto-update"
+            echo ::set-output name=sha::$(git show-ref -s HEAD)
+          fi
+        shell: bash
+
   R-CMD-check-smoke:
+    needs: pre
     runs-on: ubuntu-latest
 
     name: "Smoke test: stock R"
@@ -31,6 +75,23 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ steps.pre.outputs.sha }}
+
+      - name: Log
+        run: |
+          git log --numstat --graph --decorate
+        shell: bash
+
+      - name: Log all
+        run: |
+          git log --all --numstat --graph --decorate
+        shell: bash
+
+      - name: Fail
+        run: |
+          false
+        shell: bash
 
       - uses: ./.github/workflows/rate-limit
         with:
