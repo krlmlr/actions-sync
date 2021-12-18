@@ -34,21 +34,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
-      - name: Log
-        run: |
-          git log --numstat --graph --decorate
-        shell: bash
-
-      - name: Log all
-        run: |
-          git log --all --numstat --graph --decorate
-        shell: bash
-
-      - name: Fail
-        run: |
-          false
-        shell: bash
-
       - uses: ./.github/workflows/rate-limit
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
