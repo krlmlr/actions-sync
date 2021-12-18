@@ -52,8 +52,8 @@ runs:
     - name: Add pkg.lock to .gitignore
       run: |
         set -x
-        if ! [ -f .github/.gitignore ] || [ -z "$(grep '^pkg.lock$' .github/.gitignore)" ]; then
-          echo pkg.lock >> .github/.gitignore
+        if ! [ -f .github/.gitignore ] || [ -z "$(grep '^/pkg.lock$' .github/.gitignore)" ]; then
+          echo /pkg.lock >> .github/.gitignore
         fi
       shell: bash
 
