@@ -54,6 +54,7 @@ jobs:
         run: |
           if [ -n "$(git status --porcelain)" ]; then
             echo "Changed"
+            git fetch
             if [ -n "${GITHUB_HEAD_REF}" ]; then
               git switch ${GITHUB_HEAD_REF}
               git merge ${GITHUB_BASE_REF} --no-edit
