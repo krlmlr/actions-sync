@@ -1,0 +1,30 @@
+name: 'Action to auto-style a package'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check styler options
+      id: autostyle-check
+      run: |
+        set -x
+        echo ::set-output name=scope::$(grep Config/autostyle/scope DESCRIPTION | cut -d " " -f 2)
+        echo ::set-output name=strict::$(grep Config/autostyle/strict DESCRIPTION | cut -d " " -f 2)
+      shell: Rscript {0}
+
+    - name: Enable styler cache
+      if: ${{ steps.autostyle-check.outputs.scope }}
+      run: |
+        styler::cache_activate(verbose = TRUE)
+      shell: Rscript {0}
+
+    - name: Run styler
+      if: ${{ steps.autostyle-check.outputs.scope }} && !${{ steps.autostyle-check.outputs.strict }}
+      run: |
+        styler::style_pkg(scope = "${{ steps.autostyle-check.outputs.scope }}", strict = FALSE)
+      shell: Rscript {0}
+
+    - name: Run strict styler
+      if: ${{ steps.autostyle-check.outputs.scope }} && ${{ steps.autostyle-check.outputs.strict }}
+      run: |
+        styler::style_pkg(scope = "${{ steps.autostyle-check.outputs.scope }}", strict = FALSE)
+      shell: Rscript {0}

@@ -21,48 +21,10 @@ on:
 name: rcc
 
 jobs:
-  pre:
+  R-CMD-check-smoke:
     runs-on: ubuntu-latest
     outputs:
       sha: ${{ steps.commit.outputs.sha }}
-
-    steps:
-      - uses: actions/checkout@v2
-
-      - uses: ./.github/workflows/git-identity
-
-      - name: Show environment
-        run: |
-          env | sort
-        shell: bash
-
-      - name: Log all
-        run: |
-          git log --all --numstat --graph --decorate
-        shell: bash
-
-      - name: Show branches
-        run: |
-          git branch -vv
-          git branch -vvr
-        shell: bash
-
-      - name: Update file
-        run: |
-          echo "Test" >> dummy
-        shell: bash
-
-      - id: commit
-        uses: ./.github/workflows/commit
-
-      - name: Log all
-        run: |
-          git log --all --numstat --graph --decorate
-        shell: bash
-
-  R-CMD-check-smoke:
-    needs: pre
-    runs-on: ubuntu-latest
 
     name: "Smoke test: stock R"
 
@@ -70,14 +32,7 @@ jobs:
     # End custom: services
 
     steps:
-      - name: Show previous output
-        run: |
-          echo ${{ needs.pre.outputs.sha }}
-        shell: bash
-
       - uses: actions/checkout@v2
-        with:
-          ref: ${{ needs.pre.outputs.sha }}
 
       - name: Log
         run: |
@@ -105,8 +60,16 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           install-r: false
           cache-version: rcc-smoke-1
+          extra-packages: rcmdcheck roxygen2 styler
 
       - uses: ./.github/workflows/custom/after-install
+
+      - uses: ./.github/workflows/roxygenize
+
+      - uses: ./.github/workflows/style
+
+      - id: commit
+        uses: ./.github/workflows/commit
 
       - uses: ./.github/workflows/check
         with:
@@ -126,6 +89,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.rcc-smoke.outputs.sha }}
 
       - uses: ./.github/workflows/rate-limit
         with:
@@ -176,6 +141,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.rcc-smoke.outputs.sha }}
 
       - uses: ./.github/workflows/custom/before-install
 
@@ -231,6 +198,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+        with:
+          ref: ${{ needs.rcc-smoke.outputs.sha }}
 
       - uses: ./.github/workflows/custom/before-install
 
