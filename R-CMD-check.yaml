@@ -23,6 +23,9 @@ name: rcc
 jobs:
   pre:
     runs-on: ubuntu-latest
+    outputs:
+      sha: ${{ steps.commit.outputs.sha }}
+
     steps:
       - uses: actions/checkout@v2
 
