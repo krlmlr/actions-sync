@@ -51,8 +51,6 @@ jobs:
 
       - uses: ./.github/workflows/roxygenize
 
-      - uses: ./.github/workflows/style
-
       - id: commit
         uses: ./.github/workflows/commit
 
