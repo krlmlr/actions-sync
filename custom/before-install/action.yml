@@ -9,4 +9,4 @@ runs:
           message("Setting RCMDCHECK_ERROR_ON")
           cat('RCMDCHECK_ERROR_ON="warning"\n', file = Sys.getenv("GITHUB_ENV"), append = TRUE)
         }
-      shell: bash
+      shell: Rscript {0}
