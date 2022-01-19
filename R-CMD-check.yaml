@@ -20,6 +20,8 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref || '' }}-${{ github.base_ref || '' }}
   cancel-in-progress: true
 
+name: rcc
+
 jobs:
   rcc-smoke:
     runs-on: ubuntu-latest
