@@ -1,4 +1,8 @@
-name: 'Action to create pull requests for updated snapshots'
+name: "Action to create pull requests for updated testthat snapshots"
+description: >
+  This action will run `testthat::test_local()` for tests that seem to use snapshots,
+  this is determined by reading and grepping the test files.
+  If the tests are failing, snapshots are updated, and a pull request is opened.
 
 runs:
   using: "composite"
