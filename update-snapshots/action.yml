@@ -7,8 +7,10 @@ description: >
 runs:
   using: "composite"
   steps:
-    - name: Test files
+    - name: Run tests on test files that use snapshots
+      id: run-tests
       run: |
+        ## -- Run tests on test files that use snapshots --
         rx <- "^test-(.*)[.][rR]$"
         files <- dir("tests/testthat", pattern = rx)
         has_snapshot <- vapply(files, function(.x) any(grepl("snapshot", readLines(file.path("tests/testthat", .x)), fixed = TRUE)), logical(1))
@@ -24,6 +26,7 @@ runs:
                 print(failures[names(failures) != "result"])
                 print(failures$result)
                 testthat::snapshot_accept()
+                writeLines("::set-output name=changed::true")
               }
             },
             error = print
@@ -31,12 +34,14 @@ runs:
         }
       shell: Rscript {0}
 
-    - name: Add snapshots
+    - name: Add snapshots to Git
+      if: ${{ steps.run-tests.outputs.changed }}
       run: |
         git add -- tests/testthat/_snaps
       shell: bash
 
     - name: Check changed files
+      if: ${{ steps.run-tests.outputs.changed }}
       id: check-changed
       run: |
         echo "::set-output name=changed::$(git status --porcelain -- tests/testthat/_snaps)"
