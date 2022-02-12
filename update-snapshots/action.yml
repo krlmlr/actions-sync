@@ -31,6 +31,8 @@ runs:
             },
             error = print
           )
+        } else {
+          writeLines("No snapshots found.")
         }
       shell: Rscript {0}
 
