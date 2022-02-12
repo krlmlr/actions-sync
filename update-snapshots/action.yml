@@ -37,6 +37,8 @@ runs:
     - name: Add snapshots to Git
       if: ${{ steps.run-tests.outputs.changed }}
       run: |
+        ## -- Add snapshots to Git --
+        mkdir -p tests/testthat/_snaps
         git add -- tests/testthat/_snaps
       shell: bash
 
