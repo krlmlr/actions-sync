@@ -4,11 +4,13 @@ runs:
   using: "composite"
   steps:
     - name: Update data
+      if: ${{ github.job == 'rcc-smoke' }}
       run: |
         R -q -f data-raw/update-data.R
       shell: bash
 
     - name: Create pull request
+      if: ${{ github.job == 'rcc-smoke' }}
       uses: peter-evans/create-pull-request@v3
       with:
         base: ${{ github.head_ref }}
