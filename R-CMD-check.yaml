@@ -24,6 +24,7 @@ name: rcc
 
 jobs:
   rcc-smoke:
+    timeout-minutes: 30
     runs-on: ubuntu-latest
     outputs:
       sha: ${{ steps.commit.outputs.sha }}
@@ -76,6 +77,7 @@ jobs:
   # Runs in a separate workflow, because it's using dev pkgdown
   # which might bring in other dev dependencies
   pkgdown:
+    timeout-minutes: 30
     needs: rcc-smoke
 
     runs-on: ubuntu-latest
@@ -121,6 +123,7 @@ jobs:
   # when they alone take as long as the smoke and full tests combined.
   # To achieve this, remove the "needs:" element below.
   rcc-windows:
+    timeout-minutes: 30
     # Begin custom: early run
     needs: rcc-smoke
     # End custom: early run
@@ -166,6 +169,7 @@ jobs:
           results: ${{ runner.os }}-r${{ matrix.config.r }}
 
   rcc-full:
+    timeout-minutes: 30
     needs: rcc-smoke
 
     runs-on: ${{ matrix.config.os }}
