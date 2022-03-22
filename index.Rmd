@@ -41,7 +41,7 @@ make_slug <- function(slug) {
 
 make_badge <- function(slug, name, yaml_name) {
   paste0(
-    '<a href="', github, "/", slug, "/actions/workflows/", yaml_name, '.yaml" target="_blank">',
+    '<a href="', github, "/", slug, "/actions/workflows/", yaml_name, '" target="_blank">',
     "![", name, "]",
     "(", github, "/", slug, "/workflows/", name, "/badge.svg)",
     "</a>"
@@ -53,7 +53,7 @@ tibble(workflow = repo_workflows) %>%
   mutate(has_push = map_lgl(contents, ~ has_push(.x$on) || has_push(.x$"TRUE"))) %>%
   filter(has_push) %>%
   mutate(name = map_chr(contents, c("name"))) %>%
-  mutate(yaml_name = gsub("[.]yaml$", "", basename(workflow))) %>%
+  mutate(yaml_name = basename(workflow)) %>%
   mutate(name = coalesce(name, yaml_name)) %>%
   mutate(slug = dirname(workflow)) %>%
   add_count(name) %>%
