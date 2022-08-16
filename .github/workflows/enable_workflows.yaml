@@ -19,19 +19,22 @@ jobs:
 
       - name: Get branches to enable
         run: |
-          git branch -r | grep -E '.+/.+/.+' | grep -v HEAD | sed 's/origin//' > repo_list
+          git branch -r | grep -E '.+/.+/.+' | grep -v HEAD | sed 's/origin\///' > repo_list
 
       - name: Enable workflows
         run: |
           set -x
           while read line; do
-          curl -H "Accept: application/vnd.github+json" \
+          curl -X PUT \
+          -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos$line/actions/workflows/pkgdown.yaml/enable
-          curl -H "Accept: application/vnd.github+json" \
+          https://api.github.com/repos/$line/actions/workflows/pkgdown.yaml/enable
+          curl -X PUT \
+          -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos$line/actions/workflows/R-CMD-check.yaml/enable
-          curl -H "Accept: application/vnd.github+json" \
+          https://api.github.com/repos/$line/actions/workflows/R-CMD-check.yaml/enable
+          curl -X PUT \
+          -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos$line/actions/workflows/R-CMD-check-dev.yaml/enable
+          https://api.github.com/repos/$line/actions/workflows/R-CMD-check-dev.yaml/enable
           done < repo_list
