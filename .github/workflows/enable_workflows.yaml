@@ -1,7 +1,6 @@
 name: Enable workflows
 
 on:
-  pull_request:
   workflow_dispatch:
   schedule:
     - cron:  '0 2 1 * *'
@@ -23,7 +22,6 @@ jobs:
 
       - name: Enable workflows
         run: |
-          set -x
           while read line; do
           curl -X PUT \
           -H "Accept: application/vnd.github+json" \
