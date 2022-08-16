@@ -10,6 +10,7 @@ jobs:
   enable-workflows:
     runs-on: ubuntu-latest
     env:
+      TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
 
     steps:
       - name: Checkout repository
