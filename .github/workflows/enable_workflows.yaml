@@ -23,6 +23,7 @@ jobs:
 
       - name: Enable workflows
         run: |
+          set -x
           while read line; do
           curl -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
