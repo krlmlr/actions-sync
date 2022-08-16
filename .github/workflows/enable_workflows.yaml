@@ -27,11 +27,11 @@ jobs:
           while read line; do
           curl -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos/$line/actions/workflows/pkgdown.yaml/enable
+          https://api.github.com/repos$line/actions/workflows/pkgdown.yaml/enable
           curl -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos/$line/actions/workflows/R-CMD-check.yaml/enable
+          https://api.github.com/repos$line/actions/workflows/R-CMD-check.yaml/enable
           curl -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos/$line/actions/workflows/R-CMD-check-dev.yaml/enable
+          https://api.github.com/repos$line/actions/workflows/R-CMD-check-dev.yaml/enable
           done < repo_list
