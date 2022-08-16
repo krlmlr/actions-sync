@@ -1,0 +1,22 @@
+name: Enable workflows
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron:  '0 2 1 * *'
+
+jobs:
+  enable-workflows:
+    runs-on: ubuntu-latest
+    env:
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Get branches to enable
+        run: |
+          git branch -r | grep -E '.+/.+/.+' | grep -v HEAD | sed 's/origin//'
