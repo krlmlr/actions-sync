@@ -24,6 +24,9 @@ jobs:
       - name: Enable workflows
         run: |
           set -x
+          curl -H "Accept: application/vnd.github+json" \
+          -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+          https://api.github.com/repos/cynkra/cynkratemplate/actions/workflows
           while read line; do
           curl -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
