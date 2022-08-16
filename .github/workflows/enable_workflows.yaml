@@ -24,17 +24,14 @@ jobs:
       - name: Enable workflows
         run: |
           set -x
-          curl -H "Accept: application/vnd.github+json" \
-          -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos/cynkra/cynkratemplate/actions/workflows
           while read line; do
           curl -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos/$line/actions/workflows/pkgdown/enable
+          https://api.github.com/repos/$line/actions/workflows/pkgdown.yaml/enable
           curl -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos/$line/actions/workflows/rcc/enable
+          https://api.github.com/repos/$line/actions/workflows/R-CMD-check.yaml/enable
           curl -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-          https://api.github.com/repos/$line/actions/workflows/rcc-dev/enable
+          https://api.github.com/repos/$line/actions/workflows/R-CMD-check-dev.yaml/enable
           done < repo_list
