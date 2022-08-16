@@ -9,13 +9,28 @@ on:
 jobs:
   enable-workflows:
     runs-on: ubuntu-latest
-    env:
-      TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          ref: main
+          fetch-depth: 0
 
       - name: Get branches to enable
         run: |
-          git branch -r | grep -E '.+/.+/.+' | grep -v HEAD | sed 's/origin//'
+          git branch -r | grep -E '.+/.+/.+' | grep -v HEAD | sed 's/origin//' > repo_list
+
+      - name: Enable workflows
+        run: |
+          while read line; do
+          curl -H "Accept: application/vnd.github+json" \
+          -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+          https://api.github.com/repos/$line/actions/workflows/pkgdown/enable
+          curl -H "Accept: application/vnd.github+json" \
+          -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+          https://api.github.com/repos/$line/actions/workflows/rcc/enable
+          curl -H "Accept: application/vnd.github+json" \
+          -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
+          https://api.github.com/repos/$line/actions/workflows/rcc-dev/enable
+          done < repo_list
