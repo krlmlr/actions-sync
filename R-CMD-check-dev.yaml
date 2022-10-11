@@ -13,6 +13,7 @@ name: rcc dev
 
 jobs:
   matrix:
+    timeout-minutes: 30
     runs-on: ubuntu-20.04
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}
@@ -34,6 +35,7 @@ jobs:
         uses: ./.github/workflows/dep-matrix
 
   check-matrix:
+    timeout-minutes: 30
     runs-on: ubuntu-18.04
     needs: matrix
     steps:
@@ -49,6 +51,7 @@ jobs:
           echo $matrix | json2yaml
 
   R-CMD-check-dev:
+    timeout-minutes: 30
     needs: matrix
 
     runs-on: ubuntu-18.04
