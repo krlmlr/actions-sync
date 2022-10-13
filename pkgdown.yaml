@@ -6,6 +6,7 @@ on:
     branches:
       - "docs*"
       - "cran-*"
+      - main
 
 name: pkgdown
 
