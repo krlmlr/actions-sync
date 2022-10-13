@@ -51,7 +51,6 @@ Workflows in remote repositories will contain a history of all changes that came
 >
 > An overview page over all workflows in remote repositories, updated daily, is deployed to <https://krlmlr.github.io/actions-sync/>.
 
-
 ## Basic workflow
 
 1. Import a project, one of:
@@ -68,14 +67,17 @@ Workflows in remote repositories will contain a history of all changes that came
 There are also manual ways to synchronize but this will bork your work trees.
 Use with care!
 
-
 ## Editing workflows locally
 
 Tested on Ubuntu.
 Requires GNU `parallel`.
 
 1. Extract all branches as worktrees locally, to the `wt/` directory:
-    - `bin/add_worktrees`
+
+    ```sh
+    bin/add_worktrees
+    ```
+
 1. Check history by date in all worktrees, to remind you which actions have been updated recently in which remote repository:
 
     ```sh
@@ -114,13 +116,31 @@ Requires GNU `parallel`.
         bin/wt_git commit -m "My commit message"
         ```
 
-1. Push all worktrees:
-    - `git push --all`
-    - Add `-n` to verify what happens
-    - After push to this repository, the contents are synchronized with the remote repository by GitHub Actions
-1. Clean up all worktrees
-    - `bin/remove_worktrees`
+    - Alternatively, if you want to cherry-pick a commit and apply to all worktrees
 
+        ```sh
+        bin/wt_git cherry-pick commitSha
+        ```
+
+1. Push all worktrees:
+
+    ```sh
+    git push --all
+    ```
+
+    - You can also add `-n` to verify what happens
+
+    ```sh
+    git push --all -n
+    ```
+
+    - After push to this repository, the contents are synchronized with the remote repository by GitHub Actions
+
+1. Clean up all worktrees
+
+    ```sh
+    bin/remove_worktrees
+    ```
 
 ## Maintaining similar yet different workflows across projects
 
@@ -150,14 +170,14 @@ If the base workflow changes, most of the time the change can be cherry-picked i
 
 If a workflow in a remote repository changes common parts, they are brought back into the `base` branch.
 
-    ```
-    cd wt/base
-    git checkout -f owner/repo -- .
-    # Keep only desired changes
-    git add .
-    git commit -f
-    cd ../..
-    ```
+```sh
+cd wt/base
+git checkout -f owner/repo -- .
+# Keep only desired changes
+git add .
+git commit -f
+cd ../..
+```
 
 For a "tabula rasa" style setup, we can also overwrite worktrees with the contents of a branch.
 
