@@ -12,7 +12,7 @@ name: Refresh all remote repositories
 
 jobs:
   import_repo:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     name: Refresh all remote repositories
 

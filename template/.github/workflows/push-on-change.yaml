@@ -8,7 +8,7 @@ name: Push on change
 
 jobs:
   create_key:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     name: Push on change ${{ github.ref }}
 
