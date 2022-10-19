@@ -13,7 +13,7 @@ name: Status
 
 jobs:
   status:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     # Begin custom: services
     # End custom: services
@@ -72,7 +72,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "18.04"); if (length(req) > 0) cat(req, sep = "\n")')
+          done < <(Rscript -e 'req <- remotes::system_requirements("ubuntu", "22.04"); if (length(req) > 0) cat(req, sep = "\n")')
 
       # Begin custom: before install
       # End custom: before install

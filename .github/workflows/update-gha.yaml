@@ -10,7 +10,7 @@ name: Update GHA in remote repositories
 
 jobs:
   create_key:
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-22.04
 
     name: Update GHA in remote repositories
 
