@@ -18,7 +18,7 @@ jobs:
     # Begin custom: services
     # End custom: services
     env:
-      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"
+      RSPM: "https://packagemanager.rstudio.com/cran/__linux__/jammy/latest"
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       # prevent rgl issues because no X11 display is available
       RGL_USE_NULL: true
@@ -55,7 +55,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-2-${{ hashFiles('.github/depends.Rds') }}
+          key: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-3-${{ hashFiles('.github/depends.Rds') }}
           restore-keys: ${{ runner.os }}-${{ hashFiles('.github/R-version') }}-1-
 
       - name: Configure Git identity
