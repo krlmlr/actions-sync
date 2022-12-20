@@ -126,7 +126,7 @@ jobs:
       - uses: ankane/setup-mariadb@v1
         if: matrix.package == 'RMariaDB'
         with:
-          mariadb-version: 10.5
+          mariadb-version: 10.9
 
       - name: Create database, set it to UTF-8
         if: matrix.package == 'RMariaDB'
