@@ -76,7 +76,7 @@ _add_worktree() {
 
 wt_run() { # Run command in all worktrees, use '{}' as placeholder for worktree directory
   _provide_wt
-  find wt/*/* -maxdepth 0 -type d | parallel -q -I '{}' ./run.sh "$@"
+  find wt/base wt/*/* -maxdepth 0 -type d | grep -v '/base/' | parallel -q -I '{}' ./run.sh "$@"
 }
 
 wt_run_serial() { # Run command in all worktrees, use '{}' as placeholder for worktree directory
