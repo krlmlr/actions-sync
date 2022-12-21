@@ -30,7 +30,7 @@ jobs:
           ) | jq -c .)
           echo $matrix
           echo $matrix | jq .
-          echo "::set-output name=matrix::$matrix"
+          echo "matrix=$matrix" >> $GITHUB_OUTPUT
 
   check-matrix:
     runs-on: ubuntu-latest
