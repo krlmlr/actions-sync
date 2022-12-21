@@ -185,12 +185,12 @@ jobs:
           - {os: ubuntu-20.04,   r: 'release'}
 
           # Use older ubuntu to maximise backward compatibility
-          - {os: ubuntu-18.04,   r: 'devel',     http-user-agent: 'release'}
-          - {os: ubuntu-18.04,   r: 'release',   covr: true,                  desc: 'with covr'}
-          - {os: ubuntu-18.04,   r: 'oldrel-1'}
+          - {os: ubuntu-22.04,   r: 'devel',     http-user-agent: 'release'}
+          - {os: ubuntu-22.04,   r: 'release',   covr: true,                  desc: 'with covr'}
+          - {os: ubuntu-22.04,   r: 'oldrel-1'}
 
           # Begin custom: R 3.6
-          - {os: ubuntu-18.04,   r: 'oldrel-2'}
+          - {os: ubuntu-22.04,   r: 'oldrel-2'}
           # End custom: R 3.6
 
           # Begin custom: R 3.5
@@ -200,8 +200,8 @@ jobs:
           # End custom: R 3.4
 
           # Begin custom: matrix elements
-          - { os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, desc: "omit libunwind" }
-          - { os: ubuntu-18.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, libbacktrace: omit-libbacktrace, desc: "omit libunwind and libbacktrace" }
+          - { os: ubuntu-22.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, desc: "omit libunwind" }
+          - { os: ubuntu-22.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, libbacktrace: omit-libbacktrace, desc: "omit libunwind and libbacktrace" }
           # End custom: matrix elements
 
     steps:
