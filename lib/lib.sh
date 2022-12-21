@@ -102,7 +102,6 @@ _wtdir_git() {
   git_dir="$1"
   shift
 
-  echo "$git_dir"
   git -C "$git_dir" "$@"
 }
 
