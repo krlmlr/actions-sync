@@ -136,7 +136,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - { os: windows-latest,               r: 'devel-ucrt' }
           - {os: windows-latest, r: 'release'}
           # Use 3.6 to trigger usage of RTools35
           - {os: windows-latest, r: '3.6'}
@@ -194,14 +193,14 @@ jobs:
           # End custom: R 3.6
 
           # Begin custom: R 3.5
+          - {os: ubuntu-22.04,   r: 'oldrel-3'}
           # End custom: R 3.5
 
           # Begin custom: R 3.4
+          - {os: ubuntu-22.04,   r: 'oldrel-4'}
           # End custom: R 3.4
 
           # Begin custom: matrix elements
-          - { os: ubuntu-22.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, desc: "omit libunwind" }
-          - { os: ubuntu-22.04,   r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest", libunwind: omit-libunwind, libbacktrace: omit-libbacktrace, desc: "omit libunwind and libbacktrace" }
           # End custom: matrix elements
 
     steps:
