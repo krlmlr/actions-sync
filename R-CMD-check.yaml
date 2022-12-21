@@ -183,7 +183,7 @@ jobs:
 
           - {os: ubuntu-20.04,   r: 'release'}
 
-          # RProtoBuf doesn't install on Ubuntu 18.04 
+          # RProtoBuf doesn't install on Ubuntu 22.04 
           - {os: ubuntu-20.04,   r: 'devel',     http-user-agent: 'release'}
           - {os: ubuntu-20.04,   r: 'release',   covr: true,                  desc: 'with covr'}
           - {os: ubuntu-20.04,   r: 'oldrel-1'}
