@@ -137,7 +137,8 @@ jobs:
       matrix:
         config:
           - {os: windows-latest, r: 'release'}
-          # Broken checks on R 3.6
+          # Use 3.6 to trigger usage of RTools35
+          - {os: windows-latest, r: '3.6'}
 
     steps:
       - uses: actions/checkout@v3
@@ -196,6 +197,7 @@ jobs:
           # End custom: R 3.5
 
           # Begin custom: R 3.4
+          - {os: ubuntu-22.04,   r: 'oldrel-4'}
           # End custom: R 3.4
 
           # Begin custom: matrix elements
