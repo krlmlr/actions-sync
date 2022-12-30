@@ -37,7 +37,7 @@ jobs:
       - name: Check if branch exists
         id: check_branch
         run: |
-          echo "::set-output name=exists::$(git branch --list origin/${{ github.event.inputs.remote_repo }})"
+          echo "exists=$(git branch --list origin/${{ github.event.inputs.remote_repo }})" >> $GITHUB_OUTPUT
 
       - name: Show if branch exists
         run: |

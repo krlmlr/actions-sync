@@ -26,7 +26,7 @@ jobs:
       - name: Get branch name
         id: remote_repo
         run: |
-          echo "::set-output name=slug::$(echo $GITHUB_REF | sed 's#refs/heads/##')"
+          echo "slug=$(echo $GITHUB_REF | sed 's#refs/heads/##')" >> $GITHUB_OUTPUT
         shell: bash
 
 
