@@ -11,5 +11,5 @@ runs:
        run: |
          R CMD INSTALL .
          echo .github/example*.R | xargs -n 1 R -q -f
-         R -q -e 'remove.packages("procmaps")'
+         R -q -e "remove.packages('procmaps')"
        shell: bash
