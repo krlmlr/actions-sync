@@ -1,0 +1,13 @@
+name: "Action to commit changes to the repository"
+outputs:
+  sha:
+    description: "SHA of generated commit"
+    value: ${{ steps.commit.outputs.sha }}
+
+runs:
+  using: "composite"
+  steps:
+     - name: Examples
+       run: |
+         echo .github/example*.R | xargs -n 1 R -q -f
+       shell: bash
