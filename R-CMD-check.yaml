@@ -39,7 +39,7 @@ jobs:
 
       - name: Download JAGS Windows
         if: runner.os == 'Windows'
-        run: (New-Object System.Net.WebClient).DownloadFile('https://github.com/poissonconsulting/JAGS/blob/main/4.x/Windows/JAGS-4.3.1.exe', 'C:\JAGS-4.3.1.exe')
+        run: (New-Object System.Net.WebClient).DownloadFile('https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/JAGS-4.3.1.exe', 'C:\JAGS-4.3.1.exe')
         shell: powershell
 
       - name: Install JAGS Windows
