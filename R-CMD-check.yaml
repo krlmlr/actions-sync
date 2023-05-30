@@ -37,10 +37,6 @@ jobs:
         if: runner.os == 'macOS'
         run: brew install jags
 
-      - name: Install JAGS Linux
-        if: runner.os == 'Linux'
-        run: sudo apt-get install jags
-
       - name: Download JAGS Windows
         if: runner.os == 'Windows'
         run: (New-Object System.Net.WebClient).DownloadFile('https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/JAGS-4.3.1.exe', 'C:\JAGS-4.3.1.exe')
