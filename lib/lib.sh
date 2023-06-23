@@ -148,7 +148,8 @@ wt_copy_to() { # Copy a branch into all worktrees, don't commit. Pass local bran
 }
 
 refresh_all() { # Refresh all repositories
-  git branch -r | egrep -v 'main' | sed 's#  origin/##' | grep '/' | parallel --joblog refresh_all.log ./run.sh _force_import
+  git branch -r | egrep -v 'main' | sed 's#  origin/##' | grep '/'
+  git branch -r | egrep -v 'main' | sed 's#  origin/##' | grep '/' | parallel -j 1 --joblog refresh_all.log ./run.sh _force_import
 }
 
 _force_import() {
