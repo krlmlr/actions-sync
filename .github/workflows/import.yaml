@@ -19,13 +19,13 @@ jobs:
     steps:
       - name: Check out repository
         if: ${{ github.event.inputs.base }} == ''
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: main
 
       - name: Check out repository
         if: ${{ github.event.inputs.base }} != ''
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           ref: main
           fetch-depth: 0
