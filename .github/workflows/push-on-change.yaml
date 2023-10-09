@@ -1,0 +1,37 @@
+on:
+  push:
+    branches:
+      - '*/*'
+  workflow_dispatch:
+
+name: Push on change
+
+jobs:
+  create_key:
+    runs-on: ubuntu-22.04
+
+    name: Push on change ${{ github.ref }}
+
+    steps:
+      - name: Check out our repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Configure Git identity
+        run: |
+          git log HEAD^.. --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
+
+      - name: Get branch name
+        id: remote_repo
+        run: |
+          echo "slug=$(echo $GITHUB_REF | sed 's#refs/heads/##')" >> $GITHUB_OUTPUT
+        shell: bash
+
+
+      - name: Merge subtree
+        env:
+          TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
+        run: |
+          ./run.sh merge_into_remote ${{ steps.remote_repo.outputs.slug }}
