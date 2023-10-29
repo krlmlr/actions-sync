@@ -49,7 +49,7 @@ make_badge <- function(slug, name, yaml_name) {
 }
 
 tibble(workflow = repo_workflows) %>%
-  mutate(contents = map(file.path("wt", workflow), yaml::read_yaml, eval.expr = FALSE)) %>%
+  mutate(contents = map(file.path("wt", workflow), ~ suppressWarnings(yaml::read_yaml(.x, eval.expr = FALSE)))) %>%
   mutate(has_push = map_lgl(contents, ~ has_push(.x$on) || has_push(.x$"TRUE"))) %>%
   filter(has_push) %>%
   mutate(name = map_chr(contents, c("name"))) %>%
