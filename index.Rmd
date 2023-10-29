@@ -43,7 +43,7 @@ make_badge <- function(slug, name, yaml_name) {
   paste0(
     '<a href="', github, "/", slug, "/actions/workflows/", yaml_name, '" target="_blank">',
     "![", name, "]",
-    "(", github, "/", slug, "/workflows/", name, "/badge.svg)",
+    "(https://shields.io/github/actions/workflow/status/", slug, "/", yaml_name, "?label=", name, ")",
     "</a>"
   )
 }
