@@ -52,7 +52,7 @@ jobs:
       - name: Trigger if branch is new
         if: ${{ steps.check_branch.outputs.exists }} == ""
         run: |
-          curl -s \
+          curl --fail-with-body -s \
             -X POST \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             --data @- https://api.github.com/repos/${{ github.repository }}/actions/workflows/push-on-change.yaml/dispatches << EOF
@@ -60,7 +60,7 @@ jobs:
               "ref" : "${{ github.event.inputs.remote_repo }}"
             }
           EOF
-          curl -s \
+          curl --fail-with-body -s \
             -X POST \
             -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
             --data @- https://api.github.com/repos/${{ github.repository }}/actions/workflows/status.yaml/dispatches

@@ -23,15 +23,15 @@ jobs:
       - name: Enable workflows
         run: |
           while read line; do
-          curl -X PUT \
+          curl --fail-with-body -X PUT \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
           https://api.github.com/repos/$line/actions/workflows/pkgdown.yaml/enable
-          curl -X PUT \
+          curl --fail-with-body -X PUT \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
           https://api.github.com/repos/$line/actions/workflows/R-CMD-check.yaml/enable
-          curl -X PUT \
+          curl --fail-with-body -X PUT \
           -H "Accept: application/vnd.github+json" \
           -H "Authorization: token ${{ secrets.TOKEN_KEYS }}" \
           https://api.github.com/repos/$line/actions/workflows/R-CMD-check-dev.yaml/enable
