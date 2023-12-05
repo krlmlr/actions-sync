@@ -52,15 +52,6 @@ jobs:
       - name: Trigger if branch is new
         if: ${{ steps.check_branch.outputs.exists }} == ""
         run: |
-          curl --fail-with-body -s \
-            -X POST \
-            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-            --data @- https://api.github.com/repos/${{ github.repository }}/actions/workflows/push-on-change.yaml/dispatches << EOF
-            {
-              "ref" : "${{ github.event.inputs.remote_repo }}"
-            }
-          EOF
-          curl --fail-with-body -s \
-            -X POST \
-            -H"Authorization: token ${{ secrets.TOKEN_KEYS }}" \
-            --data @- https://api.github.com/repos/${{ github.repository }}/actions/workflows/status.yaml/dispatches
+          echo ${{ secrets.TOKEN_KEYS }} | gh auth login --with-token
+          gh workflow run push-on-change.yaml -r "${{ github.event.inputs.remote_repo }}"
+          gh workflow run status.yaml
