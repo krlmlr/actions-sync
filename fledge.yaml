@@ -3,9 +3,6 @@ name: fledge
 on:
   # for manual triggers
   workflow_dispatch:
-  # daily run
-  schedule:
-  - cron: "30 0 * * *"
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref || github.sha }}-${{ github.base_ref || '' }}
