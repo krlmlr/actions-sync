@@ -109,7 +109,7 @@ jobs:
         run: |
           remotes::install_local("revdep-dev/${{ matrix.package }}", dependencies = TRUE, type = .Platform$pkgType)
           remotes::install_local(".", type = .Platform$pkgType, force = TRUE)
-          remotes::install_cran("pkgbuild")
+          pak::pak(c("pkgbuild", "decor"))
         shell: Rscript {0}
 
       - name: Session info

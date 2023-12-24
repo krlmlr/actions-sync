@@ -96,6 +96,7 @@ jobs:
         run: |
           if (!requireNamespace("curl", quietly = TRUE)) install.packages("curl")
           if (!requireNamespace("remotes", quietly = TRUE)) install.packages("remotes")
+          pak::pak(c("pkgbuild", "decor"))
         shell: Rscript {0}
 
       - name: Clone backend
