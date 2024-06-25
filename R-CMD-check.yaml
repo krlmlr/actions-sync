@@ -117,53 +117,49 @@ jobs:
       - uses: ./.github/workflows/pkgdown-deploy
         if: github.event_name == 'push'
 
-  # Windows checks can be run in parallel and independently
-  # when they alone take as long as the smoke and full tests combined.
-  # To achieve this, remove the "needs:" element below.
-  rcc-windows:
-    # Begin custom: early run
-    needs: rcc-smoke
-    # End custom: early run
+  versions-matrix:
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
 
-    runs-on: ${{ matrix.config.os }}
-
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.desc }}
-
-    # Begin custom: services
-    # End custom: services
-
-    strategy:
-      fail-fast: false
-      matrix:
-        config:
-          - {os: windows-latest, r: 'release'}
-          # Use 3.6 to trigger usage of RTools35
-          - {os: windows-latest, r: '3.6'}
+    name: Collect versions
 
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: ${{ needs.rcc-smoke.outputs.sha }}
+          fetch-depth: 0
 
-      - uses: ./.github/workflows/custom/before-install
-        if: hashFiles('.github/workflows/custom/before-install/action.yml') != ''
-
-      - uses: ./.github/workflows/install
+      - uses: ./.github/workflows/rate-limit
         with:
-          r-version: ${{ matrix.config.r }}
-          cache-version: rcc-windows-1
           token: ${{ secrets.GITHUB_TOKEN }}
-          needs: check
 
-      - uses: ./.github/workflows/custom/after-install
-        if: hashFiles('.github/workflows/custom/after-install/action.yml') != ''
-
-      - uses: ./.github/workflows/update-snapshots
-        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
-
-      - uses: ./.github/workflows/check
+      - uses: r-lib/actions/setup-r@v2
         with:
-          results: ${{ runner.os }}-r${{ matrix.config.r }}
+          install-r: false
+          use-public-rspm: true
+
+      - id: set-matrix
+        uses: ./.github/workflows/versions-matrix
+
+  check-versions-matrix:
+    runs-on: ubuntu-22.04
+    needs: versions-matrix
+
+    name: Check deps
+
+    if: ${{ needs.versions-matrix.outputs.matrix != '' }}
+
+    steps:
+      - name: Install json2yaml
+        run: |
+          sudo npm install -g json2yaml
+
+      - name: Check matrix definition
+        run: |
+          matrix='${{ needs.versions-matrix.outputs.matrix }}'
+          echo $matrix
+          echo $matrix | jq .
+          echo $matrix | json2yaml
 
   rcc-full:
     needs: rcc-smoke
@@ -252,13 +248,13 @@ jobs:
       - id: set-matrix
         uses: ./.github/workflows/dep-matrix-suggests
 
-  check-matrix:
+  check-suggests-matrix:
     runs-on: ubuntu-22.04
     needs: suggests-matrix
 
     name: Check deps
 
-    if: ${{ needs.matrix.outputs.matrix != '' }}
+    if: ${{ needs.suggests-matrix.outputs.matrix != '' }}
 
     steps:
       - name: Install json2yaml
@@ -267,7 +263,7 @@ jobs:
 
       - name: Check matrix definition
         run: |
-          matrix='${{ needs.matrix.outputs.matrix }}'
+          matrix='${{ needs.suggests-matrix.outputs.matrix }}'
           echo $matrix
           echo $matrix | jq .
           echo $matrix | json2yaml

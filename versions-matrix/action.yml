@@ -1,0 +1,15 @@
+name: "Actions to compute a matrix with all R and OS versions"
+outputs:
+  matrix:
+    description: "Generated matrix"
+    value: ${{ steps.set-matrix.outputs.matrix }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: set-matrix
+      run: |
+        json <- '[{os: macos-latest,   r: "release"}, {os: ubuntu-20.04,   r: "release"}, {os: ubuntu-22.04,   r: "devel", http-user-agent: "release"}]'
+        writeLines(json)
+        writeLines(paste0("matrix=", json), Sys.getenv("GITHUB_OUTPUT"))
+      shell: Rscript {0}
