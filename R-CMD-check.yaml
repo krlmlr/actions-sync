@@ -145,7 +145,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: versions-matrix
 
-    name: Check deps
+    name: Check versions deps
 
     if: ${{ needs.versions-matrix.outputs.matrix != '' }}
 
@@ -252,7 +252,7 @@ jobs:
     runs-on: ubuntu-22.04
     needs: suggests-matrix
 
-    name: Check deps
+    name: Check suggests deps
 
     if: ${{ needs.suggests-matrix.outputs.matrix != '' }}
 
