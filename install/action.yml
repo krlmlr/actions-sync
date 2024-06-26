@@ -40,10 +40,8 @@ runs:
         # prevent rgl issues because no X11 display is available
         echo "RGL_USE_NULL=true" | tee -a $GITHUB_ENV
         # from https://github.com/r-devel/r-dev-web/blob/main/CRAN/QA/Kurt/lib/R/Scripts/check_CRAN_incoming.R
-        echo "_R_CHECK_CRAN_INCOMING_=true" | tee -a $GITHUB_ENV
         echo "_R_CHECK_CRAN_INCOMING_CHECK_FILE_URIS_=true" | tee -a $GITHUB_ENV
         echo "_R_CHECK_CRAN_INCOMING_NOTE_GNU_MAKE_=true" | tee -a $GITHUB_ENV
-        echo "_R_CHECK_CRAN_INCOMING_USE_ASPELL_=true" | tee -a $GITHUB_ENV
         echo "_R_CHECK_PACKAGE_DEPENDS_IGNORE_MISSING_ENHANCES_=true" | tee -a $GITHUB_ENV
         echo "_R_CHECK_BASHISMS_=true" | tee -a $GITHUB_ENV
         echo "_R_CHECK_CODE_CLASS_IS_STRING_=true" | tee -a $GITHUB_ENV
@@ -65,6 +63,8 @@ runs:
       if: runner.os == 'Linux'
       run: |
         sudo apt-get update
+        sudo apt-get install -y aspell
+        echo "_R_CHECK_CRAN_INCOMING_USE_ASPELL_=true" | tee -a $GITHUB_ENV
       shell: bash
 
     - uses: r-lib/actions/setup-pandoc@v2
