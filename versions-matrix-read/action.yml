@@ -7,7 +7,15 @@ outputs:
 runs:
   using: "composite"
   steps:
+    - name: Install json2yaml
+      run: |
+        sudo npm install -g json2yaml
+      shell: bash
+
     - id: set-matrix
       run: |
-        echo matrix=$(cat .github/versions-matrix.json || echo '[]') >> $GITHUB_OUTPUT
+        matrix=$(cat .github/versions-matrix.json || echo '[]')
+        echo $matrix | jq .
+        echo $matrix | json2yaml
+        echo "matrix=$matrix" | tee -a $GITHUB_OUTPUT
       shell: bash
