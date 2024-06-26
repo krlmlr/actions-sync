@@ -166,9 +166,9 @@ jobs:
       - rcc-smoke
       - versions-matrix
 
-    runs-on: ${{ matrix.config.os }}
+    runs-on: ${{ matrix.os }}
 
-    name: ${{ matrix.config.os }} (${{ matrix.config.r }}) ${{ matrix.config.desc }}
+    name: ${{ matrix.os }} (${{ matrix.r }}) ${{ matrix.desc }}
 
     # Begin custom: services
     # End custom: services
@@ -187,7 +187,7 @@ jobs:
 
       - uses: ./.github/workflows/install
         with:
-          r-version: ${{ matrix.config.r }}
+          r-version: ${{ matrix.r }}
           cache-version: rcc-full-1
           token: ${{ secrets.GITHUB_TOKEN }}
           needs: check
@@ -200,7 +200,7 @@ jobs:
 
       - uses: ./.github/workflows/check
         with:
-          results: ${{ runner.os }}-r${{ matrix.config.r }}
+          results: ${{ runner.os }}-r${{ matrix.r }}
 
   suggests-matrix:
     runs-on: ubuntu-22.04
