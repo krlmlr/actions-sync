@@ -248,8 +248,8 @@ jobs:
 
   rcc-suggests:
     needs:
-      - suggests-matrix
       - rcc-smoke
+      - suggests-matrix
 
     runs-on: ubuntu-22.04
 
