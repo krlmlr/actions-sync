@@ -22,9 +22,7 @@ runs:
           html_url=$(gh api \
             -H "Accept: application/vnd.github+json" \
             -H "X-GitHub-Api-Version: 2022-11-28" \
-            /repos/${{ github.repository }}/actions/runs/${{ github.run_id }} | jq . | tee /dev/stderr | jq -r .html_url)
-
-          echo $html_url
+            /repos/${{ github.repository }}/actions/runs/${{ github.run_id }} | jq -r .html_url)
 
           gh api \
             --method POST \
