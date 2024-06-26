@@ -30,5 +30,5 @@ to_json <- function(x) {
 configs <- unlist(lapply(include_list, to_json))
 json <- paste0('{"include":[', paste(configs, collapse = ","), ']}')
 
-writeLines(json, ".github/version-matrix.json")
+writeLines(json, ".github/versions-matrix.json")
 writeLines(json)
