@@ -185,6 +185,18 @@ jobs:
         with:
           results: ${{ runner.os }}-r${{ matrix.r }}
 
+      - uses: ./.github/workflows/update-status
+        if: success()
+        with:
+          sha: ${{ needs.rcc-smoke.outputs.sha }}
+          state: success
+
+      - uses: ./.github/workflows/update-status
+        if: failure()
+        with:
+          sha: ${{ needs.rcc-smoke.outputs.sha }}
+          state: failure
+
   suggests-matrix:
     runs-on: ubuntu-22.04
     outputs:
