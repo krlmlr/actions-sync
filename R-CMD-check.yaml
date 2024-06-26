@@ -162,7 +162,9 @@ jobs:
           echo $matrix | json2yaml
 
   rcc-full:
-    needs: rcc-smoke
+    needs:
+      - rcc-smoke
+      - versions-matrix
 
     runs-on: ${{ matrix.config.os }}
 
@@ -173,18 +175,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        config:
-          -
-            os: "macos-latest"
-            r: "release"
-          -
-            os: "ubuntu-20.04"
-            r: "release"
-          -
-            os: "ubuntu-22.04"
-            r: "devel"
-            http-user-agent: "release"
+      matrix: ${{fromJson(needs.versions-matrix.outputs.matrix)}}
 
     steps:
       - uses: actions/checkout@v4
