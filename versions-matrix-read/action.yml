@@ -1,0 +1,13 @@
+name: "Actions to read a matrix with all R and OS versions, computed with the versions-matrix action"
+outputs:
+  matrix:
+    description: "Generated matrix"
+    value: ${{ steps.set-matrix.outputs.matrix }}
+
+runs:
+  using: "composite"
+  steps:
+    - id: set-matrix
+      run: |
+        echo matrix=$(cat .github/versions-matrix.json || echo '[]') >> $GITHUB_OUTPUT
+      shell: bash

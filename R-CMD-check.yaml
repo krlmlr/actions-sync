@@ -56,6 +56,9 @@ jobs:
       - uses: ./.github/workflows/custom/after-install
         if: hashFiles('.github/workflows/custom/after-install/action.yml') != ''
 
+      - uses: ./.github/workflows/versions-matrix
+        if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
+
       - uses: ./.github/workflows/update-snapshots
         if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
 
@@ -139,27 +142,7 @@ jobs:
           use-public-rspm: true
 
       - id: set-matrix
-        uses: ./.github/workflows/versions-matrix
-
-  check-versions-matrix:
-    runs-on: ubuntu-22.04
-    needs: versions-matrix
-
-    name: Check versions deps
-
-    if: ${{ needs.versions-matrix.outputs.matrix != '' }}
-
-    steps:
-      - name: Install json2yaml
-        run: |
-          sudo npm install -g json2yaml
-
-      - name: Check matrix definition
-        run: |
-          matrix='${{ needs.versions-matrix.outputs.matrix }}'
-          echo $matrix
-          echo $matrix | jq .
-          echo $matrix | json2yaml
+        uses: ./.github/workflows/versions-matrix-read
 
   rcc-full:
     needs:

@@ -1,24 +1,3 @@
-# - {os: macos-latest,   r: 'release'}
-#
-# - {os: ubuntu-20.04,   r: 'release'}
-#
-# # Use older ubuntu to maximise backward compatibility
-# - {os: ubuntu-22.04,   r: 'devel',     http-user-agent: 'release'}
-# - {os: ubuntu-22.04,   r: 'release',   covr: true,                  desc: 'with covr'}
-# - {os: ubuntu-22.04,   r: 'oldrel-1'}
-#
-# # Begin custom: R 3.6
-# - {os: ubuntu-22.04,   r: 'oldrel-2'}
-# # End custom: R 3.6
-#
-# # Begin custom: R 3.5
-# - {os: ubuntu-22.04,   r: 'oldrel-3'}
-# # End custom: R 3.5
-#
-# # Begin custom: R 3.4
-# - {os: ubuntu-22.04,   r: 'oldrel-4'}
-# # End custom: R 3.4
-
 # FIXME: Dynamic lookup by parsing https://svn.r-project.org/R/tags/
 r_versions <- c("devel", paste0("4.", 4:0))
 macos <- data.frame(os = "macos-latest", r = r_versions[2:3])
@@ -51,7 +30,5 @@ to_json <- function(x) {
 configs <- unlist(lapply(include_list, to_json))
 json <- paste0('{"include":[', paste(configs, collapse = ","), ']}')
 
-if (Sys.getenv("GITHUB_OUTPUT") != "") {
-  writeLines(paste0("matrix=", json), Sys.getenv("GITHUB_OUTPUT"))
-}
+writeLines(json, ".github/version-matrix.json")
 writeLines(json)
