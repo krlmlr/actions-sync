@@ -5,7 +5,9 @@ runs:
   steps:
     - name: Define R CMD check error condition
       run: |
-        if (getRversion() < "4.0") {
+        # metap is a suggested package that is difficult to install for old R versions;
+        # if it is not available, we will see a NOTE mentioning this.
+        if (!requireNamespace("metap", quietly = TRUE)) {
           message("Setting RCMDCHECK_ERROR_ON")
           cat('RCMDCHECK_ERROR_ON="warning"\n', file = Sys.getenv("GITHUB_ENV"), append = TRUE)
         }
