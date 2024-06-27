@@ -12,6 +12,8 @@ runs:
       shell: Rscript {0}
 
     - name: Install knitcitations if needed
+      env:
+        GITHUB_PAT: ${{ github.token }}
       run: |
         pak::pak("cboettig/knitcitations")
       shell: Rscript {0}
