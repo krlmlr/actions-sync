@@ -301,7 +301,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
         git diff actions-sync ^subtree | patch -p1
         if [ $(git status --porcelain | wc -l) -gt 0 ]; then
           git add .
-          git commit -m "Import from actions-sync, check carefully"
+          git commit -m "ci: Import from actions-sync, check carefully"
         fi
       fi
       git push
