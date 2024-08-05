@@ -38,7 +38,7 @@ jobs:
 
       - uses: krlmlr/actions-sync/git-identity@base
 
-      - uses: krlmlr/actions-sync/.github/@base
+      - uses: krlmlr/actions-sync/install/@base
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           install-r: false
