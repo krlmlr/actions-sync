@@ -36,9 +36,9 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: ./.github/workflows/git-identity
+      - uses: cynkra/dm/.github/workflows/git-identity@main
 
-      - uses: ./.github/workflows/install
+      - uses: cynkra/dm/.github/workflows/install@main
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           install-r: false
