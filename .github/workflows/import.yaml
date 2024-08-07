@@ -30,6 +30,12 @@ jobs:
           ref: main
           fetch-depth: 0
 
+      - name: Token scopes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh auth status
+
       - name: Configure Git identity
         run: |
           git log -n 1 --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
