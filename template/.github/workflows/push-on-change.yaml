@@ -21,7 +21,7 @@ jobs:
 
       - name: Configure Git identity
         run: |
-          git log HEAD^.. --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
+          git log -n 1 --pretty=format:"git config --global user.name '%an' && git config --global user.email '%ae'" | tee /dev/stderr | sh
 
       - name: Get branch name
         id: remote_repo
