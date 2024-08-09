@@ -20,7 +20,7 @@ Apply changes to similar workflows at once across all your projects.
     4. Store it as a secret named `TOKEN_KEYS`
     5. Remember to update the token when it expires
 3. Clone your new repository locally
-      - Optional: To be able to contribute back to this repository, run the following code in your terminal:
+      - To be able to benefit from changes in this repository, run the following code in your terminal:
          ```r
          git remote add krlmlr https://github.com/krlmlr/actions-sync
          git fetch --all
