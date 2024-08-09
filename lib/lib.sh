@@ -199,7 +199,7 @@ import_base() { # Import a new repository with fallback to a base branch, pass s
 
     git branch --no-track ${new_repo} ${base} -f
   else
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty 2>&1 | sed -r 's/\r?Rewrite [^)]+[)][^(]*[(][^)]*[)]//g'
+    git filter-repo --subdirectory-filter .github/workflows --prune-empty always --commit-callback 'commit.committer_date = commit.author_date' --force --refs HEAD
     import_branch=$(git branch | cut -d " " -f 2)
 
     cd ../../..
