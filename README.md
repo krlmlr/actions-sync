@@ -155,6 +155,13 @@ Requires GNU `parallel`.
     bin/remove_worktrees
     ```
 
+1. Run operations for some worktrees (example: starting with `pois`)
+
+      ```sh
+      bin/wt_git_some pois status
+      ```
+
+
 ## Maintaining similar yet different workflows across projects
 
 For R projects, workflows may differ across projects:
