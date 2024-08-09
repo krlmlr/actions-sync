@@ -251,8 +251,9 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   _provide_wt
 
   cd wt/${repo}
-  # --env-filter: https://stackoverflow.com/a/38586928/946850
-  FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --env-filter 'export GIT_COMMITTER_DATE="$GIT_AUTHOR_DATE"' --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f 2>&1 | sed -r 's/\r?Rewrite [^)]+[)][^(]*[(][^)]*[)]//g'
+  # --commit-callback: https://stackoverflow.com/a/74315596/946850
+  git filter-repo --invert-paths --path .github/workflows --to-subdirectory-filter .github/workflows --prune-empty always --commit-callback 'commit.committer_date = commit.author_date' --force --refs ${repo}
+
   cd ../../..
 
   git clone https://${TOKEN_KEYS}@github.com/${repo} remote
@@ -270,8 +271,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   else
     echo "Integrate"
     # At least one remote commit
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --subdirectory-filter .github/workflows --prune-empty -f 2>&1 | sed -r 's/\r?Rewrite [^)]+[)][^(]*[(][^)]*[)]//g'
-    FILTER_BRANCH_SQUELCH_WARNING=1 git filter-branch --tree-filter 'rm -rf .github/ && mkdir -p .github/workflows/ && mv * .github/workflows/ || true' --prune-empty -f 2>&1 | sed -r 's/\r?Rewrite [^)]+[)][^(]*[(][^)]*[)]//g'
+    git filter-repo --path .github/workflows --prune-empty auto --commit-callback 'commit.committer_date = commit.author_date' --force --refs HEAD --preserve-commit-encoding
 
     import_branch=$(git branch | cut -d " " -f 2)
     git branch subtree
@@ -280,13 +280,10 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
     # Rebase actions-sync onto subtree
     # to ignore differences in committer date
     # and out-of-order commits
-    git branch actions-sync actions/${repo}
-    git checkout actions-sync
+    git checkout -b actions-sync actions/${repo}
 
-    # Without --rebase-merges, pillar and dm fail
-    # With --rebase-merges, sometimes empty commits remain
-    # The combination is even worse.
-    if ! ( git rebase -q --rebase-merges subtree ); then
+    # Without --rebase-merges, pillar and dm fail. Is this still true?
+    if ! ( git rebase -q subtree ); then
       echo "Warning: Rebase failed"
       git rebase --abort
     fi
@@ -298,7 +295,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
     if [ $(git log --pretty=oneline actions-sync ^subtree | head -n 1 | wc -l) -gt 0 ]; then
       if ! git cherry-pick actions-sync ^subtree --allow-empty --first-parent -m 1 --no-edit; then
         git cherry-pick --abort
-        git diff actions-sync ^subtree | patch -p1
+        git diff actions-sync ^subtree | tee /dev/stderr | patch -p1 -N
         if [ $(git status --porcelain | wc -l) -gt 0 ]; then
           git add .
           git commit -m "ci: Import from actions-sync, check carefully"
