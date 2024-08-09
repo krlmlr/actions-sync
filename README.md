@@ -6,7 +6,8 @@ Apply changes to similar workflows at once across all your projects.
 
 ## Setup
 
-1. Create a repository from this template, leave "Include all branches" unchecked.
+1. Create a repository from this template using the green "Use this template" button at the top right
+    - Leave "Include all branches" unchecked.
     - You can make this repository public, or keep it private.
 2. Create a PAT and store it as a secret.
     1. Visit <https://github.com/settings/tokens>
@@ -18,6 +19,15 @@ Apply changes to similar workflows at once across all your projects.
     3. Copy generated token
     4. Store it as a secret named `TOKEN_KEYS`
     5. Remember to update the token when it expires
+3. Clone your new repository locally
+      - Optional: To be able to contribute back to this repository, run the following code in your terminal:
+         ```r
+         git remote add krlmlr https://github.com/krlmlr/actions-sync
+         git fetch --all
+         git merge krlmlr/main -s ours --allow-unrelated-histories
+         git push
+         ```
+
 
 ## Design
 
