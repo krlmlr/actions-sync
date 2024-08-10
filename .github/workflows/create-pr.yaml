@@ -1,0 +1,39 @@
+# Creates a PR in another repository
+# This is necessary to trigger the workflow in the remote repository,
+# becase the default GitHub token does not have the necessary permissions.
+on:
+  workflow_call:
+    inputs:
+      remote_repo:
+        description: 'Remote repository (owner/repo)'
+        required: true
+        type: string
+      head:
+        description: 'Head branch'
+        required: true
+        type: string
+      caller:
+        description: 'Source'
+        required: true
+        type: string
+
+name: Create PR
+
+jobs:
+  create_pr:
+    runs-on: ubuntu-24.04
+
+    name: Create PR in ${{ github.event.inputs.remote_repo }} for branch ${{ github.event.inputs.head }}
+
+    steps:
+      - name: Create PR
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN_KEYS }}
+        run: |
+          # Close existing PR to make sure workflow is triggered
+          pr_number=$(gh pr list --json number --state open --head "${{ github.event.inputs.head }}" | jq -r '.[].number')
+          if [ -n "$pr_number" ]; then
+            gh pr close $pr_number
+          fi
+
+          gh pr create --head "${{ github.event.inputs.head }}" -f --body "${{ github.event.inputs.caller }}"
