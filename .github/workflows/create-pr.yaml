@@ -2,7 +2,7 @@
 # This is necessary to trigger the workflow in the remote repository,
 # becase the default GitHub token does not have the necessary permissions.
 on:
-  workflow_call:
+  workflow_dispatch:
     inputs:
       remote_repo:
         description: 'Remote repository (owner/repo)'
