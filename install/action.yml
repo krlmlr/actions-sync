@@ -103,8 +103,6 @@ runs:
         set -x
         if ! [ -f .github/.gitignore ] || [ -z "$(grep '^/pkg.lock$' .github/.gitignore)" ]; then
           echo /pkg.lock >> .github/.gitignore
-          git add .github/.gitignore
-          git commit -m 'chore: Add `.github/pkg.lock` to `.gitignore`' || true
         fi
       shell: bash
 
