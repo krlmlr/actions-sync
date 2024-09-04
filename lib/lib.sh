@@ -315,7 +315,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
           git commit -m "ci: Import from actions-sync, check carefully"
         fi
       fi
-      git branch actions-sync-update
+      git checkout -b actions-sync-update
       git push -u origin HEAD -f
 
       # Create PR if ahead of the import branch
