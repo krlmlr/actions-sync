@@ -318,7 +318,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
       git branch -m actions-sync-update
       git push -u origin HEAD -f
       gh pr create --fill-first
-      gh pr --merge --squash --auto
+      gh pr merge --squash --auto
     else
       echo "Nothing to cherry-pick"
     fi
