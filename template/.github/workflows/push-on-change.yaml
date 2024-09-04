@@ -34,7 +34,6 @@ jobs:
           echo "slug=$(echo $GITHUB_REF | sed 's#refs/heads/##')" >> $GITHUB_OUTPUT
         shell: bash
 
-
       - name: Merge subtree
         env:
           TOKEN_KEYS: ${{ secrets.TOKEN_KEYS }}
