@@ -315,10 +315,16 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
           git commit -m "ci: Import from actions-sync, check carefully"
         fi
       fi
-      git branch -m actions-sync-update
+      git branch actions-sync-update
       git push -u origin HEAD -f
-      gh pr create --fill-first
-      gh pr merge --squash --auto
+
+      # Create PR if ahead of the import branch
+      if [ $(git ahead-behind HEAD origin/${import_branch} | cut -d " " -f 1) -gt 0 ]; then
+        gh pr create --fill-first
+        gh pr merge --squash --auto
+      else
+        echo "Nothing to update"
+      fi
     else
       echo "Nothing to cherry-pick"
     fi
