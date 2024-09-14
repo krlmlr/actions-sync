@@ -319,7 +319,7 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
       git push -u origin HEAD -f
 
       # Create PR if ahead of the import branch
-      if [ $(git ahead-behind HEAD origin/${import_branch} | cut -d " " -f 1) -gt 0 ]; then
+      if [ "$(git rev-list --count HEAD...origin/${import_branch})" -gt 0 ]; then
         gh pr create --fill-first
         gh pr merge --squash --auto
       else
