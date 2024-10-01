@@ -321,7 +321,8 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
       # Create PR if ahead of the import branch
       if [ "$(git rev-list --count HEAD...origin/${import_branch})" -gt 0 ]; then
         gh pr create --fill-first
-        gh pr merge --squash --auto
+        # FIXME: Remove after entirely switching to protected branches
+        gh pr edit --add-label mergequeue || gh pr merge --squash --auto
       else
         echo "Nothing to update"
       fi
