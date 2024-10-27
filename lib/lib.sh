@@ -320,7 +320,12 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
 
       # Create PR if ahead of the import branch
       if [ "$(git rev-list --count HEAD...origin/${import_branch})" -gt 0 ]; then
-        retry_backoff gh pr create --fill-first
+        # Only create PR if it doesn't exist yet
+        if [ $(gh pr list --state open --head "${import_branch}" --json headRefName --jq length) -gt 0 ]; then
+          retry_backoff gh pr create --fill-first
+        else
+          echo "PR exists already"
+        fi
         retry_backoff gh pr merge --squash --auto
       else
         echo "Nothing to update"
