@@ -320,9 +320,8 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
 
       # Create PR if ahead of the import branch
       if [ "$(git rev-list --count HEAD...origin/${import_branch})" -gt 0 ]; then
-        gh pr create --fill-first
-        # FIXME: Remove after entirely switching to protected branches
-        gh pr edit --add-label mergequeue || gh pr merge --squash --auto
+        retry_backoff gh pr create --fill-first
+        retry_backoff gh pr merge --squash --auto
       else
         echo "Nothing to update"
       fi
@@ -332,4 +331,21 @@ merge_into_remote() { # Merge our workflow into the remote repository. Makes wor
   fi
   cd ..
   rm -rf remote
+}
+
+retry_backoff() { # Retry a command with exponential backoff
+  command="$1"
+  shift
+
+  sleep=1
+
+  for i in $(seq 0 14); do
+    if $command "$@"; then
+      return 0
+    fi
+    echo "Retry $i in $sleep seconds"
+    sleep $sleep
+    sleep=$((2*$sleep))
+  done
+  return 1
 }
