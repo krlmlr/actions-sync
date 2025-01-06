@@ -3,8 +3,13 @@ name: 'Custom steps to run after R packages are installed'
 runs:
   using: "composite"
   steps:
-    - name: Check rjags on macOS
+    - name: Install rjags fro source on macOS
       if: runner.os == 'macOS'
+      run: |
+        install.packages("rjags", type = "source")
+      shell: Rscript {0}
+
+    - name: Check rjags
       run: |
         library(rjags)
       shell: Rscript {0}
