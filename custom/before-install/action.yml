@@ -13,7 +13,7 @@ runs:
       if: runner.os == 'Windows'
       run: |
         # Follow HTTP redirects
-        Invoke-WebRequest -Uri 'https://sourceforge.net/projects/mcmc-jags/files/JAGS/4.x/Windows/JAGS-4.3.1.exe' -OutFile 'C:\JAGS-4.3.1.exe'
+        Invoke-WebRequest -Uri 'https://github.com/poissonconsulting/jags-win/raw/refs/heads/main/JAGS-4.3.1.exe' -OutFile 'C:\JAGS-4.3.1.exe'
       shell: powershell
 
     - name: Install JAGS Windows
