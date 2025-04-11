@@ -51,6 +51,9 @@ jobs:
 
     name: "Smoke test: stock R"
 
+    permissions:
+      contents: write
+
     # Begin custom: services
     # End custom: services
 
