@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - "docs*"
-      - "cran-*"
+      - main
   workflow_dispatch:
 
 name: pkgdown
