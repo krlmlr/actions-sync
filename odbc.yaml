@@ -50,8 +50,8 @@ jobs:
 
   backend:
     needs: matrix
-    # Need Ubuntu 20.04 for remotes::system_requirements()
-    runs-on: ubuntu-20.04
+    # Need Ubuntu 24.04 for remotes::system_requirements()
+    runs-on: ubuntu-24.04
 
     services:
       postgres:
@@ -109,7 +109,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04", path = "revdep-dev/${{ matrix.package }}"))')
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "24.04", path = "revdep-dev/${{ matrix.package }}"))')
 
       - name: Install package and dependencies
         run: |
@@ -147,7 +147,7 @@ jobs:
         if: matrix.database == 'sql-server'
         run: |
           curl https://packages.microsoft.com/keys/microsoft.asc | apt-key add -
-          curl https://packages.microsoft.com/config/ubuntu/20.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
+          curl https://packages.microsoft.com/config/ubuntu/24.04/prod.list > /etc/apt/sources.list.d/mssql-release.list
           apt-get update
           ACCEPT_EULA=Y apt-get install -y msodbcsql17
           ln -s /opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.*.so.* /opt/microsoft/msodbcsql17/lib64/libmsodbcsql-17.so

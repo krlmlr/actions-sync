@@ -49,8 +49,8 @@ jobs:
 
   backend:
     needs: matrix
-    # Need Ubuntu 20.04 for remotes::system_requirements()
-    runs-on: ubuntu-20.04
+    # Need Ubuntu 24.04 for remotes::system_requirements()
+    runs-on: ubuntu-24.04
 
     strategy:
       fail-fast: false
@@ -90,7 +90,7 @@ jobs:
           while read -r cmd
           do
             eval sudo $cmd
-          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "20.04", path = "revdep-dev/${{ matrix.package }}"))')
+          done < <(Rscript -e 'writeLines(remotes::system_requirements("ubuntu", "24.04", path = "revdep-dev/${{ matrix.package }}"))')
 
       - name: Install package and dependencies
         run: |
