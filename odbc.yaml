@@ -92,7 +92,6 @@ jobs:
 
       - uses: ./.github/workflows/install
         with:
-          install-r: false
           cache-version: backends-${{ matrix.package }}
           needs: check
           extra-packages: "any::pkgbuild any::remotes decor ."
