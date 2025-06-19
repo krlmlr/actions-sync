@@ -20,6 +20,9 @@ jobs:
       - uses: anthropics/claude-code-action@beta
         id: claude
         with:
+          allowed_tools: |
+            Bash
+            R
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           # Optional: add custom trigger phrase (default: @claude)
