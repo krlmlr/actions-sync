@@ -111,8 +111,8 @@ jobs:
               # Verify that copilot is actually assigned
               assigned_users=$(gh issue view "$oldest_issue" --repo "$REPO" --json assignees --jq '.assignees[].login' 2>/dev/null || echo "")
 
-              if echo "$assigned_users" | tee /dev/stderr | grep -q "^copilot$"; then
-                echo "✓ Successfully verified assignment to copilot"
+              if echo "$assigned_users" | grep -q "^Copilot$"; then
+                echo "✓ Successfully verified assignment to @copilot"
 
                 # Add a comment to the issue
                 if gh issue comment "$oldest_issue" --repo "$REPO" --body "🤖 This issue has been assigned to Copilot for automated handling." 2>/dev/null; then
