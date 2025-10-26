@@ -113,14 +113,6 @@ jobs:
 
               if echo "$assigned_users" | grep -q "^Copilot$"; then
                 echo "✓ Successfully verified assignment to @copilot"
-
-                # Add a comment to the issue
-                if gh issue comment "$oldest_issue" --repo "$REPO" --body "🤖 This issue has been assigned to Copilot for automated handling." 2>/dev/null; then
-                  echo "✓ Added comment to issue"
-                else
-                  echo "⚠️  Could not add comment to issue (assignment still succeeded)"
-                fi
-
                 echo "✅ Successfully assigned issue #$oldest_issue in $REPO"
                 success_count=$((success_count + 1))
               else
