@@ -1,0 +1,146 @@
+name: Assign AI Issue to Copilot
+
+on:
+  # Run every 20 minutes
+  schedule:
+    - cron: "*/20 * * * *"
+  # Allow manual trigger
+  workflow_dispatch:
+  # Run when workflow changes
+  push:
+    paths:
+      - .github/workflows/ai.yaml
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref || '' }}-${{ github.base_ref || '' }}
+  cancel-in-progress: true
+
+jobs:
+  assign_issues:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Get repository branches
+        id: get_repos
+        run: |
+          # Get all repository branches (owner/repo format)
+          git branch -r | grep -E '^  origin/[^/]+/[^/]+$' | sed 's/^  origin\///' | sort > repo_list.txt
+          echo "Found $(wc -l < repo_list.txt) repositories to process"
+          cat repo_list.txt
+        shell: bash
+
+      - name: Process repositories
+        env:
+          GH_TOKEN: ${{ secrets.TOKEN_KEYS }}
+        run: |
+          set -euo pipefail
+
+          # Check gh version and upgrade if needed
+          # https://github.com/cli/cli/issues/11809
+          current_version=$(gh --version | head -n1 | awk '{print $3}')
+          required_version="2.82.1"
+
+          if [ "$(printf '%s\n' "$required_version" "$current_version" | sort -V | head -n1)" != "$required_version" ]; then
+            echo "Current gh version ($current_version) is below required ($required_version), upgrading..."
+            # Use official installation from GitHub releases
+
+            # Get latest version
+            latest_version=$(curl -fsSL https://api.github.com/repos/cli/cli/releases/latest | jq -r .tag_name | sed 's/^v//')
+
+            # Download and install latest gh
+            gh_url="https://github.com/cli/cli/releases/download/v${latest_version}/gh_${latest_version}_linux_amd64.tar.gz"
+            echo "Downloading from: $gh_url"
+            curl -fsSL "$gh_url" | sudo tar -xz -C /usr/local --strip-components=1
+            gh --version
+          else
+            echo "gh version $current_version is sufficient"
+          fi
+
+          # Track failures
+          failed_repos=""
+          success_count=0
+          skip_count=0
+          fail_count=0
+
+          # Process each repository
+          while IFS= read -r REPO; do
+            echo ""
+            echo "========================================"
+            echo "Processing: $REPO"
+            echo "========================================"
+
+            # Check if repo is a fork
+            is_forked=$(gh api repos/$REPO --jq '.fork' 2>/dev/null || echo "error")
+
+            if [ "$is_forked" = "error" ]; then
+              echo "⚠️  Could not access repository $REPO (may not exist or no permission)"
+              skip_count=$((skip_count + 1))
+              continue
+            fi
+
+            if [ "$is_forked" = "true" ]; then
+              echo "⏭️  Skipping $REPO (is a fork)"
+              skip_count=$((skip_count + 1))
+              continue
+            fi
+
+            # Get all open, unassigned issues with the "AI 🤖" label, sorted by creation date (oldest first)
+            oldest_issue=$(gh issue list \
+              --repo "$REPO" \
+              --label "AI 🤖" \
+              --state open \
+              --json number,createdAt,assignees \
+              --jq 'map(select(.assignees | length == 0)) | sort_by(.createdAt) | .[0].number' 2>/dev/null || echo "")
+
+            if [ -z "$oldest_issue" ] || [ "$oldest_issue" = "null" ]; then
+              echo "ℹ️  No unassigned AI issues found in $REPO"
+              skip_count=$((skip_count + 1))
+              continue
+            fi
+
+            echo "Found unassigned AI issue #$oldest_issue in $REPO"
+            echo "Assigning to @copilot"
+
+            # Try to assign the issue to Copilot
+            if gh issue edit "$oldest_issue" --repo "$REPO" --add-assignee "@copilot" 2>/dev/null; then
+              # Verify that copilot is actually assigned
+              assigned_users=$(gh issue view "$oldest_issue" --repo "$REPO" --json assignees --jq '.assignees[].login' 2>/dev/null || echo "")
+
+              if echo "$assigned_users" | grep -q "^Copilot$"; then
+                echo "✓ Successfully verified assignment to @copilot"
+                echo "✅ Successfully assigned issue #$oldest_issue in $REPO"
+                success_count=$((success_count + 1))
+              else
+                echo "✗ Failed to verify assignment to copilot in $REPO"
+                echo "Assignees: $assigned_users"
+                failed_repos="${failed_repos}$REPO (issue #$oldest_issue - assignment verification failed)\n"
+                fail_count=$((fail_count + 1))
+              fi
+            else
+              echo "✗ Failed to assign issue #$oldest_issue in $REPO"
+              failed_repos="${failed_repos}$REPO (issue #$oldest_issue - assignment failed)\n"
+              fail_count=$((fail_count + 1))
+            fi
+
+          done < repo_list.txt
+
+          echo ""
+          echo "========================================"
+          echo "Summary"
+          echo "========================================"
+          echo "✅ Successfully processed: $success_count repositories"
+          echo "⏭️  Skipped: $skip_count repositories"
+          echo "❌ Failed: $fail_count repositories"
+
+          if [ -n "$failed_repos" ]; then
+            echo ""
+            echo "Failed repositories:"
+            echo -e "$failed_repos"
+            exit 1
+          fi
+        shell: bash
