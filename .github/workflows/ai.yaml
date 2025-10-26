@@ -15,6 +15,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref || '' }}-${{ github.base_ref || '' }}
   cancel-in-progress: true
 
+# Set a custom run name that shows the summary
+run-name: "AI Assignment: ${{ github.run_number }}"
+
 jobs:
   assign_issues:
     runs-on: ubuntu-24.04
@@ -35,6 +38,7 @@ jobs:
         shell: bash
 
       - name: Process repositories
+        id: process
         env:
           GH_TOKEN: ${{ secrets.TOKEN_KEYS }}
         run: |
@@ -61,8 +65,9 @@ jobs:
             echo "gh version $current_version is sufficient"
           fi
 
-          # Track failures
+          # Track failures and successes
           failed_repos=""
+          assigned_issues=""
           success_count=0
           skip_count=0
           fail_count=0
@@ -114,6 +119,12 @@ jobs:
               if echo "$assigned_users" | grep -q "^Copilot$"; then
                 echo "✓ Successfully verified assignment to @copilot"
                 echo "✅ Successfully assigned issue #$oldest_issue in $REPO"
+
+                # Get issue title for the summary
+                issue_title=$(gh issue view "$oldest_issue" --repo "$REPO" --json title --jq '.title' 2>/dev/null || echo "")
+                issue_url="https://github.com/$REPO/issues/$oldest_issue"
+                assigned_issues="${assigned_issues}$REPO|#$oldest_issue|$issue_title|$issue_url\n"
+
                 success_count=$((success_count + 1))
               else
                 echo "✗ Failed to verify assignment to copilot in $REPO"
@@ -137,10 +148,69 @@ jobs:
           echo "⏭️  Skipped: $skip_count repositories"
           echo "❌ Failed: $fail_count repositories"
 
+          # Write summary to GitHub Actions job summary
+          {
+            echo "## 🤖 AI Issue Assignment Summary"
+            echo ""
+            echo "| Metric | Count |"
+            echo "|--------|-------|"
+            echo "| ✅ Successfully Assigned | $success_count |"
+            echo "| ⏭️  Skipped | $skip_count |"
+            echo "| ❌ Failed | $fail_count |"
+            echo "| 📊 Total Processed | $((success_count + skip_count + fail_count)) |"
+            echo ""
+
+            if [ -n "$assigned_issues" ]; then
+              echo "### ✅ Assigned Issues"
+              echo ""
+              echo "| Repository | Issue | Title |"
+              echo "|------------|-------|-------|"
+              echo -e "$assigned_issues" | while IFS='|' read -r repo issue title url; do
+                if [ -n "$repo" ]; then
+                  echo "| $repo | [$issue]($url) | $title |"
+                fi
+              done
+              echo ""
+            fi
+
+            if [ -n "$failed_repos" ]; then
+              echo "### ❌ Failed Repositories"
+              echo ""
+              echo -e "$failed_repos" | while IFS= read -r line; do
+                if [ -n "$line" ]; then
+                  echo "- $line"
+                fi
+              done
+            else
+              if [ "$success_count" -eq 0 ]; then
+                echo "ℹ️ No issues to assign in this run."
+              else
+                echo "✨ All assignments completed successfully!"
+              fi
+            fi
+          } >> $GITHUB_STEP_SUMMARY
+
+          # Save counts as outputs for potential use in run name
+          echo "success_count=$success_count" >> $GITHUB_OUTPUT
+          echo "skip_count=$skip_count" >> $GITHUB_OUTPUT
+          echo "fail_count=$fail_count" >> $GITHUB_OUTPUT
+
           if [ -n "$failed_repos" ]; then
             echo ""
             echo "Failed repositories:"
             echo -e "$failed_repos"
             exit 1
           fi
+        shell: bash
+
+      - name: Report Summary
+        if: always()
+        run: |
+          echo "================================================"
+          echo "🤖 AI ISSUE ASSIGNMENT COMPLETED"
+          echo "================================================"
+          echo "✅ Assigned: ${{ steps.process.outputs.success_count }}"
+          echo "⏭️  Skipped: ${{ steps.process.outputs.skip_count }}"
+          echo "❌ Failed: ${{ steps.process.outputs.fail_count }}"
+          echo "================================================"
         shell: bash
