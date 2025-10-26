@@ -15,6 +15,9 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}-${{ github.head_ref || '' }}-${{ github.base_ref || '' }}
   cancel-in-progress: true
 
+# Set a custom run name that shows the summary
+run-name: "AI Assignment: ${{ github.run_number }}"
+
 jobs:
   assign_issues:
     runs-on: ubuntu-24.04
@@ -35,6 +38,7 @@ jobs:
         shell: bash
 
       - name: Process repositories
+        id: process
         env:
           GH_TOKEN: ${{ secrets.TOKEN_KEYS }}
         run: |
@@ -137,10 +141,52 @@ jobs:
           echo "⏭️  Skipped: $skip_count repositories"
           echo "❌ Failed: $fail_count repositories"
 
+          # Write summary to GitHub Actions job summary
+          {
+            echo "## 🤖 AI Issue Assignment Summary"
+            echo ""
+            echo "| Metric | Count |"
+            echo "|--------|-------|"
+            echo "| ✅ Successfully Assigned | $success_count |"
+            echo "| ⏭️  Skipped | $skip_count |"
+            echo "| ❌ Failed | $fail_count |"
+            echo "| 📊 Total Processed | $((success_count + skip_count + fail_count)) |"
+            echo ""
+            
+            if [ -n "$failed_repos" ]; then
+              echo "### ❌ Failed Repositories"
+              echo ""
+              echo -e "$failed_repos" | while IFS= read -r line; do
+                if [ -n "$line" ]; then
+                  echo "- $line"
+                fi
+              done
+            else
+              echo "✨ All repositories processed successfully!"
+            fi
+          } >> $GITHUB_STEP_SUMMARY
+
+          # Save counts as outputs for potential use in run name
+          echo "success_count=$success_count" >> $GITHUB_OUTPUT
+          echo "skip_count=$skip_count" >> $GITHUB_OUTPUT
+          echo "fail_count=$fail_count" >> $GITHUB_OUTPUT
+
           if [ -n "$failed_repos" ]; then
             echo ""
             echo "Failed repositories:"
             echo -e "$failed_repos"
             exit 1
           fi
+        shell: bash
+
+      - name: Report Summary
+        if: always()
+        run: |
+          echo "================================================"
+          echo "🤖 AI ISSUE ASSIGNMENT COMPLETED"
+          echo "================================================"
+          echo "✅ Assigned: ${{ steps.process.outputs.success_count }}"
+          echo "⏭️  Skipped: ${{ steps.process.outputs.skip_count }}"
+          echo "❌ Failed: ${{ steps.process.outputs.fail_count }}"
+          echo "================================================"
         shell: bash
