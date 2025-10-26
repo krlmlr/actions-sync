@@ -65,8 +65,9 @@ jobs:
             echo "gh version $current_version is sufficient"
           fi
 
-          # Track failures
+          # Track failures and successes
           failed_repos=""
+          assigned_issues=""
           success_count=0
           skip_count=0
           fail_count=0
@@ -118,6 +119,12 @@ jobs:
               if echo "$assigned_users" | grep -q "^Copilot$"; then
                 echo "✓ Successfully verified assignment to @copilot"
                 echo "✅ Successfully assigned issue #$oldest_issue in $REPO"
+
+                # Get issue title for the summary
+                issue_title=$(gh issue view "$oldest_issue" --repo "$REPO" --json title --jq '.title' 2>/dev/null || echo "")
+                issue_url="https://github.com/$REPO/issues/$oldest_issue"
+                assigned_issues="${assigned_issues}$REPO|#$oldest_issue|$issue_title|$issue_url\n"
+
                 success_count=$((success_count + 1))
               else
                 echo "✗ Failed to verify assignment to copilot in $REPO"
@@ -152,7 +159,20 @@ jobs:
             echo "| ❌ Failed | $fail_count |"
             echo "| 📊 Total Processed | $((success_count + skip_count + fail_count)) |"
             echo ""
-            
+
+            if [ -n "$assigned_issues" ]; then
+              echo "### ✅ Assigned Issues"
+              echo ""
+              echo "| Repository | Issue | Title |"
+              echo "|------------|-------|-------|"
+              echo -e "$assigned_issues" | while IFS='|' read -r repo issue title url; do
+                if [ -n "$repo" ]; then
+                  echo "| $repo | [$issue]($url) | $title |"
+                fi
+              done
+              echo ""
+            fi
+
             if [ -n "$failed_repos" ]; then
               echo "### ❌ Failed Repositories"
               echo ""
@@ -162,7 +182,11 @@ jobs:
                 fi
               done
             else
-              echo "✨ All repositories processed successfully!"
+              if [ "$success_count" -eq 0 ]; then
+                echo "ℹ️ No issues to assign in this run."
+              else
+                echo "✨ All assignments completed successfully!"
+              fi
             fi
           } >> $GITHUB_STEP_SUMMARY
 
