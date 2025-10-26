@@ -1,9 +1,9 @@
 name: Assign AI Issue to Copilot
 
 on:
-  # Run hourly
+  # Run every 20 minutes
   schedule:
-    - cron: "0 * * * *"
+    - cron: "*/20 * * * *"
   # Allow manual trigger
   workflow_dispatch:
   # Run when workflow changes
@@ -38,7 +38,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.TOKEN_KEYS }}
         run: |
-          set -euxo pipefail
+          set -euo pipefail
 
           # Check gh version and upgrade if needed
           # https://github.com/cli/cli/issues/11809
