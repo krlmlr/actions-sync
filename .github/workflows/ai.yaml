@@ -100,7 +100,7 @@ jobs:
               --label "AI 🤖" \
               --state open \
               --json number,createdAt,assignees \
-              --jq 'map(select(.assignees | length == 0)) | sort_by(.createdAt) | .[0].number' 2>/dev/null || echo "")
+              --jq 'map(select(.assignees | length == 0)) | sort_by(.createdAt) | .[0].number' 2>/dev/null)
 
             if [ -z "$oldest_issue" ] || [ "$oldest_issue" = "null" ]; then
               echo "ℹ️  No unassigned AI issues found in $REPO"
