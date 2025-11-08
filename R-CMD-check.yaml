@@ -76,7 +76,7 @@ jobs:
           ref: ${{ inputs.ref }}
 
       - name: Update status for rcc
-        if: github.actor != 'Copilot'
+        if: github.actor != 'Copilot' && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         # FIXME: Wrap into action
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -182,7 +182,7 @@ jobs:
 
       - name: Update status for rcc
         # FIXME: Wrap into action
-        if: always() && (github.actor != 'Copilot')
+        if: always() && (github.actor != 'Copilot') && (github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
