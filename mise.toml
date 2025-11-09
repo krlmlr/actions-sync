@@ -1,0 +1,18 @@
+# mise configuration for managed-infra
+# https://mise.jdx.dev/
+#
+# Getting started:
+# 1. Install mise: https://mise.jdx.dev/getting-started.html
+# 2. Run: mise install
+# 3. The virtualenv will be automatically activated when you cd into this directory
+# 4. Scripts in _scripts/ will be available in your PATH
+#
+# To verify setup:
+#   mise doctor        # Check configuration and installed tools
+#   mise env           # Show environment variables that mise sets
+#   which python       # Should point to mise's Python 3.11
+#   echo $PATH         # Should have _scripts at the front
+
+[env]
+# Add bin directory to the front of PATH
+_.path = ["bin"]

@@ -21,6 +21,7 @@ Apply changes to similar workflows at once across all your projects.
     5. Remember to update the token when it expires
 3. Clone your new repository locally
       - To be able to benefit from changes in this repository, run the following code in your terminal:
+
          ```r
          git remote add krlmlr https://github.com/krlmlr/actions-sync
          git fetch --all
@@ -28,6 +29,21 @@ Apply changes to similar workflows at once across all your projects.
          git push
          ```
 
+### Optional: Development environment with mise
+
+This project uses [mise](https://mise.jdx.dev/) to manage the development environment:
+
+1. Install mise: <https://mise.jdx.dev/getting-started.html>
+2. Run `mise install` in the project directory
+3. The `bin/` directory will be automatically added to your PATH when you cd into this directory
+
+To verify setup:
+
+```sh
+mise doctor        # Check configuration and installed tools
+mise env           # Show environment variables that mise sets
+echo $PATH         # Should have bin/ at the front
+```
 
 ## Design
 
