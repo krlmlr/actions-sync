@@ -125,7 +125,7 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          remotes::install_runiverse("${{ matrix.package }}", linux_distro = "noble")
+          remotes::install_runiverse("${{ matrix.package }}")
         shell: Rscript {0}
 
       - name: Session info
