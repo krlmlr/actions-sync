@@ -6,16 +6,40 @@ get_deps <- function() {
   }
 
   deps_df <- desc::desc_get_deps()
-  deps_df_optional <- deps_df$package[deps_df$type %in% c("Suggests", "Enhances")]
-  deps_df_hard <- deps_df$package[deps_df$type %in% c("Depends", "Imports", "LinkingTo")]
+  deps_df_optional <- deps_df$package[
+    deps_df$type %in% c("Suggests", "Enhances")
+  ]
+  deps_df_hard <- deps_df$package[
+    deps_df$type %in% c("Depends", "Imports", "LinkingTo")
+  ]
   deps_df_base <- unlist(tools::standard_package_names(), use.names = FALSE)
+
+  # Vignette builders can't be excluded: `R CMD build` (run by R CMD check)
+  # re-builds the vignettes, which fails outright when the declared
+  # VignetteBuilder package (e.g. quarto) is missing. Treat them as off-limits.
+  vignette_builders <- strsplit(
+    desc::desc_get_field("VignetteBuilder", default = ""),
+    "[[:space:]]*,[[:space:]]*"
+  )[[1]]
+  vignette_builders <- vignette_builders[nzchar(vignette_builders)]
 
   packages <- sort(deps_df_optional)
   packages <- intersect(packages, rownames(available.packages()))
 
   # Too big to fail, or can't be avoided:
-  off_limits <- c("testthat", "rmarkdown", "rcmdcheck", deps_df_hard, deps_df_base)
-  off_limits_dep <- unlist(tools::package_dependencies(off_limits, recursive = TRUE, which = "strong"))
+  off_limits <- c(
+    "testthat",
+    "rmarkdown",
+    "rcmdcheck",
+    vignette_builders,
+    deps_df_hard,
+    deps_df_base
+  )
+  off_limits_dep <- unlist(tools::package_dependencies(
+    off_limits,
+    recursive = TRUE,
+    which = "strong"
+  ))
   setdiff(packages, c(off_limits, off_limits_dep))
 }
 
@@ -31,7 +55,9 @@ if (Sys.getenv("GITHUB_BASE_REF") != "") {
     writeLines(diff_lines)
     packages <- get_deps()
   } else {
-    writeLines("No changes using :: found in R/ or tests/, not checking without suggested packages")
+    writeLines(
+      "No changes using :: found in R/ or tests/, not checking without suggested packages"
+    )
     packages <- character()
   }
 } else {

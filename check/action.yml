@@ -7,6 +7,40 @@ inputs:
 runs:
   using: "composite"
   steps:
+    # On Windows, Quarto re-builds vignettes in a separate R process spawned by
+    # the Quarto CLI. That process only sees env-conveyed libraries
+    # (R_LIBS_USER), not R CMD build's temporary install library, so
+    # `library(<pkg>)` fails with "there is no package called '<pkg>'" while
+    # building Quarto vignettes - unless the package is already installed in the
+    # regular library. Install it up front to work around this. We mirror
+    # quarto-dev/quarto-r, which adds `local::.` to its check dependencies "as we
+    # register vignette engine". Restricted to Windows + a Quarto vignette
+    # builder, since that is the only place the failure occurs.
+    # Refs:
+    # - https://github.com/r-lib/pkgdown/issues/2830
+    # - https://github.com/quarto-dev/quarto-cli/discussions/2307
+    # - https://github.com/quarto-dev/quarto-r/blob/main/.github/workflows/R-CMD-check.yaml
+    - name: Detect a Quarto vignette builder
+      id: quarto-vignette
+      if: runner.os == 'Windows'
+      run: |
+        builders <- strsplit(
+          desc::desc_get_field("VignetteBuilder", default = ""),
+          "[[:space:]]*,[[:space:]]*"
+        )[[1]]
+        uses_quarto <- if ("quarto" %in% builders) "true" else "false"
+        cat(
+          sprintf("uses-quarto=%s\n", uses_quarto),
+          file = Sys.getenv("GITHUB_OUTPUT"),
+          append = TRUE
+        )
+      shell: Rscript {0}
+
+    - name: Install the package so Quarto resolves it when re-building vignettes
+      if: runner.os == 'Windows' && steps.quarto-vignette.outputs.uses-quarto == 'true'
+      run: _R_SHLIB_STRIP_=true R CMD INSTALL .
+      shell: bash
+
     - uses: r-lib/actions/check-r-package@v2
       with:
         # Fails on R 3.6 on Windows, remove when this job is removed?
