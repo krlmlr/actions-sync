@@ -22,7 +22,7 @@ runs:
         }
       shell: Rscript {0}
 
-    - uses: codecov/codecov-action@v5
+    - uses: codecov/codecov-action@v7
       with:
         # Fail if token is given
         fail_ci_if_error: ${{ inputs.token != '' }}
