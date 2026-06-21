@@ -1,0 +1,17 @@
+name: pkgdown
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  release:
+    types: [published]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  pkgdown:
+    uses: poissonconsulting/.github/.github/workflows/pkgdown.yml@v1
+    with:
+      private: false
+    secrets: inherit
