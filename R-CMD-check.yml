@@ -1,0 +1,17 @@
+name: R-CMD-check
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+permissions:
+  contents: read
+jobs:
+  R-CMD-check:
+    uses: poissonconsulting/.github/.github/workflows/R-CMD-check.yml@v1
+    with:
+      tier: cran
+      jags: false
+      tex: false
+      private: false
+    secrets: inherit
