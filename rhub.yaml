@@ -5,26 +5,26 @@
 # rhub::rhub_setup()
 #
 # It is unlikely that you need to modify this file manually.
+#
+# Distributed to CRAN-tier packages by poissonconsulting/.github tools/sync-ci.sh.
+# It is dispatch-triggered (run via rhub::rhub_check()), not a push/PR check, so it
+# is vendored as-is rather than called as a reusable workflow.
 
 name: R-hub
-run-name: >-
-  ${{ github.event.inputs.id || format('Manual run by @{0}', github.triggering_actor) }}:
-  ${{ github.event.inputs.name || github.event.inputs.config }}
+run-name: "${{ github.event.inputs.id }}: ${{ github.event.inputs.name || format('Manually run by {0}', github.triggering_actor) }}"
 
 on:
   workflow_dispatch:
     inputs:
       config:
-        description: >-
-          Comma-separated list of R-hub platforms to use.
-          Full list: https://r-hub.github.io/containers/
+        description: 'A comma separated list of R-hub platforms to use.'
         type: string
         default: 'linux,windows,macos'
       name:
-        description: 'Run name. You can leave this empty.'
+        description: 'Run name. You can leave this empty now.'
         type: string
       id:
-        description: 'Unique ID. You can leave this empty.'
+        description: 'Unique ID. You can leave this empty now.'
         type: string
 
 jobs:
