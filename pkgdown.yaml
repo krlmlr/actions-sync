@@ -3,7 +3,7 @@ on:
   push:
     branches: [main, master]
   pull_request:
-    branches: [main, master]
+    branches: [main, master, dev]
   release:
     types: [published]
   workflow_dispatch:
@@ -11,7 +11,8 @@ permissions:
   contents: write
 jobs:
   pkgdown:
-    uses: poissonconsulting/.github/.github/workflows/pkgdown.yml@v1
+    uses: poissonconsulting/.github/.github/workflows/pkgdown.yaml@v1
     with:
+      cmdstan: false
       private: false
     secrets: inherit
