@@ -125,7 +125,12 @@ jobs:
         env:
           GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          remotes::install_runiverse("${{ matrix.package }}", linux_distro = "noble")
+          package <- "${{ matrix.package }}"
+          # Guard against an empty matrix entry: with no dev dependencies
+          # there is nothing to install, and install_runiverse("") errors.
+          if (nzchar(package)) {
+            remotes::install_runiverse(package, linux_distro = "noble")
+          }
         shell: Rscript {0}
 
       - name: Session info

@@ -124,11 +124,21 @@ runs:
           writeLines(paste0("::warning::", msg))
         }
 
-        json <- paste0(
-          '{"package":[',
-          paste0('"', deps, '"', collapse = ","),
-          ']}'
-        )
+        # Build the matrix JSON explicitly for the empty case.
+        # paste0('"', character(0), '"') collapses to the two-character
+        # string '""', which would emit {"package":[""]} (a single empty
+        # package) instead of an empty array, causing a spurious job that
+        # runs install_runiverse("") and fails. Emit an empty array so the
+        # dependent matrix job is skipped when there are no dev deps.
+        if (length(deps) == 0) {
+          json <- '{"package":[]}'
+        } else {
+          json <- paste0(
+            '{"package":[',
+            paste0('"', deps, '"', collapse = ","),
+            ']}'
+          )
+        }
         writeLines(json)
         writeLines(paste0("matrix=", json), Sys.getenv("GITHUB_OUTPUT"))
       shell: Rscript {0}
