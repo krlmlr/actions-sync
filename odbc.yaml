@@ -50,7 +50,8 @@ jobs:
 
   backend:
     needs: matrix
-    # Need Ubuntu 24.04 for remotes::system_requirements()
+    # Ubuntu 24.04 matches the driver packages installed below (e.g. the
+    # msodbcsql17 repo config and the distro odbc-mariadb driver).
     runs-on: ubuntu-24.04
 
     services:
@@ -94,7 +95,10 @@ jobs:
         with:
           cache-version: backends-${{ matrix.package }}
           needs: check
-          extra-packages: "any::pkgbuild any::remotes decor ."
+          # remotes from GitHub: the CRAN release (2.5.0) does not yet know
+          # Ubuntu 24.04, so its system_requirements() aborts on the 24.04
+          # runner below. The dev version adds 24.04 to its supported list.
+          extra-packages: "any::pkgbuild github::r-lib/remotes decor ."
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Clone backend
@@ -103,7 +107,11 @@ jobs:
 
       - name: Install system dependencies
         if: runner.os == 'Linux'
-        # "22.04" fails here
+        # Relies on the dev version of remotes installed above; the CRAN release
+        # 2.5.0 only knows Ubuntu releases up to "22.04", so "24.04" aborts with
+        # a match.arg() error that the process substitution silently swallows,
+        # installing nothing (which is how unixodbc-dev went missing and odbc
+        # failed to compile with "sql.h: No such file or directory").
         run: |
           while read -r cmd
           do
